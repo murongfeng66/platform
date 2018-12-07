@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jwzhu.platform.core.resource.db.ResourceDao">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into Resource
+        <trim prefix="(" suffixOverrides="," suffix=")">
+            <if test="code != null">
+                `code`,
+            </if>
+            <if test="parentCode != null">
+                parentCode,
+            </if>
+            <if test="name != null">
+                `name`,
+            </if>
+            <if test="url != null">
+                url,
+            </if>
+            <if test="sort != null">
+                sort,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="isShow != null">
+                isShow,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+        </trim>
+        <trim prefix="values(" suffixOverrides="," suffix=")">
+            <if test="code!= null">
+                #{code},
+            </if>
+            <if test="parentCode != null">
+                #{parentCode},
+            </if>
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="url != null">
+                #{url},
+            </if>
+            <if test="sort != null">
+                #{sort},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="isShow != null">
+                #{isShow},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+        </trim>
+    </insert>
+    <select id="queryByParam" resultType="com.jwzhu.platform.core.resource.model.ResourceList">
+        select id, `code`, parentCode, `name`, sort, type, isShow
+        from Resource
+        <where>
+            <trim suffixOverrides="and">
+                <if test="code != null">
+                    `code` like concat(#{code},'%') and
+                </if>
+                <if test="parentCode != null">
+                    parentCode like concat(#{parentCode},'%') and
+                </if>
+                <if test="name != null">
+                    `name` like concat(#{name},'%') and
+                </if>
+                <if test="sort != null">
+                    sort = #{sort} and
+                </if>
+                <if test="type != null">
+                    type = #{type} and
+                </if>
+                <if test="isShow != null">
+                    isShow = #{isShow} and
+                </if>
+            </trim>
+        </where>
+    </select>
+    <select id="queryMenu" resultType="com.jwzhu.platform.core.resource.model.Menu">
+        select `code`, parentCode, `name`, url, type
+        from Resource
+        order by `sort` desc
+    </select>
+</mapper>
