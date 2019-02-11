@@ -3,26 +3,248 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>统一管理平台</title>
+    <title th:text="${platformName}">管理平台</title>
+    <link rel="icon" type="image/x-icon" href="/image/icon.ico">
 
     <link rel="stylesheet" href="/css/common.css">
-    <link rel="stylesheet" href="/css/bootstrap/4.1.3/bootstrap.css">
-</head>
-<body th:text="${token}">
+    <link rel="stylesheet" href="/font-awesome-4.7.0/css/font-awesome.min.css">
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-color: #fbfbfb;
+        }
 
+        .top {
+            padding: 0 1vw;
+            background-color: #252a2f;
+            color: #ffffff;
+            height: 50px;
+            display: flex;
+            font-size: 20px;
+        }
+
+        .top-buttons {
+            height: 100%;
+            font-size: 18px;
+        }
+
+        .top-button {
+            display: flex;
+            height: 100%;
+            padding: 0 10px;
+            cursor: pointer;
+        }
+
+        .top-button:hover {
+            background-color: #444a52;
+        }
+
+        .middle {
+            height: calc(100% - 50px);
+            display: flex;
+        }
+
+        .navigate {
+            display: inline-block;
+            background-color: #252a2f;
+            color: #ffffff;
+            height: 100%;
+            width: 140px;
+        }
+
+        .navigate-user {
+            text-align: center;
+            border-top: 1px solid #464646;
+            border-bottom: 1px solid #464646;
+            padding: 20px 0;
+        }
+
+        .navigate-user-header {
+            height: 50px;
+            width: 50px;
+            border-radius: 25px;
+            box-shadow: 0 0 10px #ffffff;
+        }
+
+        .navigate-user-name {
+            margin-top: 5px;
+            font-size: 16px;
+        }
+
+        .navigate-menu {
+            padding: 10px 0;
+            font-size: 14px;
+        }
+
+        .navigate-menu-item {
+            height: 42px;
+        }
+
+        .navigate-menu-item:hover {
+            background-color: #33373d;
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        .navigate-menu-item:hover .navigate-menu-item-children {
+            display: block;
+        }
+
+        .navigate-menu-item:hover .menu-item-left {
+            height: 100%;
+            margin: auto 0;
+            transition: height .2s;
+            -moz-transition: height .2s; /* Firefox 4 */
+            -webkit-transition: height .2s; /* Safari 和 Chrome */
+            -o-transition: height .2s; /* Opera */
+        }
+
+        .menu-item {
+            display: flex;
+            height: 100%;
+        }
+
+        .menu-item-left {
+            width: 3px;
+            height: 0;
+            background-color: #0e90ce;
+        }
+
+        .navigate-menu-item-children {
+            position: relative;
+            left: 140px;
+            top: -43px;
+            display: none;
+            width: 160px;
+            border: 1px solid #828282;
+            border-left: 0;
+            z-index: 1;
+        }
+
+        .navigate-menu-item-children-item {
+            background-color: #33373d;
+            height: 42px;
+        }
+
+        .children-item {
+            padding: 10px;
+        }
+
+        .children-item-bottom {
+            height: 3px;
+            width: 0;
+            background-color: #0e90ce;
+        }
+
+        .navigate-menu-item-children-item:hover {
+            background-color: #444a52;
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        .navigate-menu-item-children-item:hover .children-item-bottom {
+            width: 100%;
+            margin: 0 auto;
+            transition: width .2s;
+            -moz-transition: width .2s; /* Firefox 4 */
+            -webkit-transition: width .2s; /* Safari 和 Chrome */
+            -o-transition: width .2s; /* Opera */
+        }
+
+        .menu-content {
+            width: calc(100% - 140px);
+            height: calc(100% - 50px);
+            border: 0;
+            position: fixed;
+            left: 140px;
+        }
+    </style>
+</head>
+<body>
+<div class="top">
+    <div class="margin-auto margin-left-no">
+        <i class="fa fa-server"></i>
+        <span th:text="${platformName}"></span>
+    </div>
+    <div class="top-buttons margin-auto margin-right-no">
+        <div class="top-button" onclick="logout()">
+            <span class="margin-auto">
+            <i class="fa fa-sign-out"></i>
+            <span>退出</span>
+        </span>
+        </div>
+    </div>
+</div>
+<div id="middle" class="middle">
+    <div class="navigate">
+        <div class="navigate-user">
+            <img id="navigate_user_header" class="navigate-user-header" src="http://img.jwzhu.com/web_25/building/000017的副本.jpg">
+            <div id="navigate_user_name" class="navigate-user-name" th:text="${user.nickname}"></div>
+        </div>
+        <div class="navigate-menu">
+        </div>
+    </div>
+</div>
 </body>
 <script src="/js/jquery/jquery-3.3.1.js"></script>
 <script src="/js/common.js"></script>
 <script type="text/javascript">
-    common.token  = '[[${token}]]';
-    $(function(){
+    $(function () {
+        common.token = '[[${token}]]';
         queryMenu();
     });
 
-    var queryMenu = function(){
-        common.ajax.get('/queryMenu',null,function(data){
-            debugger;
+    var queryMenu = function () {
+        common.ajax.get('/queryMenu', null, function (data) {
+            $.each(data, function (index, item) {
+                var _itemHtml = $('<div class="navigate-menu-item"><div class="menu-item"><div class="menu-item-left"></div><div class="margin-auto margin-left-10">' + item.name + '</div></div></div>');
+                $('.navigate-menu').append(_itemHtml);
+                if (item.children) {
+                    addChildren(_itemHtml, item.children);
+                }
+
+                bindClick(_itemHtml,item);
+            });
         });
+    };
+
+    var addChildren = function (_parent, children) {
+        if (children.length === 0) {
+            return;
+        }
+        var _children = $('<div class="navigate-menu-item-children"></div>');
+        _parent.append(_children);
+        $.each(children, function (index, item) {
+            var _itemHtml = $('<div class="navigate-menu-item-children-item"><div class="children-item">' + item.name + '</div><div class="children-item-bottom"></div></div>');
+            _children.append(_itemHtml);
+            if (item.children) {
+                addChildren(_itemHtml, item.children);
+            }
+
+            bindClick(_itemHtml,item);
+        });
+    };
+
+    var bindClick = function(_itemHtml,item){
+        if (item.type !== 2) {
+            return;
+        }
+        _itemHtml.bind('click', function () {
+            var iFrameId = 'menu_content_' + item.code.replace(/\./g,'_');
+            if ($('#'+iFrameId).length === 0) {
+                $('#middle').append('<iframe id="' + iFrameId + '" class="menu-content" src="' + item.url+'?token='+common.token + '"></iframe>');
+            }
+        });
+    };
+
+    var logout = function(){
+        common.ajax.get('/login/logout',null,function(){
+            window.location.href = '/';
+        })
     }
 </script>
 </html>

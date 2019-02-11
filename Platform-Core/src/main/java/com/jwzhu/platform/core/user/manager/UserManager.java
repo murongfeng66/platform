@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import com.jwzhu.platform.common.enums.AvailableStatus;
 import com.jwzhu.platform.common.enums.UserType;
 import com.jwzhu.platform.common.exception.BusinessException;
-import com.jwzhu.platform.common.web.token.TokenService;
-import com.jwzhu.platform.common.web.token.TokenSubject;
+import com.jwzhu.platform.web.base.token.TokenService;
+import com.jwzhu.platform.web.base.token.TokenSubject;
 import com.jwzhu.platform.core.user.bean.LoginBean;
 import com.jwzhu.platform.core.user.model.Admin;
 import com.jwzhu.platform.core.user.model.Login;
@@ -42,6 +42,14 @@ public class UserManager {
             throw new BusinessException("不支持的用户类型");
         }
         return tokenService.createToken(new TokenSubject(login.getUserId(), login.getUserType()));
+    }
+
+    public Admin getById(long id){
+        return adminService.getById(id);
+    }
+
+    public void logout(String token){
+        tokenService.inValidToken(token);
     }
 
 }

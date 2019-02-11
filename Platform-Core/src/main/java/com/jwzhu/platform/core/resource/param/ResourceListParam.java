@@ -1,6 +1,6 @@
 package com.jwzhu.platform.core.resource.param;
 
-import com.jwzhu.platform.common.web.param.PageParam;
+import com.jwzhu.platform.web.base.param.PageParam;
 import com.jwzhu.platform.core.resource.bean.ResourceListBean;
 
 public class ResourceListParam extends PageParam<ResourceListBean> {

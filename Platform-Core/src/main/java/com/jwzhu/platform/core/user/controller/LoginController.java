@@ -6,9 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
-import com.jwzhu.platform.common.web.param.ControllerHandler;
+import com.jwzhu.platform.web.base.param.ControllerHandler;
 import com.jwzhu.platform.core.user.manager.UserManager;
 import com.jwzhu.platform.core.user.param.LoginParam;
 
@@ -24,6 +23,13 @@ public class LoginController {
     @ResponseBody
     public String login(LoginParam param){
         return userManager.login(param.initBean());
+    }
+
+    @ControllerHandler
+    @GetMapping("logout")
+    @ResponseBody
+    public void logout(String token){
+        userManager.logout(token);
     }
 
 }

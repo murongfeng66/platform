@@ -36,15 +36,17 @@ common.ajax.post = function (url, data, success) {
 common.ajax.request = function (url, type, data, success, async) {
     async = async || true;
     type = type || 'GET';
+    var headers = {};
+    if (common.token) {
+        headers.Token = common.token;
+    }
     $.ajax({
         url: url,
         async: async,
         type: type,
         data: data,
         dataType: 'JSON',
-        headers:{
-            Token:common.token
-        },
+        headers: headers,
         success: function (data) {
             if (data.code === 1) {
                 if (success && typeof success === 'function') {
@@ -55,6 +57,8 @@ common.ajax.request = function (url, type, data, success, async) {
             } else {
                 common.toast.error(data.message);
             }
+
+            common.token = data.token || common.token;
         },
         error: function () {
             common.toast.error('请求失败');
@@ -62,9 +66,10 @@ common.ajax.request = function (url, type, data, success, async) {
     });
 };
 
-common.enter = function(id,callback){
-    $('#'+id).bind('keyup',function(e){
-        if(e.keyCode === 13 && callback && typeof callback === 'function'){
+common.keydown = {};
+common.keydown.enter = function (id, callback) {
+    $('#' + id).bind('keyup', function (e) {
+        if (e.keyCode === 13 && callback && typeof callback === 'function') {
             callback();
         }
     })

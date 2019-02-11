@@ -6,9 +6,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
-import com.jwzhu.platform.common.web.param.ControllerHandler;
-import com.jwzhu.platform.common.web.response.PageResult;
+import com.jwzhu.platform.web.base.param.ControllerHandler;
+import com.jwzhu.platform.common.bean.PageResult;
 import com.jwzhu.platform.core.resource.manager.ResourceManager;
 import com.jwzhu.platform.core.resource.bean.ResourceListBean;
 import com.jwzhu.platform.core.resource.model.ResourceList;
@@ -21,6 +22,14 @@ public class ResourceController {
 
     @Autowired
     private ResourceManager resourceManager;
+
+
+    @ControllerHandler
+    @RequestMapping({"page"})
+    public ModelAndView login(ModelAndView view) {
+        view.setViewName("resource/resource");
+        return view;
+    }
 
     @PostMapping("add")
     @ResponseBody

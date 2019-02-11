@@ -33,3 +33,39 @@
     background-color: #f5f4f4;
     border: 1px solid #f10808;
 }
+
+.margin-auto{
+    margin: auto;
+}
+
+.margin-top-no{
+    margin-top: 0 !important;
+}
+
+.margin-right-no{
+    margin-right: 0 !important;
+}
+
+.margin-bottom-no{
+    margin-bottom: 0 !important;
+}
+
+.margin-left-no{
+    margin-left: 0 !important;
+}
+
+.margin-top-10{
+    margin-top: 10px !important;
+}
+
+.margin-right-10{
+    margin-right: 10px !important;
+}
+
+.margin-bottom-10{
+    margin-bottom: 10px !important;
+}
+
+.margin-left-10{
+    margin-left: 10px !important;
+}
