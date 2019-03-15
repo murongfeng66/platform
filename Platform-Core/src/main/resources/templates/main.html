@@ -183,68 +183,70 @@
     <div class="navigate">
         <div class="navigate-user">
             <img id="navigate_user_header" class="navigate-user-header" src="http://img.jwzhu.com/web_25/building/000017的副本.jpg">
-            <div id="navigate_user_name" class="navigate-user-name" th:text="${user.nickname}"></div>
+            <div id="navigate_user_name" class="navigate-user-name"></div>
         </div>
         <div class="navigate-menu">
         </div>
     </div>
 </div>
 </body>
-<script src="/js/jquery/jquery-3.3.1.js"></script>
 <script src="/js/common.js"></script>
+<script src="/js/request.js"></script>
 <script type="text/javascript">
-    $(function () {
-        common.token = '[[${token}]]';
+    window.onload = function(){
         queryMenu();
-    });
-
-    var queryMenu = function () {
-        common.ajax.get('/queryMenu', null, function (data) {
-            $.each(data, function (index, item) {
-                var _itemHtml = $('<div class="navigate-menu-item"><div class="menu-item"><div class="menu-item-left"></div><div class="margin-auto margin-left-10">' + item.name + '</div></div></div>');
-                $('.navigate-menu').append(_itemHtml);
-                if (item.children) {
-                    addChildren(_itemHtml, item.children);
-                }
-
-                bindClick(_itemHtml,item);
-            });
-        });
     };
 
-    var addChildren = function (_parent, children) {
-        if (children.length === 0) {
-            return;
-        }
-        var _children = $('<div class="navigate-menu-item-children"></div>');
-        _parent.append(_children);
-        $.each(children, function (index, item) {
-            var _itemHtml = $('<div class="navigate-menu-item-children-item"><div class="children-item">' + item.name + '</div><div class="children-item-bottom"></div></div>');
-            _children.append(_itemHtml);
-            if (item.children) {
-                addChildren(_itemHtml, item.children);
-            }
+    let queryMenu = function () {
+        // common.ajax.get('/queryMenu', null, function (data) {
+        //     $.each(data, function (index, item) {
+        //         var _itemHtml = $('<div class="navigate-menu-item"><div class="menu-item"><div class="menu-item-left"></div><div class="margin-auto margin-left-10">' + item.name + '</div></div></div>');
+        //         $('.navigate-menu').append(_itemHtml);
+        //         if (item.children) {
+        //             addChildren(_itemHtml, item.children);
+        //         }
+        //
+        //         bindClick(_itemHtml,item);
+        //     });
+        // });
 
-            bindClick(_itemHtml,item);
-        });
+        Request.get('/resource/queryByParam').then(function(data){console.info(data)});
     };
+    //
+    // let addChildren = function (_parent, children) {
+    //     if (children.length === 0) {
+    //         return;
+    //     }
+    //     var _children = $('<div class="navigate-menu-item-children"></div>');
+    //     _parent.append(_children);
+    //     $.each(children, function (index, item) {
+    //         var _itemHtml = $('<div class="navigate-menu-item-children-item"><div class="children-item">' + item.name + '</div><div class="children-item-bottom"></div></div>');
+    //         _children.append(_itemHtml);
+    //         if (item.children) {
+    //             addChildren(_itemHtml, item.children);
+    //         }
+    //
+    //         bindClick(_itemHtml,item);
+    //     });
+    // };
+    //
+    // let bindClick = function(_itemHtml,item){
+    //     if (item.type !== 2) {
+    //         return;
+    //     }
+    //     _itemHtml.bind('click', function () {
+    //         var iFrameId = 'menu_content_' + item.code.replace(/\./g,'_');
+    //         if ($('#'+iFrameId).length === 0) {
+    //             $('#middle').append('<iframe id="' + iFrameId + '" class="menu-content" src="' + item.url+'?token='+common.token + '"></iframe>');
+    //         }
+    //     });
+    // };
 
-    var bindClick = function(_itemHtml,item){
-        if (item.type !== 2) {
-            return;
-        }
-        _itemHtml.bind('click', function () {
-            var iFrameId = 'menu_content_' + item.code.replace(/\./g,'_');
-            if ($('#'+iFrameId).length === 0) {
-                $('#middle').append('<iframe id="' + iFrameId + '" class="menu-content" src="' + item.url+'?token='+common.token + '"></iframe>');
-            }
+    let logout = function(){
+        let request = Request.get('/login/logout');
+        request.then(function(){
+            window.location.reload();
         });
-    };
-
-    var logout = function(){
-        common.ajax.get('/login/logout',null,function(){
-            window.location.href = '/';
-        })
     }
 </script>
 </html>

@@ -1,5 +1,6 @@
 package com.jwzhu.platform.core.resource.service;
 
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -8,12 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.jwzhu.platform.web.base.request.RequestBaseParam;
 import com.jwzhu.platform.core.resource.bean.ResourceBean;
 import com.jwzhu.platform.core.resource.bean.ResourceListBean;
 import com.jwzhu.platform.core.resource.db.ResourceDao;
 import com.jwzhu.platform.core.resource.model.Menu;
 import com.jwzhu.platform.core.resource.model.ResourceList;
+import com.jwzhu.platform.plugs.web.request.RequestBaseParam;
 
 @Service
 public class ResourceService {
@@ -47,7 +48,7 @@ public class ResourceService {
             }
         }
 
-//        menus.sort(Comparator.comparingInt(Menu::getSort).reversed());
+        menus.sort(Comparator.comparingInt(Menu::getSort).reversed());
         return menus;
     }
 

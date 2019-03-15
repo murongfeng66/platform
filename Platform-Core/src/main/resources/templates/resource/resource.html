@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>登录</title>
+    <link rel="icon" type="image/x-icon" href="/image/icon.ico">
+
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/bootstrap/4.1.3/bootstrap.css">
+    <style type="text/css">
+
+    </style>
+</head>
+<body>
+<table id="table_body">
+</table>
+</body>
+<script src="/js/jquery/jquery-3.3.1.js"></script>
+<script src="/js/common.js"></script>
+<script src="/js/form.js"></script>
+<script src="/js/table.js"></script>
+<script type="text/javascript">
+    $(function () {
+        queryList();
+    });
+
+    function queryList() {
+        $.queryList({
+            tableId: 'table_body',
+            url: '/resource/queryByParam',
+            column: [{
+                title: '父编码',
+                name: 'parentCode'
+            }, {
+                title: '编码',
+                name: 'code'
+            }, {
+                title: '名称',
+                name: 'name'
+            }],
+            queryParam:{
+                pageSize:2
+            }
+        });
+    }
+
+</script>
+</html>

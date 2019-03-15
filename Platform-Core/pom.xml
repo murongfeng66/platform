@@ -22,7 +22,7 @@
         </dependency>
         <dependency>
             <groupId>com.jwzhu</groupId>
-            <artifactId>platform-webBase</artifactId>
+            <artifactId>platform-plugs-web</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -39,6 +39,11 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

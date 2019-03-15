@@ -2,8 +2,8 @@ package com.jwzhu.platform.core.user.param;
 
 import javax.validation.constraints.NotEmpty;
 
-import com.jwzhu.platform.web.base.param.BaseParam;
 import com.jwzhu.platform.core.user.bean.LoginBean;
+import com.jwzhu.platform.plugs.web.param.BaseParam;
 
 public class LoginParam extends BaseParam<LoginBean> {
 

@@ -4,8 +4,8 @@ import java.sql.Timestamp;
 
 import javax.validation.constraints.NotNull;
 
-import com.jwzhu.platform.web.base.param.BaseParam;
 import com.jwzhu.platform.core.resource.bean.ResourceBean;
+import com.jwzhu.platform.plugs.web.param.BaseParam;
 
 public class ResourceParam extends BaseParam<ResourceBean> {
 

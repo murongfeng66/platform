@@ -1,60 +1,63 @@
-(function ($) {
-    var formConfig = {};
-
-    formConfig.serializeJsonConfig = {
-        notEmpty: true
+(function () {
+    const FormConfig = {
+        serializeJsonConfig: {
+            notEmpty: true
+        }, loadFormConfig: {
+            resetForm: true,
+            notEmpty: true
+        }
     };
-    formConfig.loadFormConfig = {
-        resetForm: true,
-        notEmpty: true
+
+    HTMLElement.prototype.getForm = function () {
+        let formItems = this.querySelectorAll('[name]');
+        let formJson = {};
+        for (let i in formItems) {
+            if (!formItems.hasOwnProperty(i)) {
+                continue
+            }
+
+            let item = formItems[i];
+            if (FormConfig.serializeJsonConfig.notEmpty && item.value === '') {
+                continue
+            }
+
+            formJson[formItems[i].name] = formItems[i].value;
+        }
+        return formJson;
     };
 
-    $.fn.extend({
-        serializeJson: function (config) {
-            var _config = config || formConfig.serializeJsonConfig;
-            var formArray = this.serializeArray();
-            var formJson = {};
-            for (var i in formArray) {
-                if (!formArray.hasOwnProperty(i)) {
-                    continue
-                }
-
-                var item = formArray[i];
-                if (_config.notEmpty && item.value === '') {
-                    continue
-                }
-
-                formJson[formArray[i].name] = formArray[i].value;
+    HTMLElement.prototype.setForm = function (formData) {
+        if(FormConfig.loadFormConfig){
+            this.reset();
+        }
+        for (let name in formData) {
+            if (!formData.hasOwnProperty(name)) {
+                continue
             }
-            return formJson;
-        },
-        loadForm: function (dataJson, config) {
-            var _config = config || formConfig.loadFormConfig;
-            if (_config.resetForm) {
-                this.resize();
+
+            if (FormConfig.loadFormConfig.notEmpty && formData[name] === '') {
+                continue
             }
-            for (var key in dataJson) {
-                if (!dataJson.hasOwnProperty(key)) {
+
+            let formItems = this.querySelectorAll('[name='+name+']');
+            for (let i in formItems) {
+                if (!formItems.hasOwnProperty(i)) {
                     continue
                 }
 
-                if (_config.notEmpty && dataJson[key] === '') {
-                    continue
-                }
+                formItems[i].value = formData[name];
+            }
+        }
+    };
 
-                var formItem = this.find('[name=' + key + ']');
-                if (formItem.length > 0) {
-                    formItem.val(dataJson[key]);
-                }
+    Object.defineProperties(HTMLElement.prototype, {
+        testFunction: {
+            writable: true,
+            enumerable: false,
+            configurable: true,
+            value: function () {
+                console.info('这是一个测试属性');
             }
         }
     });
-    $.extend({
-        setGlobalConfig: function (config) {
-            formConfig = $.extend(true,formConfig,config);
-        },
-        getGlobalConfig: function () {
-            return formConfig;
-        }
-    });
-})(jQuery);
+})();

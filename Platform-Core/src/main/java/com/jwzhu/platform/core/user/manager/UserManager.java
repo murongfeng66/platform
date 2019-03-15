@@ -6,17 +6,16 @@ import org.springframework.stereotype.Service;
 import com.jwzhu.platform.common.enums.AvailableStatus;
 import com.jwzhu.platform.common.enums.UserType;
 import com.jwzhu.platform.common.exception.BusinessException;
-import com.jwzhu.platform.web.base.token.TokenService;
-import com.jwzhu.platform.web.base.token.TokenSubject;
 import com.jwzhu.platform.core.user.bean.LoginBean;
 import com.jwzhu.platform.core.user.model.Admin;
 import com.jwzhu.platform.core.user.model.Login;
 import com.jwzhu.platform.core.user.service.AdminService;
 import com.jwzhu.platform.core.user.service.LoginService;
+import com.jwzhu.platform.plugs.web.token.TokenService;
+import com.jwzhu.platform.plugs.web.token.TokenSubject;
 
 @Service
 public class UserManager {
-
     @Autowired
     private LoginService loginService;
     @Autowired

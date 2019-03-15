@@ -83,7 +83,7 @@
         </where>
     </select>
     <select id="queryMenu" resultType="com.jwzhu.platform.core.resource.model.Menu">
-        select `code`, parentCode, `name`, url, type
+        select `code`, parentCode, `name`, url, type, sort
         from Resource
         order by `sort` desc
     </select>

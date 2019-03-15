@@ -35,19 +35,6 @@ public class PageBean<T> extends BaseBean{
     private Integer totalCount;
 
     /**
-     * 获取分页结果
-     */
-    public PageResult<T> getResult() {
-        PageResult<T> pageResult = new PageResult<>();
-        pageResult.setTotalPage(this.totalPage);
-        pageResult.setPageSize(this.pageSize);
-        pageResult.setTotalCount(this.totalCount);
-        pageResult.setCurrentPage(this.currentPage);
-        pageResult.setList(this.list);
-        return pageResult;
-    }
-
-    /**
      * 是否分页
      */
     public boolean needCut() {

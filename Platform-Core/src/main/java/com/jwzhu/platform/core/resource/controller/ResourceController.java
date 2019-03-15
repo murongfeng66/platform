@@ -8,13 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.jwzhu.platform.web.base.param.ControllerHandler;
-import com.jwzhu.platform.common.bean.PageResult;
-import com.jwzhu.platform.core.resource.manager.ResourceManager;
 import com.jwzhu.platform.core.resource.bean.ResourceListBean;
-import com.jwzhu.platform.core.resource.model.ResourceList;
+import com.jwzhu.platform.core.resource.manager.ResourceManager;
 import com.jwzhu.platform.core.resource.param.ResourceListParam;
 import com.jwzhu.platform.core.resource.param.ResourceParam;
+import com.jwzhu.platform.plugs.web.param.ControllerHandler;
 
 @Controller
 @RequestMapping("resource")
@@ -42,10 +40,10 @@ public class ResourceController {
     @GetMapping("queryByParam")
     @ResponseBody
     @ControllerHandler
-    public PageResult<ResourceList> queryByParam(ResourceListParam param){
+    public ResourceListBean queryByParam(ResourceListParam param){
         ResourceListBean bean = param.initBean();
         resourceManager.queryByParam(bean);
-        return bean.getResult();
+        return bean;
     }
 
 }
