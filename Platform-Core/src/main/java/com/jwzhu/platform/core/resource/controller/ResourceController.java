@@ -12,7 +12,7 @@ import com.jwzhu.platform.core.resource.bean.ResourceListBean;
 import com.jwzhu.platform.core.resource.manager.ResourceManager;
 import com.jwzhu.platform.core.resource.param.ResourceListParam;
 import com.jwzhu.platform.core.resource.param.ResourceParam;
-import com.jwzhu.platform.plugs.web.param.ControllerHandler;
+import com.jwzhu.platform.plugs.web.annotations.ControllerHandler;
 
 @Controller
 @RequestMapping("resource")

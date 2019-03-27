@@ -1,4 +1,4 @@
-package com.jwzhu.platform.plugs.web.param;
+package com.jwzhu.platform.plugs.web.aspect;
 
 import java.io.IOException;
 
@@ -23,6 +23,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jwzhu.platform.common.exception.SystemException;
 import com.jwzhu.platform.plugs.web.exception.JsonException;
 import com.jwzhu.platform.plugs.web.exception.PageException;
+import com.jwzhu.platform.plugs.web.exception.token.TokenEmptyException;
+import com.jwzhu.platform.plugs.web.param.BaseParam;
+import com.jwzhu.platform.plugs.web.annotations.ControllerHandler;
 import com.jwzhu.platform.plugs.web.request.RequestBaseParam;
 import com.jwzhu.platform.plugs.web.request.RequestType;
 import com.jwzhu.platform.plugs.web.request.RequestUtil;
@@ -73,13 +76,17 @@ public class ControllerAspect {
         String token = analyzeToken(controllerHandler);
 
         if(controllerHandler.needToken() && StringUtils.isEmpty(token)){
-            HttpServletResponse response = RequestUtil.getResponse();
-            if(response != null){
-                try {
-                    response.sendRedirect("/login");
-                } catch (IOException e) {
-                    throw new SystemException(e);
+            if(RequestBaseParam.getRequestType() == RequestType.Page){
+                HttpServletResponse response = RequestUtil.getResponse();
+                if(response != null){
+                    try {
+                        response.sendRedirect("/login");
+                    } catch (IOException e) {
+                        throw new SystemException(e);
+                    }
                 }
+            }else{
+                wrapException(new TokenEmptyException());
             }
         }
     }

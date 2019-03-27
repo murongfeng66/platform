@@ -7,6 +7,7 @@ public class WebResult<T> {
     private Long costTime;
     private String message;
     private String token;
+    private String redirect;
 
     public WebResult() {
         this.message = "请求成功";
@@ -61,5 +62,13 @@ public class WebResult<T> {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getRedirect() {
+        return redirect;
+    }
+
+    public void setRedirect(String redirect) {
+        this.redirect = redirect;
     }
 }

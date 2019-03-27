@@ -1,13 +1,10 @@
 package com.jwzhu.platform.plugs.web.token;
 
-import java.util.concurrent.TimeUnit;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.BoundValueOperations;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.jwzhu.platform.common.cache.CacheUtil;
 import com.jwzhu.platform.plugs.web.exception.token.TokenTimeOutException;
 
 @Service
@@ -16,7 +13,11 @@ public class TokenService {
     private TokenUtil tokenUtil;
     private TokenConfig tokenConfig;
     @Autowired
-    private StringRedisTemplate redisTemplate;
+    private CacheUtil cacheUtil;
+
+    private String getCacheKey(String token){
+        return tokenConfig.getParamName() + "_"+token;
+    }
 
     public TokenService(TokenConfig tokenConfig) {
         this.tokenConfig = tokenConfig;
@@ -25,26 +26,26 @@ public class TokenService {
 
     public String createToken(TokenSubject subject) {
         String token = tokenUtil.createToken(subject);
-        BoundValueOperations<String, String> operations = redisTemplate.boundValueOps("Valid_Token_" + token);
+        String cacheKey = getCacheKey(token);
         if (tokenConfig.getExpiredTime() != null && tokenConfig.getExpiredTime() > 0) {
-            operations.set(token, tokenConfig.getExpiredTime(), TimeUnit.MILLISECONDS);
+            cacheUtil.set(cacheKey, subject, tokenConfig.getExpiredTime());
         } else {
-            operations.set(token);
+            cacheUtil.set(cacheKey, subject);
         }
         return token;
     }
 
     public TokenSubject checkToken(String token) {
         TokenSubject subject = tokenUtil.checkToken(token);
-        BoundValueOperations<String, String> operations = redisTemplate.boundValueOps("Valid_Token_" + token);
-        if (StringUtils.isEmpty(operations.get())) {
-            throw new TokenTimeOutException("凭证过期");
+        String cacheKey = getCacheKey(token);
+        if (cacheUtil.get(cacheKey) == null) {
+            throw new TokenTimeOutException();
         }
         return subject;
     }
 
     public void inValidToken(String token){
-        redisTemplate.delete("Valid_Token_" + token);
+        cacheUtil.delete(getCacheKey(token));
     }
 
     public TokenSubject analyzeToken(String token) {

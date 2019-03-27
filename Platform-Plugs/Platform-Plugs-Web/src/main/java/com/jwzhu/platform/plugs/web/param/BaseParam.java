@@ -42,7 +42,7 @@ public abstract class BaseParam<T extends BaseBean> {
 
     protected abstract T getBean();
 
-    public String[] getIgnoreProperties() {
+    protected String[] getIgnoreProperties() {
         return null;
     }
 

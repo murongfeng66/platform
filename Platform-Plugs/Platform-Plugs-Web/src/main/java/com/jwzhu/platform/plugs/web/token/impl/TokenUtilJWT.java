@@ -67,7 +67,7 @@ public class TokenUtilJWT implements TokenUtil {
             Claims claims = Jwts.parser().setSigningKey(this.secretKey).parseClaimsJws(token).getBody();
             return JSON.parseObject(claims.getSubject(),TokenSubject.class);
         }catch (ExpiredJwtException e){
-            throw new TokenTimeOutException("凭证过期");
+            throw new TokenTimeOutException();
         }
     }
 
@@ -77,7 +77,7 @@ public class TokenUtilJWT implements TokenUtil {
             Claims claims = Jwts.parser().setSigningKey(this.secretKey).parseClaimsJws(token).getBody();
             return JSON.parseObject(claims.getSubject(),TokenSubject.class);
         }catch (ExpiredJwtException e){
-            throw new TokenTimeOutException("token is overdue");
+            throw new TokenTimeOutException();
         }
     }
 }

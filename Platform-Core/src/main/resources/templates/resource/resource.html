@@ -16,17 +16,17 @@
 <table id="table_body">
 </table>
 </body>
-<script src="/js/jquery/jquery-3.3.1.js"></script>
 <script src="/js/common.js"></script>
 <script src="/js/form.js"></script>
 <script src="/js/table.js"></script>
+<script src="/js/request.js"></script>
 <script type="text/javascript">
-    $(function () {
+    window.onload = function(){
         queryList();
-    });
+    };
 
     function queryList() {
-        $.queryList({
+        Table.query({
             tableId: 'table_body',
             url: '/resource/queryByParam',
             column: [{

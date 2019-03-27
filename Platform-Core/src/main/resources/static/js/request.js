@@ -1,5 +1,5 @@
 const Request = {};
-(function(){
+(function () {
     Request.get = function (url, params) {
         return request(url, 'GET', params);
     };
@@ -22,22 +22,35 @@ const Request = {};
         return urlParam.endsWith('&') ? urlParam.substr(0, urlParam.length - 1) : urlParam;
     };
 
-    function request(url, type, params){
+    Request.addParamToUrl = function (url, name, value) {
+        if (url.indexOf('?') > 0) {
+            url += '&';
+        } else {
+            url += '?';
+        }
+        if (name) {
+            url += name + '=';
+        }
+        url += value;
+        return url;
+    };
+
+    function request(url, type, params) {
         return new Promise(function (resolve) {
             let xhr = new XMLHttpRequest();
+            let paramStr = Request.JsonToUrlParam(params);
+            if ('GET' === type) {
+                url = Request.addParamToUrl(url, null, paramStr);
+            }
             xhr.open(type, url, true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
             xhr.setRequestHeader("x-requested-with", "XMLHttpRequest");
 
-            let formData = new FormData();
-            for (let paramName in params) {
-                if (!params.hasOwnProperty(paramName)) {
-                    continue;
-                }
-                formData.append(paramName, params[paramName]);
+            if ('POST' === type) {
+                xhr.send(paramStr);
+            } else {
+                xhr.send();
             }
-
-            xhr.send(Request.JsonToUrlParam(params));
 
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
@@ -46,23 +59,30 @@ const Request = {};
                             resolve();
                         } else {
                             let responseContentTypes = xhr.getResponseHeader('Content-Type').split(';');
-                            if (responseContentTypes.indexOf('application/json')!==-1) {
+                            if (responseContentTypes.indexOf('application/json') !== -1) {
                                 try {
                                     let data = JSON.parse(xhr.responseText);
-                                    if(data.code === 1){
+                                    if (data.code === 1) {
                                         resolve(data.data);
-                                    }else{
+                                    } else {
                                         common.toast.error(data.message);
                                     }
+                                    if (data.redirect) {
+                                        window.location.href = data.redirect;
+                                    }
                                 } catch (e) {
-                                    common.toast.error('响应内容错误');
+                                    common.toast.error('请求失败');
+                                    console.error('响应内容错误：' + url);
+                                    console.error(e);
                                 }
                             } else {
-                                common.toast.error('响应类型不支持');
+                                common.toast.error('请求失败');
+                                console.error('响应类型[' + responseContentTypes + ']不支持：' + url);
                             }
                         }
                     } else {
                         common.toast.error('请求失败');
+                        console.error('请求失败：' + url);
                     }
                 }
             }
