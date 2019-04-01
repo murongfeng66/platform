@@ -14,23 +14,11 @@ import com.jwzhu.platform.common.exception.ParamException;
 
 public abstract class BaseParam<T extends BaseBean> {
     /**
-     * 访问令牌
-     */
-    private String token;
-    /**
      * 请求类型
      */
     private Short requestType;
 
     private static ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
 
     public Short getRequestType() {
         return requestType;

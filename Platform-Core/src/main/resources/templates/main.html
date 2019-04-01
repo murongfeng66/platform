@@ -8,44 +8,31 @@
 
     <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="/font-awesome-4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/bootstrap/4.1.3/bootstrap.css">
     <style type="text/css">
-        body {
-            margin: 0;
-            padding: 0;
-            position: fixed;
+
+        .light-line-left {
+            width: 3px;
+            height: 0;
+            background-color: #0e90ce;
+            margin: auto 0;
+        }
+
+        .light-line-bottom-div {
+            position: absolute;
+            height: 3px;
             width: 100%;
+            bottom: 0;
+        }
+
+        .light-line-bottom {
+            width: 0;
             height: 100%;
-            background-color: #fbfbfb;
+            background-color: #0e90ce;
+            margin: 0 auto;
         }
 
-        .top {
-            padding: 0 2rem;
-            background-color: #252a2f;
-            color: #ffffff;
-            height: 4rem;
-            display: flex;
-            font-size: 1.2rem;
-        }
-
-        .top-buttons {
+        .main-body {
             height: 100%;
-            font-size: 1.2rem;
-        }
-
-        .top-button {
-            display: flex;
-            height: 100%;
-            padding: 0 10px;
-            cursor: pointer;
-        }
-
-        .top-button:hover {
-            background-color: #444a52;
-        }
-
-        .middle {
-            height: calc(100% - 4rem);
             display: flex;
         }
 
@@ -59,8 +46,7 @@
 
         .navigate-user {
             text-align: center;
-            border-top: 1px solid #464646;
-            border-bottom: 1px solid #464646;
+            border-bottom: 1px solid #e8e8e8;
             padding: 2rem 0;
         }
 
@@ -68,11 +54,12 @@
             height: 4rem;
             width: 4rem;
             border-radius: 2rem;
-            box-shadow: 0 0 10px #ffffff;
+            box-shadow: 0 0 10px #e8e8e8;
         }
 
         .navigate-user-name {
             margin-top: 0.4rem;
+            padding: 10px;
         }
 
         .navigate-menus {
@@ -85,7 +72,7 @@
 
         .navigate-menus-item:hover {
             background-color: #33373d;
-            color: #ffffff;
+            color: #e8e8e8;
             cursor: pointer;
         }
 
@@ -100,36 +87,16 @@
             position: inherit;
         }
 
-        .light-line-left {
-            width: 3px;
-            height: 0;
-            background-color: #0e90ce;
-        }
-
         .menu-item:hover .light-line-left {
             height: 100%;
-            margin: auto 0;
-            transition: height .2s;
-            -moz-transition: height .2s; /* Firefox 4 */
-            -webkit-transition: height .2s; /* Safari 和 Chrome */
-            -o-transition: height .2s; /* Opera */
-        }
-
-        .light-line-bottom {
-            width: 0;
-            height: 3px;
-            background-color: #0e90ce;
-            position: absolute;
-            bottom: 0;
+            animation: height_0_to_100 .2s;
+            -webkit-animation: height_0_to_100 .2s; /* Safari 和 Chrome */
         }
 
         .menu-item:hover .light-line-bottom {
             width: 100%;
-            /*margin: auto auto;*/
-            transition: width .2s;
-            -moz-transition: width .2s; /* Firefox 4 */
-            -webkit-transition: width .2s; /* Safari 和 Chrome */
-            -o-transition: width .2s; /* Opera */
+            animation: width_0_to_100 .2s;
+            -webkit-animation: width_0_to_100 .2s; /* Safari 和 Chrome */
         }
 
         .navigate-menus-item-children {
@@ -144,7 +111,7 @@
 
         .content {
             width: calc(100% - 10rem);
-            height: calc(100% - 4rem);
+            height: 100%;
             border: 0;
             position: fixed;
             left: 10rem;
@@ -154,12 +121,7 @@
             width: 100%;
             height: 2rem;
             line-height: 2rem;
-        }
-
-        .content-body {
-            width: 100%;
-            height: calc(100% - 2rem);
-            border: 0;
+            color: #ffffff;
         }
 
         .content-top-nav {
@@ -173,12 +135,10 @@
         .content-top-nav-item {
             flex: 1 1 auto;
             text-align: center;
-            border-right: 1px solid #7e8082;
-            border-bottom: 1px solid #7e8082;
+            border: 1px solid #e8e8e8;
+            border-top: 0;
             cursor: pointer;
-            /*background-color: #b7b9bb;*/
-            background-color: #464646;
-            color: #ffffff;
+            background-color: #252a2f;
         }
 
         .content-top-nav-item:hover {
@@ -189,54 +149,44 @@
             background-color: #7c7c7c;
         }
 
-        .content-top-nav-item.hover .light-line-bottom {
-            height: 100%;
-            margin: auto 0;
-            transition: height .2s;
-            -moz-transition: height .2s; /* Firefox 4 */
-            -webkit-transition: height .2s; /* Safari 和 Chrome */
-            -o-transition: height .2s; /* Opera */
-        }
-
-        .content-top-nav-item i {
+        .content-top-nav-item .close {
             float: right;
             line-height: 2rem;
             margin-right: 10px;
-            color: #7a0000;
+            color: #e8e8e8;
+            height: 2rem;
+            width: 2rem;
+            font-size: 1rem;
         }
 
-        .content-top-nav-item i:hover {
+        .content-top-nav-item .close:hover {
             color: #c60000;
-            font-size: 1.1rem;
+        }
+
+        .content-body {
+            width: 100%;
+            height: calc(100% - 2rem);
+            border: 0;
+            display: none;
+        }
+
+        .content-body.active {
+            display: block;
         }
     </style>
 </head>
 <body>
-<div class="top">
-    <div class="margin-auto margin-left-no">
-        <i class="fa fa-server"></i>
-        <span th:text="${platformName}"></span>
-    </div>
-    <div class="top-buttons margin-auto margin-right-no">
-        <div class="top-button" onclick="Request.get('/login/logout');">
-            <span class="margin-auto">
-            <i class="fa fa-sign-out"></i>
-            <span>退出</span>
-        </span>
-        </div>
-    </div>
-</div>
-<div id="middle" class="middle">
+<div id="middle" class="main-body">
     <div class="navigate">
         <div class="navigate-user">
             <img id="navigate_user_header" class="navigate-user-header" src="http://img.jwzhu.com/web_25/building/000017的副本.jpg">
-            <div id="navigate_user_name" class="navigate-user-name" th:text="${admin.nickname}"></div>
+            <div id="navigate_user_name" class="navigate-user-name"><span th:text="${admin.nickname}"></span><span onclick="Request.get('/login/logout');" class="margin-left-10" style="cursor: pointer"><i class="fa fa-sign-out"></i></span></div>
         </div>
         <div id="navigate-menus" class="navigate-menus"></div>
     </div>
     <div id="content" class="content">
         <div class="content-top">
-            <ul id="content-top-nav" class="content-top-nav"></ul>
+            <ul id="content_top_nav" class="content-top-nav"></ul>
         </div>
     </div>
 </div>
@@ -276,7 +226,7 @@
         children.forEach(function (childrenItem) {
             let _childrenItemHtml = document.createElement('div');
             _childrenItemHtml.classList.add('menu-item');
-            _childrenItemHtml.innerHTML = '<div class="margin-auto margin-left-10">' + childrenItem.name + '</div><div class="light-line-bottom"></div>';
+            _childrenItemHtml.innerHTML = '<div class="margin-auto margin-left-10">' + childrenItem.name + '</div><div class="light-line-bottom-div"><div class="light-line-bottom"></div></div>';
             _childrenHtml.appendChild(_childrenItemHtml);
             if (childrenItem.children) {
                 addChildren(_childrenItemHtml, childrenItem.children);
@@ -291,40 +241,74 @@
             return;
         }
         _itemHtml.onclick = function () {
-            let _items = document.querySelector('.content-top-nav-item.active');
-            if (_items) {
-                _items.classList.remove('active');
+            if (document.querySelectorAll('.content-body').length >= 10) {
+                common.toast.info('最多打开10个页面');
+                return;
             }
+            let _activeNav = document.querySelector('.content-top-nav-item.active');
+            if (_activeNav) {
+                _activeNav.classList.remove('active');
+            }
+            let _activeContent = document.querySelector('.content-body.active');
+            if (_activeContent) {
+                _activeContent.classList.remove('active');
+            }
+
             let iFrameId = 'menu_content_' + item.code.replace(/\./g, '_');
-            let navItemId = 'content-top-nav_' + item.code.replace(/\./g, '_');
-            if (document.getElementById(iFrameId)) {
-                document.getElementById(navItemId).classList.add('active');
+            let navItemId = 'content_top_nav_' + item.code.replace(/\./g, '_');
+            let _iFrameHtml = document.getElementById(iFrameId);
+            let _navItemHtml = document.getElementById(navItemId);
+
+            if (_iFrameHtml) {
+                _iFrameHtml.show();
+                _navItemHtml.show();
+                _iFrameHtml.classList.add('active');
+                _navItemHtml.classList.add('active');
             } else {
-                let _iFrameHtml = document.createElement('iframe');
-                _iFrameHtml.id = iFrameId;
-                _iFrameHtml.classList.add('content-body');
-                _iFrameHtml.src = item.url;
-                document.getElementById('content').appendChild(_iFrameHtml);
-                let _navItemHtml = document.createElement('li');
-                _navItemHtml.id = navItemId;
-                _navItemHtml.setAttribute('data-iFrameId', iFrameId);
-                _navItemHtml.classList.add('content-top-nav-item', 'active');
-                _navItemHtml.innerHTML = item.name + '<i class="fa fa-times"></i>';
-                document.getElementById('content-top-nav').appendChild(_navItemHtml);
-                _navItemHtml.onclick = navClick;
+                document.getElementById('content_top_nav').innerHTML += '<li id="' + navItemId + '" class="content-top-nav-item active" onclick="navClick()" data-iFrameId="' + iFrameId + '">' + item.name + '<div class="close fa fa-times" onclick="navClose()"></div></li>';
+
+                document.getElementById('content').innerHTML += '<iframe id="' + iFrameId + '" class="content-body active" src="' + item.url + '"></iframe>';
             }
         };
     };
 
-    let navClick = function(){
-        if(!this.classList.contains('active')){
-            let _items = document.querySelector('.content-top-nav-item.active');
-            if (_items) {
-                _items.classList.remove('active');
-            }
-            this.classList.add('active');
+    let navClick = function () {
+        let _target = window.event.target;
+        if (_target.classList.contains('active')) {
+            return
         }
+        let _activeNav = document.querySelector('.content-top-nav-item.active');
+        if (_activeNav) {
+            _activeNav.classList.remove('active');
+        }
+        let _activeContent = document.querySelector('.content-body.active');
+        if (_activeContent) {
+            _activeContent.classList.remove('active');
+        }
+        _target.classList.add('active');
+        let iFrameId = _target.getAttribute('data-iFrameId');
+        document.getElementById(iFrameId).classList.add('active');
     };
+
+    let navClose = function () {
+        window.event.stopPropagation();
+        let _target = window.event.target;
+        let _navItemHtml = _target.parentElement;
+        let iFrameId = _navItemHtml.getAttribute('data-iFrameId');
+        let _iFrameHtml = document.getElementById(iFrameId);
+        _navItemHtml.classList.remove('active');
+        _iFrameHtml.classList.remove('active');
+        _navItemHtml.hide();
+        _iFrameHtml.hide();
+
+        let nextActiveNavItemHtml = document.querySelector('#' + _navItemHtml.id + '+li');
+        nextActiveNavItemHtml = nextActiveNavItemHtml == null ? document.querySelector('#content_top_nav :first-child') : nextActiveNavItemHtml;
+        if (nextActiveNavItemHtml != null) {
+            let nextActiveIFrameHtml = document.getElementById(nextActiveNavItemHtml.getAttribute('data-iFrameId'));
+            nextActiveIFrameHtml.classList.add('active');
+            nextActiveNavItemHtml.classList.add('active');
+        }
+    }
 
 </script>
 </html>

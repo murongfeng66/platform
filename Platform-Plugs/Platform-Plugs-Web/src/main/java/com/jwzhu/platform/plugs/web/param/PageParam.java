@@ -22,7 +22,7 @@ public abstract class PageParam<T extends BaseBean> extends BaseParam<T> {
     /**
      * 是否需要分页
      */
-    private Short needCut = 1;
+    private Short needCut = 0;
     /**
      * 结果总数
      */
@@ -33,7 +33,7 @@ public abstract class PageParam<T extends BaseBean> extends BaseParam<T> {
     }
 
     public void setCurrentPage(Integer currentPage) {
-        this.currentPage = currentPage;
+        this.currentPage = currentPage > 0 ? currentPage : 1;
     }
 
     public Integer getTotalPage() {
@@ -49,7 +49,7 @@ public abstract class PageParam<T extends BaseBean> extends BaseParam<T> {
     }
 
     public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
+        this.pageSize = pageSize > 0 ? pageSize : 10;
     }
 
     public Short getNeedCut() {

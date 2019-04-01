@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jwzhu.platform.core.role.db.RoleDao">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into Role(`code`, `name`, createTime) values(#{code}, #{name}, #{createTime})
+    </insert>
+    <select id="queryByParam" resultType="com.jwzhu.platform.core.role.model.Role">
+        select id, `code`, `name`, createTime, updateTime
+        from Role
+        <where>
+            <trim suffixOverrides="and">
+                <if test="id != null">
+                    id = #{id} and
+                </if>
+                <if test="key != null">
+                    (`code` like concat(#{key}, '%') or `name` like concat(#{key}, '%')) and
+                </if>
+            </trim>
+        </where>
+    </select>
+</mapper>

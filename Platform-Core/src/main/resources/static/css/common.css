@@ -1,3 +1,13 @@
+body{
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
 .toast-container {
     position: fixed;
     z-index: 9999;
@@ -23,49 +33,139 @@
     word-wrap: break-word;
 }
 
-.toast-info{
-    color: #212121;
-    background-color: #d8d8d8;
+.toast-info {
+    color: #252a2f;
+    background-color: #e8e8e8;
 }
 
-.toast-error{
-    color: #f10808;
-    background-color: #f5f4f4;
-    border: 1px solid #f10808;
+.toast-error {
+    color: #c60000;
+    background-color: #e8e8e8;
+    border: 1px solid #c60000;
 }
 
-.margin-auto{
+.margin-auto {
     margin: auto;
 }
 
-.margin-top-no{
+.margin-top-no {
     margin-top: 0 !important;
 }
 
-.margin-right-no{
+.margin-right-no {
     margin-right: 0 !important;
 }
 
-.margin-bottom-no{
+.margin-bottom-no {
     margin-bottom: 0 !important;
 }
 
-.margin-left-no{
+.margin-left-no {
     margin-left: 0 !important;
 }
 
-.margin-top-10{
+.margin-top-10 {
     margin-top: 10px !important;
 }
 
-.margin-right-10{
+.margin-right-10 {
     margin-right: 10px !important;
 }
 
-.margin-bottom-10{
+.margin-bottom-10 {
     margin-bottom: 10px !important;
 }
 
-.margin-left-10{
+.margin-left-10 {
     margin-left: 10px !important;
+}
+
+@keyframes width_0_to_100 {
+    from {
+        width: 0
+    }
+    to {
+        width: 100%
+    }
+}
+
+@-webkit-keyframes width_0_to_100
+{
+    from {
+        width: 0
+    }
+    to {
+        width: 100%
+    }
+}
+
+@keyframes height_0_to_100 {
+    from {
+        height: 0
+    }
+    to {
+        height: 100%
+    }
+}
+
+@-webkit-keyframes height_0_to_100
+{
+    from {
+        height: 0
+    }
+    to {
+        height: 100%
+    }
+}
+
+@keyframes height_100_to_0 {
+    from {
+        height: 100%
+    }
+    to {
+        height: 0
+    }
+}
+
+@-webkit-keyframes height_100_to_0
+{
+    from {
+        height: 100%
+    }
+    to {
+        height: 0
+    }
+}
+
+@keyframes opacity_0_to_1 {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes opacity_0_to_1 {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.hide{
+    display: none !important;
+}
+
+.opacity-0-1{
+    animation: opacity_0_to_1 .5s;
+    -webkit-animation: opacity_0_to_1 .5s;
+}
+
+[disabled]{
+    color: #7c7c7c;
+    pointer-events: none;
+    cursor: auto;
 }

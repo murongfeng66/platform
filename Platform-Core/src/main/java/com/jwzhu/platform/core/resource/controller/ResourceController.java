@@ -21,7 +21,6 @@ public class ResourceController {
     @Autowired
     private ResourceManager resourceManager;
 
-
     @ControllerHandler
     @RequestMapping({"page"})
     public ModelAndView login(ModelAndView view) {

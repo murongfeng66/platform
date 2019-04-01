@@ -1,10 +1,8 @@
 const Table = {};
 
+const TableCache = {};
 (function () {
-    Table.query = function(option){
-        initList(option);
-    };
-    function initList(option){
+    Table.query = function (option) {
         let o = {
             tableId: option.tableId,
             url: option.url,
@@ -12,119 +10,156 @@ const Table = {};
             column: option.column
         };
 
-        if (!o.column || o.column.length === 0) {
-            throw '列为空';
+        if (TableCache[o.tableId]) {
+
+        } else {
+            if (!option.tableId) {
+                throw '列表ID为空';
+            }
+            if (!option.url) {
+                throw '列表URL为空';
+            }
+            if (!option.column || option.column.length === 0) {
+                throw '列表列为空';
+            }
+
+            let tableCache = {
+                option: o,
+                data: {list: [], currentPage: 1, totalPage: 0},
+                _tableDivHtml: null,
+                _tBodyHtml: null,
+                _tPageHtml: null,
+                _pageHtmlList: {}
+            };
+
+            initList.call(tableCache);
+            TableCache[tableCache.option.tableId] = tableCache;
+        }
+    };
+
+    function initList() {
+        initTable.call(this);
+
+        requestData.call(this);
+    }
+
+    function initTable() {
+        let _this = this;
+        _this.option.queryParam.needCut = _this.option.queryParam.needCut ? _this.option.queryParam.needCut : 1;
+        _this._tableDivHtml = document.getElementById(_this.option.tableId);
+
+        let htmlString = '<table class="table"><thead class="table-head">';
+        htmlString += '<tr>';
+
+        let tableRemainWidth = _this._tableDivHtml.clientWidth;
+        let columnDefaultWidth = (tableRemainWidth / _this.option.column.length).toFixed(0);
+        _this.option.column.forEach(function (item, index) {
+            let width = item.width ? item.width : columnDefaultWidth;
+            width = index === _this.option.column.length - 1 ? tableRemainWidth : width;
+            tableRemainWidth -= width;
+            _this.option.column[index].width = width;
+            htmlString += '<th style="width: ' + width + 'px">' + item.title + '</th>';
+        });
+        htmlString += '</tr></thead>';
+
+        htmlString += '<tbody class="table-body table-interval"></tbody></table>';
+        htmlString += '<div class="table-page">';
+        htmlString += '<div class="page-item" data-page="firstPage">&laquo;</div>';
+        htmlString += '<div class="page-item" data-page="prePage">&lt;</div>';
+        htmlString += '<div class="page-item" data-page="nextPage">&gt;</div>';
+        htmlString += '<div class="page-item" data-page="lastPage">&raquo;</div>';
+        htmlString += '</div>';
+
+        _this._tableDivHtml.innerHTML = htmlString;
+
+        _this._tBodyHtml = _this._tableDivHtml.querySelector('.table-body');
+        _this._tPageHtml = _this._tableDivHtml.querySelector('.table-page');
+        _this._pageHtmlList.firstPage = _this._tPageHtml.querySelector('[data-page=firstPage]');
+        _this._pageHtmlList.firstPage.onclick = function(){
+            gotoPage.call(_this);
+        };
+        _this._pageHtmlList.prePage = _this._tPageHtml.querySelector('[data-page=prePage]');
+        _this._pageHtmlList.prePage.onclick = function(){
+            gotoPage.call(_this);
+        };
+        _this._pageHtmlList.nextPage = _this._tPageHtml.querySelector('[data-page=nextPage]');
+        _this._pageHtmlList.nextPage.onclick = function(){
+            gotoPage.call(_this);
+        };
+        _this._pageHtmlList.lastPage = _this._tPageHtml.querySelector('[data-page=lastPage]');
+        _this._pageHtmlList.lastPage.onclick = function(){
+            gotoPage.call(_this);
+        };
+    }
+
+    function requestData() {
+        let _this = this;
+        Request.get(_this.option.url, _this.option.queryParam, true).then(function (data) {
+
+            let htmlString = '';
+            data.data.forEach(function (rowItem, index) {
+                _this.data.list[index] = rowItem;
+                htmlString += '<tr class="opacity-0-1">';
+                _this.option.column.forEach(function (columnItem) {
+                    htmlString += '<td>';
+                    htmlString += common.string.checkEmpty(rowItem[columnItem.name]);
+                    htmlString += '</td>';
+                });
+                htmlString += '</tr>';
+            });
+            _this._tBodyHtml.innerHTML = htmlString;
+
+            _this.data.currentPage = data.currentPage;
+            _this.data.totalPage = data.totalPage;
+            updatePage.call(_this);
+        }, true);
+    }
+
+    function updatePage() {
+        if(this.data.totalPage === 1){
+            this._tPageHtml.hide();
+            return
+        }else{
+            this._tPageHtml.show();
         }
 
-        Request.get(o.url, o.queryParam).then(function (data) {
-            let _tHeadHtml = document.createElement('thead');
-            let _headTrHtml = document.createElement('tr');
-            o.column.forEach(function(item){
-                let _headTrThHtml = document.createElement('th');
-                _headTrThHtml.innerHTML = common.string.checkEmpty(item.title);
-                _headTrHtml.append(_headTrThHtml);
-            });
-            _tHeadHtml.append(_headTrHtml);
+        if (this.data.currentPage === 1) {
+            this._pageHtmlList.firstPage.setAttribute('disabled', '');
+            this._pageHtmlList.prePage.setAttribute('disabled', '');
+        }else{
+            this._pageHtmlList.firstPage.removeAttribute('disabled');
+            this._pageHtmlList.prePage.removeAttribute('disabled');
+        }
 
-            let _tBodyHtml = document.createElement('tbody');
-            data.forEach(function(rowItem){
-                let _bodyTrHtml = document.createElement('tr');
-                o.column.forEach(function(columnItem){
-                    let _bodyTrTdHtml = document.createElement('td');
-                    _bodyTrTdHtml.innerHTML = common.string.checkEmpty(rowItem[columnItem.name]);
-                    _bodyTrHtml.append(_bodyTrTdHtml);
-                });
-                _tBodyHtml.append(_bodyTrHtml);
-            });
+        if (this.data.currentPage === this.data.totalPage) {
+            this._pageHtmlList.nextPage.setAttribute('disabled', '');
+            this._pageHtmlList.lastPage.setAttribute('disabled', '');
+        }else{
+            this._pageHtmlList.nextPage.removeAttribute('disabled');
+            this._pageHtmlList.lastPage.removeAttribute('disabled');
+        }
+    }
 
-            let _tableHtml = document.getElementById(o.tableId);
-            _tableHtml.classList.add('table','table-hover');
-            _tableHtml.append(_tHeadHtml);
-            _tableHtml.append(_tBodyHtml);
+    function gotoPage(){
+        let _liHtml = window.event.target;
+        let page = _liHtml.getAttribute('data-page');
 
-            // let $page = updatePage(data.currentPage, data.totalPage);
-            // _tableHtml.after($page);
-        }, true)
+        if (page === 'firstPage') {
+            this.option.queryParam.currentPage = 1;
+        } else if (page === 'lastPage') {
+            this.option.queryParam.currentPage = this.data.totalPage;
+        } else if (page === 'prePage') {
+            this.option.queryParam.currentPage = this.data.currentPage - 1;
+        } else if (page === 'nextPage') {
+            this.option.queryParam.currentPage = this.data.currentPage + 1;
+        } else {
+            this.option.queryParam.currentPage = parseInt(page);
+        }
+
+        if (this.option.queryParam.currentPage < 1 || this.option.queryParam.currentPage > this.data.totalPage || this.option.queryParam.currentPage === this.data.currentPage) {
+            return;
+        }
+
+        requestData.call(this);
     }
 })();
-
-// (function ($) {
-//     function initList(option) {
-//         var o = {
-//             tableId: option.tableId,
-//             url: option.url,
-//             queryParam: option.queryParam || {},
-//             column: option.column
-//         };
-//
-//         if (!o.column || o.column.length === 0) {
-//             throw 'column is empty';
-//         }
-//
-//         common.ajax.get(o.url, o.queryParam, function (data) {
-//             var $tHead = $('<thead></thead>');
-//             var $headRow = $('<tr></tr>');
-//             $.each(o.column, function (index, item) {
-//                 $headRow.append('<td>' + common.string.checkEmpty(item.title) + '</td>');
-//             });
-//             $tHead.append($headRow);
-//
-//             var $tBody = $('<tbody></tbody>');
-//             $.each(data.data, function (index, item) {
-//                 var $row = $('<tr></tr>');
-//                 $.each(o.column, function (columnIndex, columnItem) {
-//                     $row.append('<td>' + common.string.checkEmpty(item[columnItem.name]) + '</td>');
-//                 });
-//                 $tBody.append($row);
-//             });
-//
-//             var $table_body = $('#' + o.tableId);
-//             $table_body.addClass('table table-hover');
-//             $table_body.append($tHead);
-//             $table_body.append($tBody);
-//
-//             var $page = updatePage(data.currentPage, data.totalPage);
-//             $table_body.after($page);
-//         }, true)
-//     }
-//
-//     var updatePage = function(currentPage, totalPage){
-//         if (totalPage > 1) {
-//             var $page = $('<ul class="pagination"></ul>');
-//             if (currentPage > 1) {
-//                 var $prePage = $('<li class="page-item margin-auto margin-right-no"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span><span class="sr-only">Previous</span></a></li>');
-//                 $page.append($prePage);
-//             }
-//
-//             for (var i = 1; i <= totalPage; i++) {
-//                 var $pageItem = $('<li class="page-item"><a class="page-link" href="#">' + i + '</a></li>');
-//
-//                 if(i === 1){
-//                     $pageItem.addClass('margin-auto margin-right-no');
-//                 }
-//
-//                 if(i === totalPage){
-//                     $pageItem.addClass('margin-auto margin-left-no');
-//                 }
-//
-//                 if (i === currentPage) {
-//                     $pageItem.addClass('disabled');
-//                 }
-//                 $page.append($pageItem);
-//             }
-//
-//             if (currentPage < totalPage && totalPage > 3) {
-//                 var $sufPage = $('<li class="page-item margin-auto margin-left-no"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span><span class="sr-only">Next</span></a></li>');
-//                 $page.append($sufPage);
-//             }
-//             return $page;
-//         }else{
-//             return null;
-//         }
-//     };
-//
-//     $.extend({
-//         queryList: initList
-//     });
-//
-// })(jQuery);

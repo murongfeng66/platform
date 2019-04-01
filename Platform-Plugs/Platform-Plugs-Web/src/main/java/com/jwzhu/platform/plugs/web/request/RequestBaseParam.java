@@ -1,6 +1,10 @@
 package com.jwzhu.platform.plugs.web.request;
 
 import java.sql.Timestamp;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.UUID;
 
 import org.springframework.util.StringUtils;
@@ -18,11 +22,11 @@ public class RequestBaseParam {
     /**
      * 请求时间
      */
-    private static ThreadLocal<Timestamp> REQUEST_TIME = new ThreadLocal<>();
+    private static ThreadLocal<LocalDateTime> REQUEST_TIME = new ThreadLocal<>();
     /**
      * 响应时间
      */
-    private static ThreadLocal<Timestamp> RESPONSE_TIME = new ThreadLocal<>();
+    private static ThreadLocal<LocalDateTime> RESPONSE_TIME = new ThreadLocal<>();
     /**
      * 处理时长
      */
@@ -51,18 +55,18 @@ public class RequestBaseParam {
      * 初始化请求时间
      */
     public static void initRequestTime() {
-        REQUEST_TIME.set(DateUtil.now());
+        REQUEST_TIME.set(LocalDateTime.now());
     }
 
     /**
      * 初始化响应时间
      */
     public static void initResponseTime() {
-        RESPONSE_TIME.set(DateUtil.now());
         if (REQUEST_TIME.get() == null) {
             initRequestTime();
         }
-        COST_TIME.set(RESPONSE_TIME.get().getTime() - REQUEST_TIME.get().getTime());
+        RESPONSE_TIME.set(LocalDateTime.now());
+        COST_TIME.set(Duration.between(RESPONSE_TIME.get(),  REQUEST_TIME.get()).toMillis());
     }
 
     /**
@@ -94,8 +98,8 @@ public class RequestBaseParam {
     /**
      * 获取请求时间
      */
-    public static Timestamp getRequestTime() {
-        Timestamp requestTime = REQUEST_TIME.get();
+    public static LocalDateTime getRequestTime() {
+        LocalDateTime requestTime = REQUEST_TIME.get();
         if (requestTime == null) {
             throw new SystemException("请求时间为空");
         }
@@ -105,8 +109,8 @@ public class RequestBaseParam {
     /**
      * 获取请求时间
      */
-    public static Timestamp getResponseTime() {
-        Timestamp responseTime = RESPONSE_TIME.get();
+    public static LocalDateTime getResponseTime() {
+        LocalDateTime responseTime = RESPONSE_TIME.get();
         if (responseTime == null) {
             throw new SystemException("响应时间为空");
         }

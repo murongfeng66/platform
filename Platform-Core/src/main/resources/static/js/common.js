@@ -41,3 +41,11 @@ common.string = {};
 common.string.checkEmpty = function (str) {
     return str || '';
 };
+
+HTMLElement.prototype.hide = function(){
+    this.classList.add('hide');
+};
+
+HTMLElement.prototype.show = function(){
+    this.classList.remove('hide');
+};

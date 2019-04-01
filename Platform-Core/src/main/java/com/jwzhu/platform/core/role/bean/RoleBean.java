@@ -1,19 +1,14 @@
-package com.jwzhu.platform.core.resource.bean;
+package com.jwzhu.platform.core.role.bean;
 
 import java.time.LocalDateTime;
 
 import com.jwzhu.platform.common.bean.BaseBean;
 
-public class ResourceBean extends BaseBean {
+public class RoleBean extends BaseBean {
 
     private Long id;
     private String code;
-    private String parentCode;
     private String name;
-    private String url;
-    private Integer sort;
-    private Short type;
-    private Short isShow;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 
@@ -33,52 +28,12 @@ public class ResourceBean extends BaseBean {
         this.code = code;
     }
 
-    public String getParentCode() {
-        return parentCode;
-    }
-
-    public void setParentCode(String parentCode) {
-        this.parentCode = parentCode;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public Integer getSort() {
-        return sort;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
-
-    public Short getType() {
-        return type;
-    }
-
-    public void setType(Short type) {
-        this.type = type;
-    }
-
-    public Short getIsShow() {
-        return isShow;
-    }
-
-    public void setIsShow(Short isShow) {
-        this.isShow = isShow;
     }
 
     public LocalDateTime getCreateTime() {
