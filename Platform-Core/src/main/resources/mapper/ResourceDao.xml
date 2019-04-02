@@ -2,8 +2,37 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jwzhu.platform.core.resource.db.ResourceDao">
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        insert into Resource (`code`, parentCode, `name`, url, sort, type, isShow, createTime) values (#{code}, #{parentCode}, #{name}, #{url}, #{sort}, #{type}, #{isShow}, #{createTime})
+        insert into Resource (`code`, parentCode, `name`, url, sort, type, isShow, availableStatus, createTime) values (#{code}, #{parentCode}, #{name}, #{url}, #{sort}, #{type}, #{isShow}, #{availableStatus}, #{createTime})
     </insert>
+    <update id="updateById">
+        update Resource
+        <set>
+            <trim suffixOverrides=",">
+                <if test="name != null">
+                    `name` = #{name},
+                </if>
+                <if test="url != null">
+                    url = #{url},
+                </if>
+                <if test="sort != null">
+                    sort = #{sort},
+                </if>
+                <if test="type != null">
+                    type = #{type},
+                </if>
+                <if test="isShow != null">
+                    isShow = #{isShow},
+                </if>
+                <if test="availableStatus != null">
+                    availableStatus = #{availableStatus},
+                </if>
+                <if test="updateTime != null">
+                    updateTime = #{updateTime},
+                </if>
+            </trim>
+        </set>
+        where id = #{id}
+    </update>
     <select id="queryByParam" resultType="com.jwzhu.platform.core.resource.model.ResourceList">
         select id, `code`, parentCode, `name`, sort, type, isShow
         from Resource
@@ -27,13 +56,37 @@
                 <if test="isShow != null">
                     isShow = #{isShow} and
                 </if>
+                <if test="availableStatus != null">
+                    availableStatus = #{availableStatus} and
+                </if>
             </trim>
         </where>
     </select>
     <select id="queryMenu" resultType="com.jwzhu.platform.core.resource.model.Menu">
         select `code`, parentCode, `name`, url, type, sort
         from Resource
-        where type in (1, 2) and isShow = 1
+        <where>
+            <trim suffixOverrides="and">
+                <if test="types != null and types.length > 0">
+                    type in
+                    <foreach collection="types" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                    and
+                </if>
+                <if test="isShow != null">
+                    isShow = #{isShow} and
+                </if>
+                <if test="availableStatus != null">
+                    availableStatus = #{availableStatus} and
+                </if>
+            </trim>
+        </where>
         order by `sort` desc
+    </select>
+    <select id="getById" resultType="com.jwzhu.platform.core.resource.model.Resource">
+        select id, `code`, parentCode, `name`, url, sort, type, isShow, createTime, updateTime, availableStatus
+        from Resource
+        where id = #{id}
     </select>
 </mapper>

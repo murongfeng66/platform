@@ -1,16 +1,13 @@
 package com.jwzhu.platform.plugs.web.request;
 
-import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.UUID;
 
 import org.springframework.util.StringUtils;
 
-import com.jwzhu.platform.common.date.DateUtil;
 import com.jwzhu.platform.common.exception.BusinessException;
+import com.jwzhu.platform.common.exception.NoPermissionException;
 import com.jwzhu.platform.common.exception.SystemException;
 import com.jwzhu.platform.plugs.web.token.TokenSubject;
 
@@ -146,7 +143,7 @@ public class RequestBaseParam {
     public static TokenSubject getRequestUser() {
         TokenSubject subject = REQUEST_USER.get();
         if(subject == null){
-            throw new BusinessException("无权限");
+            throw new NoPermissionException();
         }
         return subject;
     }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jwzhu.platform.common.exception.BusinessException;
+import com.jwzhu.platform.common.exception.NoPermissionException;
 import com.jwzhu.platform.common.exception.ParamException;
 import com.jwzhu.platform.common.exception.SystemException;
 import com.jwzhu.platform.plugs.web.exception.token.TokenErrorException;
@@ -49,7 +50,7 @@ public class GlobalExceptionHandler {
         logger.error(throwable.getMessage(), throwable);
         if (throwable instanceof SystemException) {
             return "系统异常";
-        } else if (throwable instanceof BusinessException || throwable instanceof ParamException || throwable instanceof TokenErrorException) {
+        } else if (throwable instanceof BusinessException || throwable instanceof ParamException || throwable instanceof TokenErrorException || throwable instanceof NoPermissionException) {
             return throwable.getMessage();
         }else if(throwable instanceof TokenTimeOutException){
             return "登录过期";

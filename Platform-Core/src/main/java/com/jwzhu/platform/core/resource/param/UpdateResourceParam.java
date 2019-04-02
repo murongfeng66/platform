@@ -1,20 +1,20 @@
-package com.jwzhu.platform.core.resource.model;
+package com.jwzhu.platform.core.resource.param;
 
-import java.sql.Timestamp;
+import javax.validation.constraints.NotNull;
 
-public class Resource {
+import com.jwzhu.platform.core.resource.bean.ResourceBean;
+import com.jwzhu.platform.plugs.web.param.BaseParam;
 
+public class UpdateResourceParam extends BaseParam<ResourceBean> {
+
+    @NotNull(message = "ID不能为空")
     private Long id;
-    private String code;
-    private String parentCode;
     private String name;
     private String url;
     private Integer sort;
     private Short type;
     private Short isShow;
     private Short availableStatus;
-    private Timestamp createTime;
-    private Timestamp updateTime;
 
     public Long getId() {
         return id;
@@ -22,22 +22,6 @@ public class Resource {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getParentCode() {
-        return parentCode;
-    }
-
-    public void setParentCode(String parentCode) {
-        this.parentCode = parentCode;
     }
 
     public String getName() {
@@ -88,19 +72,8 @@ public class Resource {
         this.availableStatus = availableStatus;
     }
 
-    public Timestamp getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Timestamp createTime) {
-        this.createTime = createTime;
-    }
-
-    public Timestamp getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Timestamp updateTime) {
-        this.updateTime = updateTime;
+    @Override
+    protected ResourceBean getBean() {
+        return new ResourceBean();
     }
 }

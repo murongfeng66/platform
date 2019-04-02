@@ -1,4 +1,4 @@
-package com.jwzhu.platform.common.enums;
+package com.jwzhu.platform.core.user.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;

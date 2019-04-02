@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jwzhu.platform.common.enums.AvailableStatus;
-import com.jwzhu.platform.common.enums.UserType;
+import com.jwzhu.platform.core.user.model.UserType;
 import com.jwzhu.platform.common.exception.BusinessException;
 import com.jwzhu.platform.core.user.bean.LoginBean;
 import com.jwzhu.platform.core.user.model.Admin;

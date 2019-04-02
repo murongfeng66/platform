@@ -48,7 +48,7 @@ public class CommonController {
     @GetMapping("queryMenu")
     @ResponseBody
     public List<Menu> queryMenu(){
-        return resourceManager.queryMenu(RequestBaseParam.getRequestUser().getUserId());
+        return resourceManager.queryMenu();
     }
 
 }

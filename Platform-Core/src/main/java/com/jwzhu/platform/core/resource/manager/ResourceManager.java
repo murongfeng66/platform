@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jwzhu.platform.common.bean.LongBean;
+import com.jwzhu.platform.common.exception.BusinessException;
 import com.jwzhu.platform.core.resource.bean.ResourceBean;
 import com.jwzhu.platform.core.resource.bean.ResourceListBean;
 import com.jwzhu.platform.core.resource.model.Menu;
+import com.jwzhu.platform.core.resource.model.Resource;
 import com.jwzhu.platform.core.resource.service.ResourceService;
 
 @Service
@@ -26,8 +29,20 @@ public class ResourceManager {
         resourceService.queryByParam(bean);
     }
 
-    public List<Menu> queryMenu(long userId){
-        return resourceService.queryMenu(userId);
+    public List<Menu> queryMenu(){
+        return resourceService.queryMenu();
+    }
+
+    public void updateById(ResourceBean bean){
+        resourceService.updateById(bean);
+    }
+
+    public Resource getById(LongBean bean){
+        Resource resource = resourceService.getById(bean.getId());
+        if(resource == null){
+            throw new BusinessException("无此资源");
+        }
+        return resource;
     }
 
 }

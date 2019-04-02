@@ -13,20 +13,8 @@ import com.jwzhu.platform.common.bean.BaseBean;
 import com.jwzhu.platform.common.exception.ParamException;
 
 public abstract class BaseParam<T extends BaseBean> {
-    /**
-     * 请求类型
-     */
-    private Short requestType;
 
     private static ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-
-    public Short getRequestType() {
-        return requestType;
-    }
-
-    public void setRequestType(Short requestType) {
-        this.requestType = requestType;
-    }
 
     protected abstract T getBean();
 
@@ -50,6 +38,10 @@ public abstract class BaseParam<T extends BaseBean> {
             ConstraintViolation<BaseParam<T>> constraintViolation = constraintViolations.iterator().next();
             throw new ParamException(constraintViolation.getMessage());
         }
+
+        exValid();
     }
+
+    protected void exValid(){}
 
 }

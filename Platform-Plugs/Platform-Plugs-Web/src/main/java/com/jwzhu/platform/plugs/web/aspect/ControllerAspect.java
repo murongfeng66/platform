@@ -52,20 +52,16 @@ public class ControllerAspect {
         HttpServletRequest request = RequestUtil.getRequest();
         if (request != null) {
             logger.info("请求地址：{}", request.getRequestURI());
+            initRequestType(request);
         }
         logger.info("请求接口：{}.{}", joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName());
 
         RequestBaseParam.initRequestId();
         RequestBaseParam.initRequestTime();
-        RequestBaseParam.initRequestType(RequestUtil.isAjax() ? RequestType.Ajax.getCode() : null);
 
         for (Object arg : joinPoint.getArgs()) {
             if (arg instanceof BaseParam) {
                 BaseParam param = (BaseParam) arg;
-
-                if (param.getRequestType() != null) {
-                    RequestBaseParam.initRequestType(param.getRequestType());
-                }
 
                 if (controllerHandler.validParam()) {
                     param.valid(controllerHandler.validGroups());
@@ -88,6 +84,15 @@ public class ControllerAspect {
             }else{
                 wrapException(new TokenEmptyException());
             }
+        }
+    }
+
+    private void initRequestType(HttpServletRequest request){
+        String requestTypeString = request.getParameter("requestType");
+        if(StringUtils.isEmpty(requestTypeString)){
+            RequestBaseParam.initRequestType(RequestUtil.isAjax() ? RequestType.Ajax.getCode() : RequestType.Page.getCode());
+        }else{
+            RequestBaseParam.initRequestType(Short.valueOf(requestTypeString));
         }
     }
 

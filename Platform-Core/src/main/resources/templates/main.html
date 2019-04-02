@@ -89,14 +89,14 @@
 
         .menu-item:hover .light-line-left {
             height: 100%;
-            animation: height_0_to_100 .2s;
-            -webkit-animation: height_0_to_100 .2s; /* Safari 和 Chrome */
+            animation: height-0-to-100 .2s;
+            -webkit-animation: height-0-to-100 .2s; /* Safari 和 Chrome */
         }
 
         .menu-item:hover .light-line-bottom {
             width: 100%;
-            animation: width_0_to_100 .2s;
-            -webkit-animation: width_0_to_100 .2s; /* Safari 和 Chrome */
+            animation: width-0-to-100 .2s;
+            -webkit-animation: width-0-to-100 .2s; /* Safari 和 Chrome */
         }
 
         .navigate-menus-item-children {
@@ -301,7 +301,8 @@
         _navItemHtml.hide();
         _iFrameHtml.hide();
 
-        let nextActiveNavItemHtml = document.querySelector('#' + _navItemHtml.id + '+li');
+        let nextActiveNavItemSelector = '#' + _navItemHtml.id + '+li';
+        let nextActiveNavItemHtml = document.querySelector(nextActiveNavItemSelector);
         nextActiveNavItemHtml = nextActiveNavItemHtml == null ? document.querySelector('#content_top_nav :first-child') : nextActiveNavItemHtml;
         if (nextActiveNavItemHtml != null) {
             let nextActiveIFrameHtml = document.getElementById(nextActiveNavItemHtml.getAttribute('data-iFrameId'));

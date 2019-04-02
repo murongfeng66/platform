@@ -80,7 +80,7 @@ body{
     margin-left: 10px !important;
 }
 
-@keyframes width_0_to_100 {
+@keyframes width-0-to-100 {
     from {
         width: 0
     }
@@ -89,7 +89,7 @@ body{
     }
 }
 
-@-webkit-keyframes width_0_to_100
+@-webkit-keyframes width-0-to-100
 {
     from {
         width: 0
@@ -99,7 +99,7 @@ body{
     }
 }
 
-@keyframes height_0_to_100 {
+@keyframes height-0-to-100 {
     from {
         height: 0
     }
@@ -108,7 +108,7 @@ body{
     }
 }
 
-@-webkit-keyframes height_0_to_100
+@-webkit-keyframes height-0-to-100
 {
     from {
         height: 0
@@ -118,7 +118,7 @@ body{
     }
 }
 
-@keyframes height_100_to_0 {
+@keyframes height-100-to-0 {
     from {
         height: 100%
     }
@@ -127,7 +127,7 @@ body{
     }
 }
 
-@-webkit-keyframes height_100_to_0
+@-webkit-keyframes height-100-to-0
 {
     from {
         height: 100%
@@ -137,7 +137,7 @@ body{
     }
 }
 
-@keyframes opacity_0_to_1 {
+@keyframes opacity-0-to-1 {
     from {
         opacity: 0;
     }
@@ -146,7 +146,7 @@ body{
     }
 }
 
-@-webkit-keyframes opacity_0_to_1 {
+@-webkit-keyframes opacity-0-to-1 {
     from {
         opacity: 0;
     }
@@ -160,12 +160,73 @@ body{
 }
 
 .opacity-0-1{
-    animation: opacity_0_to_1 .5s;
-    -webkit-animation: opacity_0_to_1 .5s;
+    animation: opacity-0-to-1 .5s;
+    -webkit-animation: opacity-0-to-1 .5s;
 }
 
 [disabled]{
     color: #7c7c7c;
     pointer-events: none;
     cursor: auto;
+}
+
+.display-flex{
+    display: flex;
+}
+
+.flex-1{
+    flex: 1 !important;
+}
+
+.flex-2{
+    flex: 2 !important;
+}
+
+.flex-3{
+    flex: 3 !important;
+}
+
+.flex-4{
+    flex: 4 !important;
+}
+
+.flex-5{
+    flex: 5 !important;
+}
+
+.flex-6{
+    flex: 6 !important;
+}
+
+.form{
+    margin: 0.25rem 0.5rem;
+    color: #252a2f;
+}
+.from-row{
+    padding: 0.375rem 0.75rem;
+    display: flex;
+}
+.from-input-group{
+    display: flex;
+    padding: 0 0.75rem;
+    width: 25%;
+}
+.from-label{
+    text-align: right;
+    padding: 0.375rem 0 0.375rem 0.75rem;
+    flex: 1;
+}
+.from-input{
+    padding: 0.375rem 0.75rem;
+    border: 1px solid #757575;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+    flex: 2;
+    color: #252a2f;
+    appearance: none;
+    -webkit-appearance: none;
+}
+select.from-input{
+    padding-right: 9px;
+    background: url(/image/arrow/solid/down.png) no-repeat scroll right center transparent;
 }

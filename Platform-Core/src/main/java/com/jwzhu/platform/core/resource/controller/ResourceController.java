@@ -10,9 +10,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.jwzhu.platform.core.resource.bean.ResourceListBean;
 import com.jwzhu.platform.core.resource.manager.ResourceManager;
+import com.jwzhu.platform.core.resource.model.Resource;
 import com.jwzhu.platform.core.resource.param.ResourceListParam;
-import com.jwzhu.platform.core.resource.param.ResourceParam;
+import com.jwzhu.platform.core.resource.param.AddResourceParam;
+import com.jwzhu.platform.core.resource.param.UpdateResourceParam;
 import com.jwzhu.platform.plugs.web.annotations.ControllerHandler;
+import com.jwzhu.platform.plugs.web.param.LongParam;
 
 @Controller
 @RequestMapping("resource")
@@ -21,8 +24,8 @@ public class ResourceController {
     @Autowired
     private ResourceManager resourceManager;
 
+    @RequestMapping("page")
     @ControllerHandler
-    @RequestMapping({"page"})
     public ModelAndView login(ModelAndView view) {
         view.setViewName("resource/resource");
         return view;
@@ -31,7 +34,7 @@ public class ResourceController {
     @PostMapping("add")
     @ResponseBody
     @ControllerHandler
-    public String add(ResourceParam param){
+    public String add(AddResourceParam param){
         resourceManager.insert(param.initBean());
         return "资源添加成功";
     }
@@ -43,6 +46,21 @@ public class ResourceController {
         ResourceListBean bean = param.initBean();
         resourceManager.queryByParam(bean);
         return bean;
+    }
+
+    @GetMapping("getById")
+    @ResponseBody
+    @ControllerHandler
+    public Resource getById(LongParam param){
+        return resourceManager.getById(param.initBean());
+    }
+
+    @PostMapping("updateById")
+    @ResponseBody
+    @ControllerHandler
+    public String updateById(UpdateResourceParam param){
+        resourceManager.updateById(param.initBean());
+        return "资源修改成功";
     }
 
 }

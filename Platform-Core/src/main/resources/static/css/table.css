@@ -29,6 +29,16 @@
     background-color: #e8e8e8;
 }
 
+.table-body tr:hover{
+    background-color: #999999;
+    color: #ffffff;
+}
+
+.table-body tr[selected]{
+    background-color: #999999;
+    color: #ffffff;
+}
+
 .table-page{
     list-style: none;
     display: flex;
@@ -47,6 +57,17 @@
     cursor: pointer;
     border-radius: 1.25rem;
     margin: 0.5rem;
+}
+
+.page-input{
+    width: 2rem;
+    border-radius:0;
+    cursor:text;
+    -webkit-appearance: none;
+}
+
+.page-input:hover{
+    -webkit-appearance: none;
 }
 
 .page-item:disabled{

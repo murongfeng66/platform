@@ -1,33 +1,28 @@
 package com.jwzhu.platform.core.resource.param;
 
-import java.sql.Timestamp;
-
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.util.StringUtils;
+
+import com.jwzhu.platform.common.exception.BusinessException;
 import com.jwzhu.platform.core.resource.bean.ResourceBean;
+import com.jwzhu.platform.core.resource.model.ResourceType;
 import com.jwzhu.platform.plugs.web.param.BaseParam;
 
-public class ResourceParam extends BaseParam<ResourceBean> {
+public class AddResourceParam extends BaseParam<ResourceBean> {
 
-    private Long id;
     @NotNull(message = "编码不能为空")
     private String code;
     private String parentCode;
+    @NotEmpty(message = "名称不能为空")
     private String name;
     private String url;
     private Integer sort;
+    @NotEmpty(message = "类型不能为空")
     private Short type;
     private Short isShow;
-    private Timestamp createTime;
-    private Timestamp updateTime;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private Short availableStatus;
 
     public String getCode() {
         return code;
@@ -85,24 +80,23 @@ public class ResourceParam extends BaseParam<ResourceBean> {
         this.isShow = isShow;
     }
 
-    public Timestamp getCreateTime() {
-        return createTime;
+    public Short getAvailableStatus() {
+        return availableStatus;
     }
 
-    public void setCreateTime(Timestamp createTime) {
-        this.createTime = createTime;
-    }
-
-    public Timestamp getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Timestamp updateTime) {
-        this.updateTime = updateTime;
+    public void setAvailableStatus(Short availableStatus) {
+        this.availableStatus = availableStatus;
     }
 
     @Override
     protected ResourceBean getBean() {
         return new ResourceBean();
+    }
+
+    @Override
+    protected void exValid() {
+        if((this.type == ResourceType.Page.getCode() || this.type == ResourceType.Function.getCode()) && StringUtils.isEmpty(this.url)){
+            throw new BusinessException("页面和功能的URL不能为空");
+        }
     }
 }

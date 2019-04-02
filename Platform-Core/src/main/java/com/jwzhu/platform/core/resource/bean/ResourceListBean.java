@@ -11,6 +11,7 @@ public class ResourceListBean extends PageBean<ResourceList> {
     private Integer sort;
     private Short type;
     private Short isShow;
+    private Short availableStatus;
 
     public String getCode() {
         return code;
@@ -58,5 +59,13 @@ public class ResourceListBean extends PageBean<ResourceList> {
 
     public void setIsShow(Short isShow) {
         this.isShow = isShow;
+    }
+
+    public Short getAvailableStatus() {
+        return availableStatus;
+    }
+
+    public void setAvailableStatus(Short availableStatus) {
+        this.availableStatus = availableStatus;
     }
 }

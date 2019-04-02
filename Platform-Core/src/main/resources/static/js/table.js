@@ -7,7 +7,8 @@ const TableCache = {};
             tableId: option.tableId,
             url: option.url,
             queryParam: option.queryParam || {},
-            column: option.column
+            column: option.column,
+            selectModel: option.selectModel || 'single'
         };
 
         if (TableCache[o.tableId]) {
@@ -66,6 +67,7 @@ const TableCache = {};
         htmlString += '<div class="table-page">';
         htmlString += '<div class="page-item" data-page="firstPage">&laquo;</div>';
         htmlString += '<div class="page-item" data-page="prePage">&lt;</div>';
+        htmlString += '<div><input type="number" class="page-item page-input" min="1"></div>';
         htmlString += '<div class="page-item" data-page="nextPage">&gt;</div>';
         htmlString += '<div class="page-item" data-page="lastPage">&raquo;</div>';
         htmlString += '</div>';
@@ -75,21 +77,28 @@ const TableCache = {};
         _this._tBodyHtml = _this._tableDivHtml.querySelector('.table-body');
         _this._tPageHtml = _this._tableDivHtml.querySelector('.table-page');
         _this._pageHtmlList.firstPage = _this._tPageHtml.querySelector('[data-page=firstPage]');
-        _this._pageHtmlList.firstPage.onclick = function(){
+        _this._pageHtmlList.firstPage.onclick = function () {
             gotoPage.call(_this);
         };
         _this._pageHtmlList.prePage = _this._tPageHtml.querySelector('[data-page=prePage]');
-        _this._pageHtmlList.prePage.onclick = function(){
+        _this._pageHtmlList.prePage.onclick = function () {
             gotoPage.call(_this);
         };
         _this._pageHtmlList.nextPage = _this._tPageHtml.querySelector('[data-page=nextPage]');
-        _this._pageHtmlList.nextPage.onclick = function(){
+        _this._pageHtmlList.nextPage.onclick = function () {
             gotoPage.call(_this);
         };
         _this._pageHtmlList.lastPage = _this._tPageHtml.querySelector('[data-page=lastPage]');
-        _this._pageHtmlList.lastPage.onclick = function(){
+        _this._pageHtmlList.lastPage.onclick = function () {
             gotoPage.call(_this);
         };
+        _this._pageHtmlList.input = _this._tPageHtml.querySelector('.page-input');
+        _this._pageHtmlList.input.onkeydown = function () {
+            if (window.event.keyCode === 13) {
+                _this.option.queryParam.currentPage = this.value;
+                requestData.call(_this);
+            }
+        }
     }
 
     function requestData() {
@@ -108,6 +117,16 @@ const TableCache = {};
                 htmlString += '</tr>';
             });
             _this._tBodyHtml.innerHTML = htmlString;
+            _this._tBodyHtml.querySelectorAll('tr').forEach(function (item) {
+                item.onclick = function () {
+                    if(_this.option.selectModel !== 'double'){
+                        _this._tBodyHtml.querySelectorAll('tr[selected]').forEach(function(selectedItem){
+                            selectedItem.removeAttribute('selected');
+                        });
+                    }
+                    item.setAttribute('selected', '');
+                }
+            });
 
             _this.data.currentPage = data.currentPage;
             _this.data.totalPage = data.totalPage;
@@ -116,17 +135,19 @@ const TableCache = {};
     }
 
     function updatePage() {
-        if(this.data.totalPage === 1){
+        if (this.data.totalPage === 1) {
             this._tPageHtml.hide();
             return
-        }else{
+        } else {
             this._tPageHtml.show();
         }
+
+        this._pageHtmlList.input.setAttribute('max', this.data.totalPage);
 
         if (this.data.currentPage === 1) {
             this._pageHtmlList.firstPage.setAttribute('disabled', '');
             this._pageHtmlList.prePage.setAttribute('disabled', '');
-        }else{
+        } else {
             this._pageHtmlList.firstPage.removeAttribute('disabled');
             this._pageHtmlList.prePage.removeAttribute('disabled');
         }
@@ -134,13 +155,13 @@ const TableCache = {};
         if (this.data.currentPage === this.data.totalPage) {
             this._pageHtmlList.nextPage.setAttribute('disabled', '');
             this._pageHtmlList.lastPage.setAttribute('disabled', '');
-        }else{
+        } else {
             this._pageHtmlList.nextPage.removeAttribute('disabled');
             this._pageHtmlList.lastPage.removeAttribute('disabled');
         }
     }
 
-    function gotoPage(){
+    function gotoPage() {
         let _liHtml = window.event.target;
         let page = _liHtml.getAttribute('data-page');
 
