@@ -296,10 +296,8 @@
         let _navItemHtml = _target.parentElement;
         let iFrameId = _navItemHtml.getAttribute('data-iFrameId');
         let _iFrameHtml = document.getElementById(iFrameId);
-        _navItemHtml.classList.remove('active');
-        _iFrameHtml.classList.remove('active');
-        _navItemHtml.hide();
-        _iFrameHtml.hide();
+        _navItemHtml.remove();
+        _iFrameHtml.remove();
 
         let nextActiveNavItemSelector = '#' + _navItemHtml.id + '+li';
         let nextActiveNavItemHtml = document.querySelector(nextActiveNavItemSelector);

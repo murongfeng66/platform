@@ -1,4 +1,96 @@
-body{
+.display-flex {
+    display: flex !important;
+}
+
+.flex-1 {
+    flex: 1 !important;
+}
+
+.flex-2 {
+    flex: 2 !important;
+}
+
+.flex-3 {
+    flex: 3 !important;
+}
+
+.flex-4 {
+    flex: 4 !important;
+}
+
+.flex-5 {
+    flex: 5 !important;
+}
+
+.flex-6 {
+    flex: 6 !important;
+}
+
+.float-right {
+    float: right !important;
+}
+
+.float-left {
+    float: left !important;
+}
+
+.margin-auto {
+    margin: auto !important;
+}
+
+.margin-top-no {
+    margin-top: 0 !important;
+}
+
+.margin-right-no {
+    margin-right: 0 !important;
+}
+
+.margin-bottom-no {
+    margin-bottom: 0 !important;
+}
+
+.margin-left-no {
+    margin-left: 0 !important;
+}
+
+.margin-top-10 {
+    margin-top: 10px !important;
+}
+
+.margin-right-10 {
+    margin-right: 10px !important;
+}
+
+.margin-bottom-10 {
+    margin-bottom: 10px !important;
+}
+
+.margin-left-10 {
+    margin-left: 10px !important;
+}
+
+.margin-top-5 {
+    margin-top: 5px !important;
+}
+
+.margin-right-5 {
+    margin-right: 5px !important;
+}
+
+.margin-bottom-5 {
+    margin-bottom: 5px !important;
+}
+
+.margin-left-5 {
+    margin-left: 5px !important;
+}
+
+.hide {
+    display: none !important;
+}
+
+body {
     margin: 0;
     padding: 0;
     position: fixed;
@@ -44,42 +136,6 @@ body{
     border: 1px solid #c60000;
 }
 
-.margin-auto {
-    margin: auto;
-}
-
-.margin-top-no {
-    margin-top: 0 !important;
-}
-
-.margin-right-no {
-    margin-right: 0 !important;
-}
-
-.margin-bottom-no {
-    margin-bottom: 0 !important;
-}
-
-.margin-left-no {
-    margin-left: 0 !important;
-}
-
-.margin-top-10 {
-    margin-top: 10px !important;
-}
-
-.margin-right-10 {
-    margin-right: 10px !important;
-}
-
-.margin-bottom-10 {
-    margin-bottom: 10px !important;
-}
-
-.margin-left-10 {
-    margin-left: 10px !important;
-}
-
 @keyframes width-0-to-100 {
     from {
         width: 0
@@ -89,8 +145,7 @@ body{
     }
 }
 
-@-webkit-keyframes width-0-to-100
-{
+@-webkit-keyframes width-0-to-100 {
     from {
         width: 0
     }
@@ -108,8 +163,7 @@ body{
     }
 }
 
-@-webkit-keyframes height-0-to-100
-{
+@-webkit-keyframes height-0-to-100 {
     from {
         height: 0
     }
@@ -127,8 +181,7 @@ body{
     }
 }
 
-@-webkit-keyframes height-100-to-0
-{
+@-webkit-keyframes height-100-to-0 {
     from {
         height: 100%
     }
@@ -155,69 +208,50 @@ body{
     }
 }
 
-.hide{
-    display: none !important;
-}
-
-.opacity-0-1{
+.opacity-0-1 {
     animation: opacity-0-to-1 .5s;
     -webkit-animation: opacity-0-to-1 .5s;
 }
 
-[disabled]{
-    color: #7c7c7c;
-    pointer-events: none;
-    cursor: auto;
+[disabled] {
+    color: #7c7c7c !important;
+    pointer-events: none !important;
+    cursor: default !important;
 }
 
-.display-flex{
-    display: flex;
-}
-
-.flex-1{
-    flex: 1 !important;
-}
-
-.flex-2{
-    flex: 2 !important;
-}
-
-.flex-3{
-    flex: 3 !important;
-}
-
-.flex-4{
-    flex: 4 !important;
-}
-
-.flex-5{
-    flex: 5 !important;
-}
-
-.flex-6{
-    flex: 6 !important;
-}
-
-.form{
-    margin: 0.25rem 0.5rem;
+.form {
+    margin: 0.25rem 0;
     color: #252a2f;
 }
-.from-row{
-    padding: 0.375rem 0.75rem;
+
+.form-row {
+    padding: 0.25rem 0;
     display: flex;
 }
-.from-input-group{
+
+.form-input-group {
     display: flex;
-    padding: 0 0.75rem;
     width: 25%;
+    height: 2rem;
 }
-.from-label{
+
+.form-input-group.input-x{
+    height: 2.5rem;
+}
+
+.form-input-group .button{
+    margin: 0 0 0 auto;
+}
+
+.form-label {
     text-align: right;
-    padding: 0.375rem 0 0.375rem 0.75rem;
+    padding: 0.25rem 0 0.25rem 0.5rem;
     flex: 1;
+    margin: auto;
 }
-.from-input{
-    padding: 0.375rem 0.75rem;
+
+.form-input {
+    padding: 0.25rem 0.5rem;
     border: 1px solid #757575;
     border-radius: 0.25rem;
     font-size: 1rem;
@@ -226,7 +260,26 @@ body{
     appearance: none;
     -webkit-appearance: none;
 }
-select.from-input{
+
+select.form-input {
     padding-right: 9px;
     background: url(/image/arrow/solid/down.png) no-repeat scroll right center transparent;
+}
+
+.button {
+    background-color: #ffffff;
+    font-size: 1rem;
+    border: 1px solid #757575;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    color: #252a2f;
+}
+
+.button.button-x{
+    padding: 0.5rem 1.5rem;
+}
+
+.button[type=reset]{
+    color: #919191;
+    border-color: #919191;
 }

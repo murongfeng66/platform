@@ -38,17 +38,8 @@
         from Resource
         <where>
             <trim suffixOverrides="and">
-                <if test="code != null">
-                    `code` like concat(#{code},'%') and
-                </if>
-                <if test="parentCode != null">
-                    parentCode like concat(#{parentCode},'%') and
-                </if>
-                <if test="name != null">
-                    `name` like concat(#{name},'%') and
-                </if>
-                <if test="sort != null">
-                    sort = #{sort} and
+                <if test="key != null">
+                    (`code` like concat(#{key},'%') or parentCode like concat(#{key},'%') or `name` like concat(#{key},'%')) and
                 </if>
                 <if test="type != null">
                     type = #{type} and

@@ -63,7 +63,7 @@ public class RequestBaseParam {
             initRequestTime();
         }
         RESPONSE_TIME.set(LocalDateTime.now());
-        COST_TIME.set(Duration.between(RESPONSE_TIME.get(),  REQUEST_TIME.get()).toMillis());
+        COST_TIME.set(Duration.between(REQUEST_TIME.get(),  RESPONSE_TIME.get()).toMillis());
     }
 
     /**

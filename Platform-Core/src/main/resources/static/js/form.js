@@ -9,20 +9,16 @@
     };
 
     HTMLElement.prototype.getForm = function () {
-        let formItems = this.querySelectorAll('[name]');
+        let _formItems = this.querySelectorAll('[name]');
         let formJson = {};
-        for (let i in formItems) {
-            if (!formItems.hasOwnProperty(i)) {
-                continue
+
+        _formItems.forEach(function(_item){
+            if (FormConfig.serializeJsonConfig.notEmpty && _item.value === '') {
+                return
             }
 
-            let item = formItems[i];
-            if (FormConfig.serializeJsonConfig.notEmpty && item.value === '') {
-                continue
-            }
-
-            formJson[formItems[i].name] = formItems[i].value;
-        }
+            formJson[_item.name] = _item.value;
+        });
         return formJson;
     };
 

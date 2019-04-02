@@ -8,33 +8,27 @@
 
     <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="/css/table.css">
+    <link rel="stylesheet" href="/font-awesome-4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-<form id="tableParam_resource" class="form">
-    <div class="from-row display-flex">
-        <div class="from-input-group">
-            <label class="from-label">编码：</label>
-            <input name="code" class="from-input">
+<form id="form_resource_query" class="form margin-top-10">
+    <div class="form-row">
+        <div class="form-input-group">
+            <label class="form-label">编码：</label>
+            <input name="key" class="form-input">
         </div>
-        <div class="from-input-group">
-            <label class="from-label">编码：</label>
-            <input name="code" class="from-input">
-        </div>
-    </div>
-    <div class="from-row display-flex">
-        <div class="from-input-group">
-            <label class="from-label">编码：</label>
-            <input name="code" class="from-input">
-        </div>
-        <div class="from-input-group">
-            <label class="from-label">编码：</label>
-            <select name="code" class="from-input">
+        <div class="form-input-group">
+            <label class="form-label">类型：</label>
+            <select name="type" class="form-input">
+                <option value="">全部</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
             </select>
         </div>
-    </div>
-    <div class="from-row">
+        <div class="form-input-group">
+            <button type="button" class="button" onclick="queryList()">查询</button>
+            <button type="reset" class="button">重置</button>
+        </div>
     </div>
 </form>
 <div id="table_resource">
@@ -52,6 +46,7 @@
     function queryList() {
         Table.query({
             tableId: 'table_resource',
+            queryFormId: 'form_resource_query',
             url: '/resource/queryByParam',
             column: [{
                 title: '父编码',
@@ -63,9 +58,7 @@
                 title: '名称',
                 name: 'name'
             }],
-            queryParam: {
-                pageSize: 4
-            }
+            pageSizes:[5,10,15]
         });
     }
 

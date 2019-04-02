@@ -5,44 +5,17 @@ import com.jwzhu.platform.core.resource.model.ResourceList;
 
 public class ResourceListBean extends PageBean<ResourceList> {
 
-    private String code;
-    private String parentCode;
-    private String name;
-    private Integer sort;
+    private String key;
     private Short type;
     private Short isShow;
     private Short availableStatus;
 
-    public String getCode() {
-        return code;
+    public String getKey() {
+        return key;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getParentCode() {
-        return parentCode;
-    }
-
-    public void setParentCode(String parentCode) {
-        this.parentCode = parentCode;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getSort() {
-        return sort;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public Short getType() {

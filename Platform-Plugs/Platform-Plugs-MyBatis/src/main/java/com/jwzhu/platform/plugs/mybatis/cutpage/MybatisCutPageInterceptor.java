@@ -158,9 +158,11 @@ public class MybatisCutPageInterceptor implements Interceptor {
      */
     private int exeCountSql(Configuration configuration, MappedStatement mappedStatement, BoundSql boundSql, Connection connection, Object parameter) {
         int totalSize = 0;
-        try (PreparedStatement stmt = connection.prepareStatement(this.getCountSql(boundSql.getSql())); ResultSet rs = stmt.executeQuery()) {
+        try  {
+            PreparedStatement stmt = connection.prepareStatement(this.getCountSql(boundSql.getSql()));
             ParameterHandler handler = configuration.newParameterHandler(mappedStatement, parameter, boundSql);
             handler.setParameters(stmt);
+            ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 totalSize = rs.getInt(1);
             }
