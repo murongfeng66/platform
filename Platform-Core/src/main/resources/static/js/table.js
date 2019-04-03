@@ -1,7 +1,7 @@
 const Table = {};
 
-const TableCache = {};
 (function () {
+    const TableCache = {};
     Table.query = function (option) {
         let o = {
             tableId: option.tableId,
@@ -10,7 +10,7 @@ const TableCache = {};
             queryParam: option.queryParam || {},
             column: option.column,
             selectModel: option.selectModel || 'single',
-            pageButtons: option.pageButtons || [],
+            bottomButtons: option.bottomButtons || [],
             reloadButton: option.reloadButton || true,
             pageSizes: option.pageSizes || [15, 30, 45],
             rowClick: option.rowClick,
@@ -42,10 +42,9 @@ const TableCache = {};
             };
 
             if (tableCache.option.reloadButton) {
-                tableCache.option.pageButtons.unshift({
+                tableCache.option.bottomButtons.unshift({
                     text: '刷新',
                     faClass: 'fa-refresh',
-                    color: '#0e90ce',
                     onclick: requestData
                 });
             }
@@ -70,9 +69,28 @@ const TableCache = {};
     }
 
     function initTable() {
+        this.option.queryParam.needCut = this.option.queryParam.needCut ? this.option.queryParam.needCut : 1;
+        this._tableDivHtml = document.getElementById(this.option.tableId);
+
+        createTable.call(this);
+
+        this._tPageHtml = this._tableDivHtml.querySelector('.table-bottom-page');
+        this._tableBottomInfoHtml = this._tableDivHtml.querySelector('.table-bottom-info');
+
+
+        this._tBodyHtml = this._tableDivHtml.querySelector('.table-body');
+
+        initPage.call(this);
+        initBottom.call(this);
+
+        let selector = '#' + this.option.queryFormId + ' [name]';
+        this._queryItemsHtml = document.querySelectorAll(selector);
+
+        bindBodyClick.call(this);
+    }
+
+    function createTable(){
         let _this = this;
-        _this.option.queryParam.needCut = _this.option.queryParam.needCut ? _this.option.queryParam.needCut : 1;
-        _this._tableDivHtml = document.getElementById(_this.option.tableId);
 
         let htmlString = '<table class="table"><thead class="table-head">';
         htmlString += '<tr>';
@@ -111,10 +129,11 @@ const TableCache = {};
         htmlString += '</div>';
 
         _this._tableDivHtml.innerHTML = htmlString;
+    }
 
-        _this._tBodyHtml = _this._tableDivHtml.querySelector('.table-body');
-        _this._tPageHtml = _this._tableDivHtml.querySelector('.table-bottom-page');
-        _this._tableBottomInfoHtml = _this._tableDivHtml.querySelector('.table-bottom-info');
+    function initPage(){
+        let _this = this;
+
         _this._pageHtmlList.firstPage = _this._tPageHtml.querySelector('[data-page=firstPage]');
         _this._pageHtmlList.firstPage.onclick = function () {
             gotoPage.call(_this);
@@ -143,12 +162,14 @@ const TableCache = {};
             _this.option.queryParam.pageSize = this.value;
             requestData.call(_this);
         };
+    }
 
+    function initBottom(){
+        let _this = this;
         let _bottomButtons = _this._tableDivHtml.querySelector('.table-bottom-buttons');
-
-        _this.option.pageButtons.forEach(function (button) {
+        _this.option.bottomButtons.forEach(function (button) {
             let _buttonHtml = document.createElement('span');
-            _buttonHtml.classList.add('table-bottom-button');
+            _buttonHtml.classList.add('table-bottom-button', 'margin-right-10');
             _buttonHtml.style.color = button.color;
             _buttonHtml.innerHTML = '<i class="fa ' + button.faClass + '"></i><apsn class="margin-left-5">' + button.text + '</apsn>';
             _buttonHtml.onclick = function () {
@@ -158,10 +179,10 @@ const TableCache = {};
             };
             _bottomButtons.appendChild(_buttonHtml);
         });
+    }
 
-        let selector = '#' + _this.option.queryFormId + ' [name]';
-        _this._queryItemsHtml = document.querySelectorAll(selector);
-
+    function bindBodyClick(){
+        let _this = this;
         _this._tBodyHtml.onclick = function () {
             window.event.stopPropagation();
             let _target = window.event.target;

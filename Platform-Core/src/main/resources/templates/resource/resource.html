@@ -8,6 +8,7 @@
 
     <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="/css/table.css">
+    <link rel="stylesheet" href="/css/dialog.css">
     <link rel="stylesheet" href="/font-awesome-4.7.0/css/font-awesome.min.css">
 </head>
 <body>
@@ -33,15 +34,62 @@
 </form>
 <div id="table_resource">
 </div>
+<div id="dialog_resource" class="dialog">
+    <form class="form dialog-content">
+        <div class="form-row">
+            <div class="form-input-group flex-1">
+                <label class="form-label">编码：</label>
+                <input name="key" class="form-input">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-input-group flex-1">
+                <label class="form-label">类型：</label>
+                <select name="type" class="form-input">
+                    <option value="">全部</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                </select>
+            </div>
+        </div>
+    </form>
+</div>
 </body>
 <script src="/js/common.js"></script>
 <script src="/js/form.js"></script>
 <script src="/js/table.js"></script>
 <script src="/js/request.js"></script>
+<script src="/js/dialog.js"></script>
 <script type="text/javascript">
     window.onload = function () {
         queryList();
     };
+
+    let resourceDialog = Dialog.create({
+        dialogId: 'dialog_resource',
+        topButtons: [{
+            title: '查看',
+            classNames:'',
+            onclick: function () {
+
+            }
+        }],
+        bottomButtons: [{
+            title: '取消',
+            classNames:'float-left',
+            onclick: function () {
+                console.info('取消');
+                resourceDialog.close();
+            }
+        },{
+            title: '确定',
+            classNames:'float-right',
+            onclick: function () {
+                console.info('确定');
+                resourceDialog.close();
+            }
+        }]
+    });
 
     function queryList() {
         Table.query({
@@ -58,7 +106,14 @@
                 title: '名称',
                 name: 'name'
             }],
-            pageSizes:[5,10,15]
+            pageSizes: [5, 10, 15],
+            bottomButtons: [{
+                text: '添加',
+                faClass: 'fa-plus',
+                onclick: function () {
+                    resourceDialog.setTitle('添加资源').open();
+                }
+            }]
         });
     }
 
