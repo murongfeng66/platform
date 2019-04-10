@@ -71,7 +71,7 @@
 <script src="/js/request.js"></script>
 <script type="text/javascript">
     window.onload = function(){
-        common.keydown.enter('form_login_password').then(login);
+        document.getElementById('form_login_password').keyDownEnter(login);
     };
 
     let login = function(){

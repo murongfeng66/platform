@@ -1,43 +1,27 @@
 package com.jwzhu.platform.core.resource.param;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.util.StringUtils;
-
-import com.jwzhu.platform.common.exception.BusinessException;
 import com.jwzhu.platform.core.resource.bean.ResourceBean;
-import com.jwzhu.platform.core.resource.model.ResourceType;
 import com.jwzhu.platform.plugs.web.param.BaseParam;
 
-public class AddResourceParam extends BaseParam<ResourceBean> {
+public class ResourceUpdateParam extends BaseParam<ResourceBean> {
 
-    @NotNull(message = "编码不能为空")
-    private String code;
-    private String parentCode;
-    @NotEmpty(message = "名称不能为空")
+    @NotNull(message = "ID不能为空")
+    private Long id;
     private String name;
     private String url;
     private Integer sort;
-    @NotNull(message = "类型不能为空")
     private Short type;
     private Short menuShow;
     private Short availableStatus;
 
-    public String getCode() {
-        return code;
+    public Long getId() {
+        return id;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getParentCode() {
-        return parentCode;
-    }
-
-    public void setParentCode(String parentCode) {
-        this.parentCode = parentCode;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -91,13 +75,5 @@ public class AddResourceParam extends BaseParam<ResourceBean> {
     @Override
     protected ResourceBean getBean() {
         return new ResourceBean();
-    }
-
-    @Override
-    protected void exValid() {
-        this.code = this.parentCode + "." + this.code;
-        if ((this.type == ResourceType.Page.getCode() || this.type == ResourceType.Function.getCode()) && StringUtils.isEmpty(this.url)) {
-            throw new BusinessException("页面和功能的URL不能为空");
-        }
     }
 }

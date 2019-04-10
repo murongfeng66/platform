@@ -6,13 +6,13 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -57,7 +57,7 @@ public class TokenUtilJWT implements TokenUtil {
         if(StringUtils.isEmpty(tokenConfig.getSecretKey())){
             throw new IllegalArgumentException("secretKey is null");
         }
-        byte[] encodedKey = Base64.decodeBase64(tokenConfig.getSecretKey());
+        byte[] encodedKey = Base64.getDecoder().decode(tokenConfig.getSecretKey());
         return new SecretKeySpec(encodedKey, 0, encodedKey.length, "AES");
     }
 

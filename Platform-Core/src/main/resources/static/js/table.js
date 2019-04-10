@@ -105,8 +105,6 @@ function Table() {
 
         let selector = '#' + this.option.queryFormId + ' [name]';
         this._queryItemsHtml = document.querySelectorAll(selector);
-
-        bindBodyClick.call(this);
     }
 
     function createTable() {
@@ -206,75 +204,73 @@ function Table() {
         });
     }
 
-    function bindBodyClick() {
+    function bodyClick() {
         let _this = this;
-        _this._tBodyHtml.onclick = function () {
-            window.event.stopPropagation();
-            let _target = window.event.target;
+        window.event.stopPropagation();
+        let _target = window.event.target;
 
-            let _tr;
-            let _trResearch = _target.parentElement;
-            while (true) {
-                if(_trResearch.localName === 'tr'){
-                    _tr = _trResearch;
-                }
-                if(_tr || _trResearch.classList.contains('table-body')){
-                    break;
-                }
-                _trResearch = _trResearch.parentElement;
+        let _tr;
+        let _trResearch = _target.parentElement;
+        while (true) {
+            if (_trResearch.localName === 'tr') {
+                _tr = _trResearch;
             }
-
-            let selected = _tr.getAttribute('selected') !== null;
-
-            if (_this.option.selectModel !== 'double') {
-                _this._tBodyHtml.querySelectorAll('tr[selected]').forEach(function (_selectedItem) {
-                    _selectedItem.removeAttribute('selected');
-                });
+            if (_tr || _trResearch.classList.contains('table-body')) {
+                break;
             }
+            _trResearch = _trResearch.parentElement;
+        }
 
-            if (selected) {
-                _tr.removeAttribute('selected');
-            } else {
-                _tr.setAttribute('selected', '');
+        let selected = _tr.getAttribute('selected') !== null;
+
+        if (_this.option.selectModel !== 'double') {
+            _this._tBodyHtml.querySelectorAll('tr[selected]').forEach(function (_selectedItem) {
+                _selectedItem.removeAttribute('selected');
+            });
+        }
+
+        if (selected) {
+            _tr.removeAttribute('selected');
+        } else {
+            _tr.setAttribute('selected', '');
+        }
+
+        let rowIndex;
+        let columnIndex;
+        let currentHtml = _target;
+        while (true) {
+            rowIndex = currentHtml.getAttribute('data-rowIndex');
+            columnIndex = currentHtml.getAttribute('data-columnIndex');
+
+            if (rowIndex != null && columnIndex != null) {
+                break;
             }
-
-            let rowIndex;
-            let columnIndex;
-            let currentHtml = _target;
-            while (true) {
-                rowIndex = currentHtml.getAttribute('data-rowIndex');
-                columnIndex = currentHtml.getAttribute('data-columnIndex');
-
-                if (rowIndex != null && columnIndex != null) {
-                    break;
-                }
-                if (currentHtml.classList.contains('table-body')) {
-                    break
-                }
-                currentHtml = currentHtml.parentElement;
+            if (currentHtml.classList.contains('table-body')) {
+                break
             }
+            currentHtml = currentHtml.parentElement;
+        }
 
 
-            let rowData = _this.data.list[rowIndex];
+        let rowData = _this.data.list[rowIndex];
 
-            if (typeof _this.option.rowClick === 'function') {
-                _this.option.rowClick.call(rowData, rowData, rowIndex);
+        if (typeof _this.option.rowClick === 'function') {
+            _this.option.rowClick.call(rowData, rowData, rowIndex);
+        }
+
+        if (typeof _this.option.columnClick === 'function') {
+            let columnName = _this.option.column[columnIndex].name;
+            let columnData = rowData[columnName];
+            _this.option.columnClick.call(rowData, columnData, columnIndex, columnName);
+        }
+
+        if (_target.classList.contains('table-row-operate')) {
+            let buttonIndex = _target.getAttribute('data-buttonIndex');
+            let button = _this.operateButtons[rowIndex][buttonIndex];
+            if (button && typeof button.onclick === 'function') {
+                button.onclick.call(rowData);
             }
-
-            if (typeof _this.option.columnClick === 'function') {
-                let columnName = _this.option.column[columnIndex].name;
-                let columnData = rowData[columnName];
-                _this.option.columnClick.call(rowData, columnData, columnIndex, columnName);
-            }
-
-            if (_target.classList.contains('table-row-operate')) {
-                let buttonIndex = _target.getAttribute('data-buttonIndex');
-                let button = _this.operateButtons[rowIndex][buttonIndex];
-                if (button && typeof button.onclick === 'function') {
-                    button.onclick.call(rowData);
-                }
-            }
-        };
+        }
     }
 
     function requestData() {
@@ -291,34 +287,43 @@ function Table() {
         _this.option.queryParam.pageSize = _this.option.queryParam.pageSize ? _this.option.queryParam.pageSize : _this._pageHtmlList.size.value;
 
         Request.get(_this.option.url, _this.option.queryParam, true).then(function (data) {
+            _this._tBodyHtml.onclick = null;
             let htmlString = '';
-            data.data.forEach(function (rowItem, rowIndex) {
-                _this.data.list[rowIndex] = rowItem;
-                _this.operateButtons[rowIndex] = [];
+            if (data.totalCount === 0) {
+                htmlString += '<tr class="opacity-0-1"><td class="text-center table-empty" colspan="' + _this.option.column.length + '">暂无数据</td></tr>';
+            } else {
+                data.data.forEach(function (rowItem, rowIndex) {
+                    _this.data.list[rowIndex] = rowItem;
+                    _this.operateButtons[rowIndex] = [];
 
-                htmlString += '<tr class="opacity-0-1" data-rowIndex="' + rowIndex + '">';
+                    htmlString += '<tr class="opacity-0-1" data-rowIndex="' + rowIndex + '">';
 
-                _this.option.column.forEach(function (columnItem, columnIndex) {
-                    htmlString += '<td data-rowIndex="' + rowIndex + '" data-columnIndex="' + columnIndex + '">';
-                    if (columnItem.name === 'operate' && typeof _this.option.rowOperate === 'function') {
-                        let buttons = _this.option.rowOperate.call(rowItem);
-                        buttons.forEach(function (button, index) {
-                            _this.operateButtons[rowIndex][index] = button;
+                    _this.option.column.forEach(function (columnItem, columnIndex) {
+                        htmlString += '<td data-rowIndex="' + rowIndex + '" data-columnIndex="' + columnIndex + '">';
+                        if (columnItem.name === 'operate' && typeof _this.option.rowOperate === 'function') {
+                            let buttons = _this.option.rowOperate.call(rowItem);
+                            buttons.forEach(function (button, index) {
+                                _this.operateButtons[rowIndex][index] = button;
 
-                            htmlString += '<span class="table-row-operate margin-left-10 ' + button.classNames + '" data-buttonIndex="' + index + '">';
-                            if (button.faClass) {
-                                htmlString += '<i class="fa ' + button.faClass + '"></i>';
-                            }
-                            htmlString += button.title + '</span>';
-                        });
-                    } else {
-                        htmlString += common.string.dealEmpty(rowItem[columnItem.name]);
-                    }
-                    htmlString += '</td>';
+                                htmlString += '<span class="table-row-operate margin-left-10 ' + button.classNames + '" data-buttonIndex="' + index + '">';
+                                if (button.faClass) {
+                                    htmlString += '<i class="fa ' + button.faClass + '"></i>';
+                                }
+                                htmlString += button.title + '</span>';
+                            });
+                        } else {
+                            htmlString += common.string.dealEmpty(rowItem[columnItem.name]);
+                        }
+                        htmlString += '</td>';
+                    });
+
+                    htmlString += '</tr>';
                 });
 
-                htmlString += '</tr>';
-            });
+                _this._tBodyHtml.onclick = function () {
+                    bodyClick.call(_this);
+                };
+            }
             _this._tBodyHtml.innerHTML = htmlString;
 
             _this.data.currentPage = data.currentPage;
@@ -330,7 +335,7 @@ function Table() {
     }
 
     function updatePage() {
-        this._tableBottomInfoHtml.innerHTML = this.data.totalPage + ' / ' + this.data.totalCount;
+        this._tableBottomInfoHtml.innerHTML = '共' + this.data.totalPage + '页  ' + this.data.totalCount + '行';
 
         this._pageHtmlList.input.value = this.data.currentPage;
         this._pageHtmlList.input.setAttribute('max', this.data.totalPage);

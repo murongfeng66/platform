@@ -3,50 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>系统角色</title>
+    <title>系统资源</title>
     <link rel="icon" type="image/x-icon" href="/image/icon.ico">
 
     <link rel="stylesheet" href="/css/common.css">
-    <link rel="stylesheet" href="/css/bootstrap/4.1.3/bootstrap.css">
-    <style type="text/css">
-
-    </style>
+    <link rel="stylesheet" href="/css/table.css">
+    <link rel="stylesheet" href="/css/dialog.css">
+    <link rel="stylesheet" href="/font-awesome-4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-<table id="table_body">
-</table>
-<ul class="pagination">
-    <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
-    <li class="page-item"><a class="page-link" href="#">&lt;</a></li>
-    <li class="page-item"><a class="page-link" href="#">&gt;</a></li>
-    <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
-</ul>
+<form id="form_role_query" class="form margin-top-10">
+    <div class="form-row">
+        <div class="form-input-group">
+            <label class="form-label">编码：</label>
+            <input name="key" class="form-input">
+        </div>
+        <div class="form-input-group">
+            <button type="button" class="button" onclick="(function(){tableRole.reload();})()">查询</button>
+            <button type="reset" class="button">重置</button>
+        </div>
+    </div>
+</form>
+<div id="table_role">
+</div>
+<div id="dialog_role" class="dialog">
+    <form id="form_role" class="form dialog-content">
+        <input id="form_role_id" type="hidden" name="id">
+        <div class="form-row">
+            <div class="form-input-group flex-1">
+                <label class="form-label">编码：</label>
+                <input type="text" name="code" class="form-input" data-readonly="|Edit|">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-input-group flex-1">
+                <label class="form-label">名称：</label>
+                <input type="text" name="name" class="form-input">
+            </div>
+        </div>
+    </form>
+</div>
 </body>
 <script src="/js/common.js"></script>
 <script src="/js/form.js"></script>
 <script src="/js/table.js"></script>
 <script src="/js/request.js"></script>
+<script src="/js/dialog.js"></script>
 <script type="text/javascript">
     window.onload = function () {
-        queryList();
     };
 
-    function queryList() {
-        Table.init({
-            tableId: 'table_body',
-            url: '/role/queryByParam',
-            column: [{
-                title: '编码',
-                name: 'code'
-            }, {
-                title: '名称',
-                name: 'name'
-            }],
-            queryParam: {
-                pageSize: 2
+    let dialogRole = Dialog.create({
+        dialogId: 'dialog_role',
+        topButtons: [{
+            title: '查看',
+            classNames: '',
+            onclick: function () {
+
             }
+        }],
+        bottomButtons: [{
+            title: '保存',
+            classNames: 'float-right',
+            closeAfterClick: true,
+            onclick: function () {
+                updateRole();
+            }
+        }, {
+            title: '提交',
+            classNames: 'float-right',
+            closeAfterClick: true,
+            onclick: function () {
+                addRole();
+            }
+        }]
+    });
+
+    let tableRole = Table.init({
+        tableId: 'table_role',
+        queryFormId: 'form_role_query',
+        url: '/role/queryByParam',
+        column: [{
+            title: '编码',
+            name: 'code'
+        }, {
+            title: '名称',
+            name: 'name'
+        }],
+        bottomButtons: [{
+            title: '添加',
+            faClass: 'fa-plus',
+            onclick: function () {
+                addRoleView();
+            }
+        }],
+        rowOperate: function () {
+            let operates = [];
+            operates.push({
+                title: '编辑',
+                classNames: '',
+                onclick: updateRoleView
+            });
+            return operates;
+        }
+    });
+
+    let addRoleView = function () {
+        document.getElementById('form_role').reset();
+        let dialogTitle = '添加资源';
+
+        dialogRole.setTitle(dialogTitle).hideBottomButton().showBottomButton(1).open();
+    };
+
+    let updateRoleView = function () {
+        Request.get('/role/getById', {id: this.id}).then(function (data) {
+            let _formHtml = document.getElementById('form_role');
+            _formHtml.addReadOnly('Edit');
+            _formHtml.setForm(data);
+            document.getElementById('form_role_id').setValue(data.id);
+            dialogRole.setTitle('编辑资源').hideBottomButton().showBottomButton(0).open();
         });
-    }
+    };
+
+    let addRole = function () {
+        let formData = document.getElementById('form_role').getForm();
+        Request.post('/role/add', formData).then(function () {
+            tableRole.reload();
+        });
+    };
+
+    let updateRole = function () {
+        let formData = document.getElementById('form_role').getForm();
+        Request.post('/role/updateById', formData).then(function () {
+            tableRole.reload();
+        });
+    };
 
 </script>
 </html>

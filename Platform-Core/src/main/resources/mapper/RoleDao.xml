@@ -4,6 +4,20 @@
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         insert into Role(`code`, `name`, createTime) values(#{code}, #{name}, #{createTime})
     </insert>
+    <update id="updateById">
+        update Role
+        <set>
+            <trim suffixOverrides=",">
+                <if test="name != null">
+                    `name` = #{name},
+                </if>
+                <if test="updateTime != null">
+                    updateTime = #{updateTime},
+                </if>
+            </trim>
+        </set>
+        where id = #{id}
+    </update>
     <select id="queryByParam" resultType="com.jwzhu.platform.core.role.model.Role">
         select id, `code`, `name`, createTime, updateTime
         from Role
@@ -17,5 +31,10 @@
                 </if>
             </trim>
         </where>
+    </select>
+    <select id="getById" resultType="com.jwzhu.platform.core.role.model.Role">
+        select id, `code`, `name`, createTime, updateTime
+        from Role
+        where id = #{id}
     </select>
 </mapper>

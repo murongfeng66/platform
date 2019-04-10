@@ -1,11 +1,11 @@
 const Request = {};
 (function () {
-    Request.get = function (url, params, returnAll) {
-        return request(url, 'GET', params, returnAll || false);
+    Request.get = function (url, params, returnAll, showMessage) {
+        return request(url, 'GET', params, returnAll, showMessage);
     };
 
-    Request.post = function (url, params, returnAll) {
-        return request(url, 'POST', params, returnAll || false);
+    Request.post = function (url, params, returnAll, showMessage) {
+        return request(url, 'POST', params, returnAll, showMessage);
     };
 
     /**
@@ -35,7 +35,7 @@ const Request = {};
         return url;
     };
 
-    function request(url, type, params, returnAll) {
+    function request(url, type, params, returnAll, showMessage) {
         return new Promise(function (resolve) {
             let xhr = new XMLHttpRequest();
             let paramStr = Request.JsonToUrlParam(params);
@@ -63,6 +63,9 @@ const Request = {};
                                 try {
                                     let data = JSON.parse(xhr.responseText);
                                     if (data.code === 1) {
+                                        if(showMessage !== false && data.message && data.showMessage){
+                                            Toast.info(data.message);
+                                        }
                                         resolve(returnAll === true ? data : data.data);
                                     } else {
                                         Toast.error(data.message);

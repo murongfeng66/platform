@@ -15,4 +15,8 @@ public interface RoleDao {
 
     List<Role> queryByParam(RoleListBean bean);
 
+    Role getById(long id);
+
+    int updateById(RoleBean bean);
+
 }

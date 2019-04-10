@@ -25,17 +25,6 @@ Toast.show = function (message, type, time) {
     }, time);
 };
 
-common.keydown = {};
-common.keydown.enter = function (id) {
-    return new Promise(function (resolve) {
-        document.getElementById(id).onkeydown = function (ev) {
-            if (ev.keyCode === 13) {
-                resolve();
-            }
-        };
-    });
-};
-
 common.string = {};
 common.string.dealEmpty = function (str) {
     return str || '';
@@ -60,12 +49,12 @@ HTMLElement.prototype.show = function () {
 /**
  * 遍历Object对象中的数据
  */
-Object.prototype.forEach = function(itemFunction){
-    if(typeof itemFunction !== 'function'){
+Object.prototype.forEach = function (itemFunction) {
+    if (typeof itemFunction !== 'function') {
         return;
     }
     for (let objectKey in this) {
-        if(!this.hasOwnProperty(objectKey)){
+        if (!this.hasOwnProperty(objectKey)) {
             continue;
         }
         itemFunction.call(this, objectKey, this[objectKey]);
@@ -85,10 +74,10 @@ HTMLElement.prototype.initSelect = function (url, addAddOption) {
     let _this = this;
     Request.get(url, null).then(function (data) {
         let htmlString = '';
-        if(addAddOption){
+        if (addAddOption) {
             htmlString += '<option value="">全部</option>';
         }
-        data.forEach(function(key, value){
+        data.forEach(function (key, value) {
             htmlString += '<option value="' + key + '">' + value + '</option>';
         });
         _this.innerHTML = htmlString;
@@ -100,13 +89,24 @@ HTMLElement.prototype.initSelect = function (url, addAddOption) {
  * 触发onchange事件
  * @param value 值
  */
-HTMLElement.prototype.setValue = function(value){
+HTMLElement.prototype.setValue = function (value) {
     this.value = common.string.dealEmpty(value);
-    if(this.fireEvent){
+    if (this.fireEvent) {
         this.fireEvent('onchange');
-    }else{
+    } else {
         let event = document.createEvent('HTMLEvents');
         event.initEvent('change', false, true);
         this.dispatchEvent(event);
     }
+};
+
+/**
+ * 绑定键盘事件
+ */
+HTMLElement.prototype.keyDownEnter = function (resolve) {
+    this.onkeydown = function (ev) {
+        if (ev.keyCode === 13 && typeof resolve === 'function') {
+            resolve();
+        }
+    };
 };

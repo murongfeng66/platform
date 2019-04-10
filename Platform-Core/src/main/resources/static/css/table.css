@@ -40,6 +40,10 @@
     color: #ffffff;
 }
 
+.table-empty{
+    color: #757575;
+}
+
 .table-row-operate{
     color: #0e90ce;
     cursor: pointer;

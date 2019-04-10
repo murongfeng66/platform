@@ -15,8 +15,8 @@ import com.jwzhu.platform.core.resource.manager.ResourceManager;
 import com.jwzhu.platform.core.resource.model.Resource;
 import com.jwzhu.platform.core.resource.model.ResourceType;
 import com.jwzhu.platform.core.resource.param.ResourceListParam;
-import com.jwzhu.platform.core.resource.param.AddResourceParam;
-import com.jwzhu.platform.core.resource.param.UpdateResourceParam;
+import com.jwzhu.platform.core.resource.param.ResourceAddParam;
+import com.jwzhu.platform.core.resource.param.ResourceUpdateParam;
 import com.jwzhu.platform.plugs.web.annotations.ControllerHandler;
 import com.jwzhu.platform.plugs.web.param.LongParam;
 
@@ -37,7 +37,7 @@ public class ResourceController {
     @PostMapping("add")
     @ResponseBody
     @ControllerHandler
-    public String add(AddResourceParam param){
+    public String add(ResourceAddParam param){
         resourceManager.insert(param.initBean());
         return "资源添加成功";
     }
@@ -61,7 +61,7 @@ public class ResourceController {
     @PostMapping("updateById")
     @ResponseBody
     @ControllerHandler
-    public String updateById(UpdateResourceParam param){
+    public String updateById(ResourceUpdateParam param){
         resourceManager.updateById(param.initBean());
         return "资源修改成功";
     }
