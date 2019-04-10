@@ -1,8 +1,6 @@
 package com.jwzhu.platform.common.enums;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.jwzhu.platform.common.exception.SystemException;
@@ -37,20 +35,7 @@ public enum YesOrNo {
         return message;
     }
 
-    /**
-     * 枚举键值对列表
-     */
-    public static List<Map<Short, String>> list = new ArrayList<>();
-
-    static {
-        for (YesOrNo enumItem : YesOrNo.values()) {
-            Map<Short, String> item = new HashMap<>();
-            item.put(enumItem.code, enumItem.message);
-            list.add(item);
-        }
-    }
-
-    private static Map<Short, String> map = new HashMap<>();
+    public static Map<Short, String> map = new HashMap<>();
 
     static {
         for (YesOrNo item : YesOrNo.values()) {

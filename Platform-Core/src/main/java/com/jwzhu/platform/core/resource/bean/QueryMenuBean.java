@@ -5,7 +5,7 @@ import com.jwzhu.platform.common.bean.BaseBean;
 public class QueryMenuBean extends BaseBean {
 
     private Long userId;
-    private Short isShow;
+    private Short menuShow;
     private Short availableStatus;
     private Short[] types;
 
@@ -17,12 +17,12 @@ public class QueryMenuBean extends BaseBean {
         this.userId = userId;
     }
 
-    public Short getIsShow() {
-        return isShow;
+    public Short getMenuShow() {
+        return menuShow;
     }
 
-    public void setIsShow(Short isShow) {
-        this.isShow = isShow;
+    public void setMenuShow(Short menuShow) {
+        this.menuShow = menuShow;
     }
 
     public Short getAvailableStatus() {

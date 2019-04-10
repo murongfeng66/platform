@@ -90,6 +90,19 @@
     display: none !important;
 }
 
+[disabled] {
+    color: #7c7c7c !important;
+    pointer-events: none !important;
+    cursor: default !important;
+}
+
+[readonly] {
+    border-color: #7c7c7c !important;
+    color: #7c7c7c !important;
+    pointer-events: none !important;
+    cursor: default !important;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -211,12 +224,6 @@ body {
 .opacity-0-1 {
     animation: opacity-0-to-1 .5s;
     -webkit-animation: opacity-0-to-1 .5s;
-}
-
-[disabled] {
-    color: #7c7c7c !important;
-    pointer-events: none !important;
-    cursor: default !important;
 }
 
 .form {

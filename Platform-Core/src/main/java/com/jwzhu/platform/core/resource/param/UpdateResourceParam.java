@@ -13,7 +13,7 @@ public class UpdateResourceParam extends BaseParam<ResourceBean> {
     private String url;
     private Integer sort;
     private Short type;
-    private Short isShow;
+    private Short menuShow;
     private Short availableStatus;
 
     public Long getId() {
@@ -56,12 +56,12 @@ public class UpdateResourceParam extends BaseParam<ResourceBean> {
         this.type = type;
     }
 
-    public Short getIsShow() {
-        return isShow;
+    public Short getMenuShow() {
+        return menuShow;
     }
 
-    public void setIsShow(Short isShow) {
-        this.isShow = isShow;
+    public void setMenuShow(Short menuShow) {
+        this.menuShow = menuShow;
     }
 
     public Short getAvailableStatus() {

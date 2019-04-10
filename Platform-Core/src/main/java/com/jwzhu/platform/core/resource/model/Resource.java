@@ -11,7 +11,7 @@ public class Resource {
     private String url;
     private Integer sort;
     private Short type;
-    private Short isShow;
+    private Short menuShow;
     private Short availableStatus;
     private Timestamp createTime;
     private Timestamp updateTime;
@@ -72,12 +72,12 @@ public class Resource {
         this.type = type;
     }
 
-    public Short getIsShow() {
-        return isShow;
+    public Short getMenuShow() {
+        return menuShow;
     }
 
-    public void setIsShow(Short isShow) {
-        this.isShow = isShow;
+    public void setMenuShow(Short menuShow) {
+        this.menuShow = menuShow;
     }
 
     public Short getAvailableStatus() {

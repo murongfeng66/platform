@@ -82,7 +82,7 @@ public class ControllerAspect {
                     }
                 }
             }else{
-                wrapException(new TokenEmptyException());
+                throw new TokenEmptyException();
             }
         }
     }
@@ -115,13 +115,14 @@ public class ControllerAspect {
                 if(controllerHandler.clearToken()){
                     request.getSession().removeAttribute(tokenService.getTokenConfig().getParamName());
                 }
+                logger.info("Token来源：session");
             }
         } else {
             logger.info("Token来源：请求头");
         }
 
         if (!StringUtils.isEmpty(token)) {
-            logger.info("Token来源：session");
+            logger.info("取出Token：{}", token);
             TokenSubject subject = tokenService.checkToken(token);
             RequestBaseParam.setRefreshToken(tokenService.updateToken(subject));
             RequestBaseParam.setRequestUser(subject);
@@ -131,7 +132,7 @@ public class ControllerAspect {
 
     @AfterThrowing(value = "pointCut(controllerHandler)", argNames = "e,controllerHandler", throwing = "e")
     public void afterThrowing(Throwable e, ControllerHandler controllerHandler) {
-        logger.error("controller end with a exception\n");
+        logger.error("接口报错\n");
         wrapException(e);
     }
 
@@ -146,13 +147,13 @@ public class ControllerAspect {
     @After(value = "pointCut(controllerHandler)", argNames = "controllerHandler")
     public void after(ControllerHandler controllerHandler) {
         RequestBaseParam.initResponseTime();
-        logger.info("controller end and costTime is {}\n", RequestBaseParam.getCostTime());
+        logger.info("接口耗时：{}\n", RequestBaseParam.getCostTime());
     }
 
     @AfterReturning(value = "pointCut(controllerHandler)", argNames = "controllerHandler,returnValue", returning = "returnValue")
     public void afterReturning(ControllerHandler controllerHandler, Object returnValue) throws JsonProcessingException {
         if(controllerHandler.printResponse()){
-            logger.info("controller response is {}\n", objectMapper.writeValueAsString(returnValue));
+            logger.info("接口响应：{}\n", objectMapper.writeValueAsString(returnValue));
         }
     }
 

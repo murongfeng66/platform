@@ -55,7 +55,7 @@ public class MybatisCutPageInterceptor implements Interceptor {
                 StringBuilder pageSql = new StringBuilder(100);
                 String beginRow = String.valueOf((pageBean.getCurrentPage() - 1) * pageBean.getPageSize());
                 String endRow = String.valueOf(pageBean.getCurrentPage() * pageBean.getPageSize());
-                pageSql.append("select * from ( select temp.*, rownum row_id from ( ");
+                pageSql.append("select * from (select temp.*, rownum row_id from ( ");
                 pageSql.append(sql);
                 pageSql.append(" ) temp where rownum <= ").append(endRow);
                 pageSql.append(") where row_id > ").append(beginRow);
@@ -220,7 +220,7 @@ public class MybatisCutPageInterceptor implements Interceptor {
      * 获取统计语句
      */
     private String getCountSql(String sql) {
-        return "SELECT COUNT(1) FROM (" + sql + ") T";
+        return "select count(1) from (" + sql + ") T";
     }
 
     /**

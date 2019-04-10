@@ -1,6 +1,10 @@
 package com.jwzhu.platform.plugs.web.token;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.convert.DurationUnit;
 import org.springframework.context.annotation.Configuration;
 
 import com.jwzhu.platform.plugs.web.token.impl.TokenUtiAES;
@@ -10,9 +14,10 @@ import com.jwzhu.platform.plugs.web.token.impl.TokenUtilJWT;
 @ConfigurationProperties(prefix = "com.jwzhu.platform.token", ignoreUnknownFields = false, ignoreInvalidFields = true)
 public class TokenConfig {
     /**
-     * Token过期时长（ms），null或者0为不过期
+     * Token过期时长（ms），0为不过期
      */
-    private Long expiredTime;
+    @DurationUnit(ChronoUnit.MILLIS)
+    private Duration expiredTime;
     /**
      * Token生成密钥
      */
@@ -30,15 +35,19 @@ public class TokenConfig {
      */
     private String paramName = "Token";
     /**
-     * 当Token存在过期时长时，刷新Token的时长（ms）
+     * 当Token存在过期时长时，刷新Token的时长（ms），为0时不刷新
      */
-    private Long tokenUpdateTime = 30000L;
+    @DurationUnit(ChronoUnit.MILLIS)
+    private Duration tokenUpdateTime;
 
-    public Long getTokenUpdateTime() {
-        return tokenUpdateTime;
+    public long getTokenUpdateTime() {
+        if(tokenUpdateTime != null){
+            return tokenUpdateTime.toMillis();
+        }
+        return 0;
     }
 
-    public void setTokenUpdateTime(Long tokenUpdateTime) {
+    public void setTokenUpdateTime(Duration tokenUpdateTime) {
         this.tokenUpdateTime = tokenUpdateTime;
     }
 
@@ -81,11 +90,14 @@ public class TokenConfig {
         this.aesIv = aesIv;
     }
 
-    public Long getExpiredTime() {
-        return expiredTime;
+    public long getExpiredTime() {
+        if(expiredTime != null){
+            return expiredTime.toMillis();
+        }
+        return 0;
     }
 
-    public void setExpiredTime(Long expiredTime) {
+    public void setExpiredTime(Duration expiredTime) {
         this.expiredTime = expiredTime;
     }
 

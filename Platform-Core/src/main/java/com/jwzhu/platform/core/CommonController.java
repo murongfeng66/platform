@@ -1,6 +1,7 @@
 package com.jwzhu.platform.core;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,8 +12,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jwzhu.platform.common.PlatformConfig;
+import com.jwzhu.platform.common.enums.AvailableStatus;
+import com.jwzhu.platform.common.enums.YesOrNo;
 import com.jwzhu.platform.core.resource.manager.ResourceManager;
 import com.jwzhu.platform.core.resource.model.Menu;
+import com.jwzhu.platform.core.resource.model.ResourceType;
 import com.jwzhu.platform.core.user.manager.UserManager;
 import com.jwzhu.platform.plugs.web.annotations.ControllerHandler;
 import com.jwzhu.platform.plugs.web.request.RequestBaseParam;
@@ -49,6 +53,20 @@ public class CommonController {
     @ResponseBody
     public List<Menu> queryMenu(){
         return resourceManager.queryMenu();
+    }
+
+    @GetMapping("yesOrNo")
+    @ResponseBody
+    @ControllerHandler
+    public Map<Short, String> yesOrNo(){
+        return YesOrNo.map;
+    }
+
+    @GetMapping("availableStatus")
+    @ResponseBody
+    @ControllerHandler
+    public Map<Short, String> availableStatus(){
+        return AvailableStatus.map;
     }
 
 }

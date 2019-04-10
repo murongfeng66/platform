@@ -1,71 +1,91 @@
-const Table = {};
+function Table() {
+}
 
 (function () {
-    const TableCache = {};
-    Table.query = function (option) {
-        let o = {
-            tableId: option.tableId,
-            queryFormId: option.queryFormId,
-            url: option.url,
-            queryParam: option.queryParam || {},
-            column: option.column,
-            selectModel: option.selectModel || 'single',
-            bottomButtons: option.bottomButtons || [],
-            reloadButton: option.reloadButton || true,
-            pageSizes: option.pageSizes || [15, 30, 45],
-            rowClick: option.rowClick,
-            columnClick: option.columnClick
+    const TableHtmlCache = {};
+
+    Table.init = function (o) {
+        let option = {
+            tableId: o.tableId,
+            queryFormId: o.queryFormId,
+            url: o.url,
+            queryParam: o.queryParam || {},
+            column: o.column,
+            selectModel: o.selectModel || 'single',
+            bottomButtons: o.bottomButtons || [],
+            reloadButton: o.reloadButton || true,
+            pageSizes: o.pageSizes || [15, 30, 45],
+            rowClick: o.rowClick,
+            columnClick: o.columnClick,
+            rowOperate: o.rowOperate
         };
 
-        if (TableCache[o.tableId]) {
-            requestData.call(TableCache[o.tableId]);
-        } else {
-            if (!o.tableId) {
-                throw '列表ID为空';
+        if (!option.tableId) {
+            throw 'ID为空';
+        }
+
+        let tableHtmlCache = TableHtmlCache[option.tableId];
+        if (!tableHtmlCache) {
+            if (!option.url) {
+                throw 'URL为空';
             }
-            if (!o.url) {
-                throw '列表URL为空';
-            }
-            if (!o.column || o.column.length === 0) {
-                throw '列表列为空';
+            if (!option.column || option.column.length === 0) {
+                throw '列为空';
             }
 
-            let tableCache = {
-                option: o,
-                data: {list: [], currentPage: 1, totalPage: 0},
-                _tableDivHtml: null,
-                _tBodyHtml: null,
-                _tPageHtml: null,
-                _tableBottomInfoHtml: null,
-                _pageHtmlList: {},
-                _queryItemsHtml: []
-            };
+            tableHtmlCache = init(option);
+        }
+        return tableHtmlCache.operator;
+    };
 
-            if (tableCache.option.reloadButton) {
-                tableCache.option.bottomButtons.unshift({
-                    text: '刷新',
-                    faClass: 'fa-refresh',
-                    onclick: requestData
-                });
+    Table.prototype = {
+        reload: function () {
+            let tableHtmlCache = TableHtmlCache[this.tableId];
+            if (!tableHtmlCache) {
+                return;
             }
-
-            initList.call(tableCache);
-            TableCache[tableCache.option.tableId] = tableCache;
+            requestData.call(tableHtmlCache);
         }
     };
 
-    Table.reload = function (tableId) {
-        let tableCache = TableCache[tableId];
-        if (!tableCache) {
-            return;
+    function init(option) {
+        let tableHtmlCache = {
+            option: option,
+            operator: null,
+            data: {list: [], currentPage: 1, totalPage: 0},
+            _tableDivHtml: null,
+            _tBodyHtml: null,
+            _tPageHtml: null,
+            _tableBottomInfoHtml: null,
+            _pageHtmlList: {},
+            _queryItemsHtml: [],
+            operateButtons: []
+        };
+
+        if (tableHtmlCache.option.reloadButton) {
+            tableHtmlCache.option.bottomButtons.unshift({
+                title: '刷新',
+                faClass: 'fa-refresh',
+                onclick: requestData
+            });
         }
-        requestData.call(tableCache);
-    };
 
-    function initList() {
-        initTable.call(this);
+        if (typeof tableHtmlCache.option.rowOperate === 'function') {
+            tableHtmlCache.option.column.push({
+                title: '操作',
+                name: 'operate'
+            });
+        }
 
-        requestData.call(this);
+        initTable.call(tableHtmlCache);
+
+        requestData.call(tableHtmlCache);
+
+        TableHtmlCache[tableHtmlCache.option.tableId] = tableHtmlCache;
+
+        tableHtmlCache.operator = new Table();
+        tableHtmlCache.operator.tableId = tableHtmlCache.option.tableId;
+        return tableHtmlCache;
     }
 
     function initTable() {
@@ -89,7 +109,7 @@ const Table = {};
         bindBodyClick.call(this);
     }
 
-    function createTable(){
+    function createTable() {
         let _this = this;
 
         let htmlString = '<table class="table"><thead class="table-head">';
@@ -131,7 +151,7 @@ const Table = {};
         _this._tableDivHtml.innerHTML = htmlString;
     }
 
-    function initPage(){
+    function initPage() {
         let _this = this;
 
         _this._pageHtmlList.firstPage = _this._tPageHtml.querySelector('[data-page=firstPage]');
@@ -164,14 +184,19 @@ const Table = {};
         };
     }
 
-    function initBottom(){
+    function initBottom() {
         let _this = this;
         let _bottomButtons = _this._tableDivHtml.querySelector('.table-bottom-buttons');
         _this.option.bottomButtons.forEach(function (button) {
             let _buttonHtml = document.createElement('span');
             _buttonHtml.classList.add('table-bottom-button', 'margin-right-10');
             _buttonHtml.style.color = button.color;
-            _buttonHtml.innerHTML = '<i class="fa ' + button.faClass + '"></i><apsn class="margin-left-5">' + button.text + '</apsn>';
+            let htmlString = '<span class="margin-left-10 ' + button.classNames + '">';
+            if (button.faClass) {
+                htmlString += '<i class="fa ' + button.faClass + '"></i>';
+            }
+            htmlString += button.title + '</span>';
+            _buttonHtml.innerHTML = htmlString;
             _buttonHtml.onclick = function () {
                 if (typeof button.onclick === 'function') {
                     button.onclick.call(_this);
@@ -181,12 +206,23 @@ const Table = {};
         });
     }
 
-    function bindBodyClick(){
+    function bindBodyClick() {
         let _this = this;
         _this._tBodyHtml.onclick = function () {
             window.event.stopPropagation();
             let _target = window.event.target;
-            let _tr = _target.parentElement;
+
+            let _tr;
+            let _trResearch = _target.parentElement;
+            while (true) {
+                if(_trResearch.localName === 'tr'){
+                    _tr = _trResearch;
+                }
+                if(_tr || _trResearch.classList.contains('table-body')){
+                    break;
+                }
+                _trResearch = _trResearch.parentElement;
+            }
 
             let selected = _tr.getAttribute('selected') !== null;
 
@@ -202,7 +238,23 @@ const Table = {};
                 _tr.setAttribute('selected', '');
             }
 
-            let rowIndex = _target.getAttribute('data-rowIndex');
+            let rowIndex;
+            let columnIndex;
+            let currentHtml = _target;
+            while (true) {
+                rowIndex = currentHtml.getAttribute('data-rowIndex');
+                columnIndex = currentHtml.getAttribute('data-columnIndex');
+
+                if (rowIndex != null && columnIndex != null) {
+                    break;
+                }
+                if (currentHtml.classList.contains('table-body')) {
+                    break
+                }
+                currentHtml = currentHtml.parentElement;
+            }
+
+
             let rowData = _this.data.list[rowIndex];
 
             if (typeof _this.option.rowClick === 'function') {
@@ -210,10 +262,17 @@ const Table = {};
             }
 
             if (typeof _this.option.columnClick === 'function') {
-                let columnIndex = _target.getAttribute('data-columnIndex');
                 let columnName = _this.option.column[columnIndex].name;
                 let columnData = rowData[columnName];
                 _this.option.columnClick.call(rowData, columnData, columnIndex, columnName);
+            }
+
+            if (_target.classList.contains('table-row-operate')) {
+                let buttonIndex = _target.getAttribute('data-buttonIndex');
+                let button = _this.operateButtons[rowIndex][buttonIndex];
+                if (button && typeof button.onclick === 'function') {
+                    button.onclick.call(rowData);
+                }
             }
         };
     }
@@ -235,12 +294,29 @@ const Table = {};
             let htmlString = '';
             data.data.forEach(function (rowItem, rowIndex) {
                 _this.data.list[rowIndex] = rowItem;
+                _this.operateButtons[rowIndex] = [];
+
                 htmlString += '<tr class="opacity-0-1" data-rowIndex="' + rowIndex + '">';
+
                 _this.option.column.forEach(function (columnItem, columnIndex) {
                     htmlString += '<td data-rowIndex="' + rowIndex + '" data-columnIndex="' + columnIndex + '">';
-                    htmlString += common.string.checkEmpty(rowItem[columnItem.name]);
+                    if (columnItem.name === 'operate' && typeof _this.option.rowOperate === 'function') {
+                        let buttons = _this.option.rowOperate.call(rowItem);
+                        buttons.forEach(function (button, index) {
+                            _this.operateButtons[rowIndex][index] = button;
+
+                            htmlString += '<span class="table-row-operate margin-left-10 ' + button.classNames + '" data-buttonIndex="' + index + '">';
+                            if (button.faClass) {
+                                htmlString += '<i class="fa ' + button.faClass + '"></i>';
+                            }
+                            htmlString += button.title + '</span>';
+                        });
+                    } else {
+                        htmlString += common.string.dealEmpty(rowItem[columnItem.name]);
+                    }
                     htmlString += '</td>';
                 });
+
                 htmlString += '</tr>';
             });
             _this._tBodyHtml.innerHTML = htmlString;

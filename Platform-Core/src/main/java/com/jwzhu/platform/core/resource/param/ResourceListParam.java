@@ -7,7 +7,7 @@ public class ResourceListParam extends PageParam<ResourceListBean> {
 
     private String key;
     private Short type;
-    private Short isShow;
+    private Short menuShow;
 
     public String getKey() {
         return key;
@@ -25,16 +25,18 @@ public class ResourceListParam extends PageParam<ResourceListBean> {
         this.type = type;
     }
 
-    public Short getIsShow() {
-        return isShow;
+    public Short getMenuShow() {
+        return menuShow;
     }
 
-    public void setIsShow(Short isShow) {
-        this.isShow = isShow;
+    public void setMenuShow(Short menuShow) {
+        this.menuShow = menuShow;
     }
 
     @Override
     protected ResourceListBean getBean() {
-        return new ResourceListBean();
+        ResourceListBean bean = new ResourceListBean();
+        bean.addSort("code");
+        return bean;
     }
 }

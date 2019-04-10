@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jwzhu.platform.core.resource.db.ResourceDao">
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        insert into Resource (`code`, parentCode, `name`, url, sort, type, isShow, availableStatus, createTime) values (#{code}, #{parentCode}, #{name}, #{url}, #{sort}, #{type}, #{isShow}, #{availableStatus}, #{createTime})
+        insert into Resource (`code`, parentCode, `name`, url, sort, type, menuShow, availableStatus, createTime) values (#{code}, #{parentCode}, #{name}, #{url}, #{sort}, #{type}, #{menuShow}, #{availableStatus}, #{createTime})
     </insert>
     <update id="updateById">
         update Resource
@@ -20,8 +20,8 @@
                 <if test="type != null">
                     type = #{type},
                 </if>
-                <if test="isShow != null">
-                    isShow = #{isShow},
+                <if test="menuShow != null">
+                    menuShow = #{menuShow},
                 </if>
                 <if test="availableStatus != null">
                     availableStatus = #{availableStatus},
@@ -34,7 +34,7 @@
         where id = #{id}
     </update>
     <select id="queryByParam" resultType="com.jwzhu.platform.core.resource.model.ResourceList">
-        select id, `code`, parentCode, `name`, sort, type, isShow
+        select id, `code`, parentCode, `name`, sort, type, menuShow
         from Resource
         <where>
             <trim suffixOverrides="and">
@@ -44,14 +44,23 @@
                 <if test="type != null">
                     type = #{type} and
                 </if>
-                <if test="isShow != null">
-                    isShow = #{isShow} and
+                <if test="menuShow != null">
+                    menuShow = #{menuShow} and
                 </if>
                 <if test="availableStatus != null">
                     availableStatus = #{availableStatus} and
                 </if>
             </trim>
         </where>
+        order by
+        <trim suffixOverrides=",">
+            <if test="sorts != null and sorts.size() > 0">
+                <foreach collection="sorts" item="item">
+                    ${item.columnName} ${item.sortType},
+                </foreach>
+            </if>
+            id desc,
+        </trim>
     </select>
     <select id="queryMenu" resultType="com.jwzhu.platform.core.resource.model.Menu">
         select `code`, parentCode, `name`, url, type, sort
@@ -65,8 +74,8 @@
                     </foreach>
                     and
                 </if>
-                <if test="isShow != null">
-                    isShow = #{isShow} and
+                <if test="menuShow != null">
+                    menuShow = #{menuShow} and
                 </if>
                 <if test="availableStatus != null">
                     availableStatus = #{availableStatus} and
@@ -76,7 +85,7 @@
         order by `sort` desc
     </select>
     <select id="getById" resultType="com.jwzhu.platform.core.resource.model.Resource">
-        select id, `code`, parentCode, `name`, url, sort, type, isShow, createTime, updateTime, availableStatus
+        select id, `code`, parentCode, `name`, url, sort, type, menuShow, createTime, updateTime, availableStatus
         from Resource
         where id = #{id}
     </select>

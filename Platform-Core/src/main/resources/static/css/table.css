@@ -40,6 +40,25 @@
     color: #ffffff;
 }
 
+.table-row-operate{
+    color: #0e90ce;
+    cursor: pointer;
+    border: 1px solid #c4c4c4;
+    padding: 2px 4px;
+    height: 1.2rem;
+    font-size: 0.8rem;
+    border-radius: 0.5rem;
+    display: inline-block;
+}
+
+.table-row-operate i{
+    pointer-events: none;
+}
+
+.table-row-operate:hover{
+    background-color: #ffffff;
+}
+
 .table-bottom{
     padding: 0.5rem 2rem;
     border-top: 1px solid #e8e8e8;

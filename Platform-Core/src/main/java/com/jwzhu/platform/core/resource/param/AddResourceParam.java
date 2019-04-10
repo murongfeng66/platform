@@ -19,9 +19,9 @@ public class AddResourceParam extends BaseParam<ResourceBean> {
     private String name;
     private String url;
     private Integer sort;
-    @NotEmpty(message = "类型不能为空")
+    @NotNull(message = "类型不能为空")
     private Short type;
-    private Short isShow;
+    private Short menuShow;
     private Short availableStatus;
 
     public String getCode() {
@@ -72,12 +72,12 @@ public class AddResourceParam extends BaseParam<ResourceBean> {
         this.type = type;
     }
 
-    public Short getIsShow() {
-        return isShow;
+    public Short getMenuShow() {
+        return menuShow;
     }
 
-    public void setIsShow(Short isShow) {
-        this.isShow = isShow;
+    public void setMenuShow(Short menuShow) {
+        this.menuShow = menuShow;
     }
 
     public Short getAvailableStatus() {
@@ -95,7 +95,8 @@ public class AddResourceParam extends BaseParam<ResourceBean> {
 
     @Override
     protected void exValid() {
-        if((this.type == ResourceType.Page.getCode() || this.type == ResourceType.Function.getCode()) && StringUtils.isEmpty(this.url)){
+        this.code = this.parentCode + "." + this.code;
+        if ((this.type == ResourceType.Page.getCode() || this.type == ResourceType.Function.getCode()) && StringUtils.isEmpty(this.url)) {
             throw new BusinessException("页面和功能的URL不能为空");
         }
     }

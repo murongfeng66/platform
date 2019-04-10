@@ -1,5 +1,7 @@
 package com.jwzhu.platform.core.resource.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.jwzhu.platform.core.resource.bean.ResourceListBean;
 import com.jwzhu.platform.core.resource.manager.ResourceManager;
 import com.jwzhu.platform.core.resource.model.Resource;
+import com.jwzhu.platform.core.resource.model.ResourceType;
 import com.jwzhu.platform.core.resource.param.ResourceListParam;
 import com.jwzhu.platform.core.resource.param.AddResourceParam;
 import com.jwzhu.platform.core.resource.param.UpdateResourceParam;
@@ -61,6 +64,13 @@ public class ResourceController {
     public String updateById(UpdateResourceParam param){
         resourceManager.updateById(param.initBean());
         return "资源修改成功";
+    }
+
+    @GetMapping("resourceType")
+    @ResponseBody
+    @ControllerHandler
+    public Map<Short, String> resourceType(){
+        return ResourceType.map;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.jwzhu.platform.common.bean;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import com.jwzhu.platform.common.enums.YesOrNo;
@@ -33,6 +34,7 @@ public class PageBean<T> extends BaseBean{
      * 结果总数
      */
     private Integer totalCount;
+    private List<SortItem> sorts = new LinkedList<>();
 
     /**
      * 是否分页
@@ -89,6 +91,51 @@ public class PageBean<T> extends BaseBean{
         this.totalCount = totalCount;
         if(this.totalCount != null){
             this.totalPage = this.totalCount % this.pageSize == 0 ? this.totalCount / this.pageSize : this.totalCount / this.pageSize + 1;
+        }
+    }
+
+    public List<SortItem> getSorts() {
+        return sorts;
+    }
+
+    public void setSorts(List<SortItem> sorts) {
+        this.sorts = sorts;
+    }
+
+    public void addSort(String columnName, String sortType){
+        this.sorts.add(new SortItem(columnName, sortType));
+    }
+
+    public void addSort(String columnName){
+        this.sorts.add(new SortItem(columnName, "asc"));
+    }
+
+    public static class SortItem {
+        private String columnName;
+        private String sortType;
+
+        public SortItem() {
+        }
+
+        public SortItem(String columnName, String sortType) {
+            this.columnName = columnName;
+            this.sortType = sortType;
+        }
+
+        public String getColumnName() {
+            return columnName;
+        }
+
+        public void setColumnName(String columnName) {
+            this.columnName = columnName;
+        }
+
+        public String getSortType() {
+            return sortType;
+        }
+
+        public void setSortType(String sortType) {
+            this.sortType = sortType;
         }
     }
 }

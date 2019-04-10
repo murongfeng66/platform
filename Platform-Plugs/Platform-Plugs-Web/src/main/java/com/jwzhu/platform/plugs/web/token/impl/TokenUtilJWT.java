@@ -45,7 +45,7 @@ public class TokenUtilJWT implements TokenUtil {
         builder.setSubject(JSON.toJSONString(subject));
         builder.signWith(signatureAlgorithm, this.secretKey);
 
-        if (tokenConfig.getExpiredTime() != null && tokenConfig.getExpiredTime() >= 0) {
+        if (tokenConfig.getExpiredTime() >= 0) {
             long expMillis = subject.getCreateMillis() + tokenConfig.getExpiredTime();
             Date exp = new Date(expMillis);
             builder.setExpiration(exp);

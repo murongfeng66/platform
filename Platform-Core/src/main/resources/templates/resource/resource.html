@@ -27,7 +27,7 @@
             </select>
         </div>
         <div class="form-input-group">
-            <button type="button" class="button" onclick="queryList()">查询</button>
+            <button type="button" class="button" onclick="(function(){tableResource.reload();})()">查询</button>
             <button type="reset" class="button">重置</button>
         </div>
     </div>
@@ -35,21 +35,48 @@
 <div id="table_resource">
 </div>
 <div id="dialog_resource" class="dialog">
-    <form class="form dialog-content">
+    <form id="form_resource" class="form dialog-content">
+        <input id="form_resource_id" type="hidden" name="id">
+        <div class="form-row">
+            <div class="form-input-group flex-1">
+                <label class="form-label">父编码：</label>
+                <input id="form_resource_parentCode" type="text" name="parentCode" class="form-input" data-readonly="|Edit|Add|">
+            </div>
+        </div>
         <div class="form-row">
             <div class="form-input-group flex-1">
                 <label class="form-label">编码：</label>
-                <input name="key" class="form-input">
+                <input type="text" name="code" class="form-input" data-readonly="|Edit|">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-input-group flex-1">
+                <label class="form-label">名称：</label>
+                <input type="text" name="name" class="form-input">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-input-group flex-1">
+                <label class="form-label">地址：</label>
+                <input type="text" name="url" class="form-input">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-input-group flex-1">
+                <label class="form-label">排序：</label>
+                <input type="number" name="sort" class="form-input">
             </div>
         </div>
         <div class="form-row">
             <div class="form-input-group flex-1">
                 <label class="form-label">类型：</label>
-                <select name="type" class="form-input">
-                    <option value="">全部</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                </select>
+                <select id="form_resource_type" name="type" class="form-input" onchange="resourceTypeChange()"></select>
+            </div>
+        </div>
+        <div id="form_resource_menuShow_div" class="form-row">
+            <div class="form-input-group flex-1">
+                <label class="form-label">菜单显示：</label>
+                <select id="form_resource_menuShow" name="menuShow" class="form-input"></select>
             </div>
         </div>
     </form>
@@ -62,60 +89,138 @@
 <script src="/js/dialog.js"></script>
 <script type="text/javascript">
     window.onload = function () {
-        queryList();
+        document.getElementById('form_resource_menuShow').initSelect('/yesOrNo');
+        document.getElementById('form_resource_type').initSelect('/resource/resourceType');
     };
 
-    let resourceDialog = Dialog.create({
+    let dialogResource = Dialog.create({
         dialogId: 'dialog_resource',
         topButtons: [{
             title: '查看',
-            classNames:'',
+            classNames: '',
             onclick: function () {
 
             }
         }],
         bottomButtons: [{
-            title: '取消',
-            classNames:'float-left',
+            title: '保存',
+            classNames: 'float-right',
+            closeAfterClick: true,
             onclick: function () {
-                console.info('取消');
-                resourceDialog.close();
+                updateResource();
             }
-        },{
-            title: '确定',
-            classNames:'float-right',
+        }, {
+            title: '提交',
+            classNames: 'float-right',
+            closeAfterClick: true,
             onclick: function () {
-                console.info('确定');
-                resourceDialog.close();
+                addResource();
             }
         }]
     });
 
-    function queryList() {
-        Table.query({
-            tableId: 'table_resource',
-            queryFormId: 'form_resource_query',
-            url: '/resource/queryByParam',
-            column: [{
-                title: '父编码',
-                name: 'parentCode'
-            }, {
-                title: '编码',
-                name: 'code'
-            }, {
-                title: '名称',
-                name: 'name'
-            }],
-            pageSizes: [5, 10, 15],
-            bottomButtons: [{
-                text: '添加',
-                faClass: 'fa-plus',
-                onclick: function () {
-                    resourceDialog.setTitle('添加资源').open();
-                }
-            }]
+    let tableResource = Table.init({
+        tableId: 'table_resource',
+        queryFormId: 'form_resource_query',
+        url: '/resource/queryByParam',
+        column: [{
+            title: '父编码',
+            name: 'parentCode'
+        }, {
+            title: '编码',
+            name: 'code'
+        }, {
+            title: '名称',
+            name: 'name'
+        }],
+        bottomButtons: [{
+            title: '添加',
+            faClass: 'fa-plus',
+            onclick: function () {
+                addResourceView();
+            }
+        }],
+        rowOperate: function () {
+            let operates = [];
+            if (this.type === 1) {
+                operates.push({
+                    title: '添加页面',
+                    classNames: '',
+                    faClass: '',
+                    onclick: addResourceView
+                });
+            }
+            if (this.type === 2) {
+                operates.push({
+                    title: '添加功能',
+                    classNames: '',
+                    onclick: addResourceView
+                });
+            }
+            operates.push({
+                title: '编辑',
+                classNames: '',
+                onclick: updateResourceView
+            });
+            return operates;
+        }
+    });
+
+    let addResourceView = function () {
+        let _formHtml = document.getElementById('form_resource');
+        let dialogTitle = '添加资源';
+        let type = 1;
+        if (this.type === 1) {
+            dialogTitle = '添加页面';
+            type = 2;
+            _formHtml.addReadOnly('Add');
+        } else if (this.type === 2) {
+            dialogTitle = '添加功能';
+            type = 3;
+            _formHtml.addReadOnly('Add');
+        }else{
+            _formHtml.removeReadOnly();
+        }
+
+        _formHtml.reset();
+        document.getElementById('form_resource_parentCode').setValue(this.code);
+        document.getElementById('form_resource_type').setValue(type);
+
+        dialogResource.setTitle(dialogTitle).hideBottomButton().showBottomButton(1).open();
+    };
+
+    let updateResourceView = function () {
+        Request.get('/resource/getById', {id: this.id}).then(function (data) {
+            let _formHtml = document.getElementById('form_resource');
+            _formHtml.addReadOnly('Edit');
+            _formHtml.setForm(data);
+            document.getElementById('form_resource_id').setValue(data.id);
+            dialogResource.setTitle('编辑资源').hideBottomButton().showBottomButton(0).open();
         });
-    }
+    };
+
+    let addResource = function () {
+        let formData = document.getElementById('form_resource').getForm();
+        Request.post('/resource/add', formData).then(function () {
+            tableResource.reload();
+        });
+    };
+
+    let updateResource = function () {
+        let formData = document.getElementById('form_resource').getForm();
+        Request.post('/resource/updateById', formData).then(function () {
+            tableResource.reload();
+        });
+    };
+
+    let resourceTypeChange = function () {
+        let _target = window.event.target;
+        if (_target.value === '3') {
+            document.getElementById('form_resource_menuShow_div').hide();
+        } else {
+            document.getElementById('form_resource_menuShow_div').show();
+        }
+    };
 
 </script>
 </html>

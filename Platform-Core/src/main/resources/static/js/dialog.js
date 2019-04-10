@@ -1,9 +1,8 @@
 function Dialog() {
 }
 
-const DialogHtmlCache = {};
-const DialogCache = {};
 (function () {
+    const DialogHtmlCache = {};
 
     Dialog.create = function (o) {
         if (!o.dialogId) {
@@ -19,69 +18,76 @@ const DialogCache = {};
         };
 
         let dialogHtmlCache = DialogHtmlCache[option.dialogId];
-        if (dialogHtmlCache) {
-            return DialogCache[option.dialogId];
-        } else {
-            return init(option);
+        if (!dialogHtmlCache) {
+            dialogHtmlCache = init(option);
         }
+        return dialogHtmlCache.operator
     };
 
-    Dialog.prototype.open = function () {
-        DialogHtmlCache[this.dialogId]._dialogHtml.style.display = 'block';
-        return this;
-    };
-
-    Dialog.prototype.close = function () {
-        DialogHtmlCache[this.dialogId]._dialogHtml.style.display = '';
-        return this;
-    };
-
-    Dialog.prototype.get = function (dialogId) {
+    Dialog.get = function (dialogId) {
         return DialogCache[dialogId];
     };
 
-    Dialog.prototype.setTitle = function (title) {
-        let dialogHtmlCache = DialogHtmlCache[this.dialogId];
-        dialogHtmlCache._dialogTopHtml.title.selfHtml.innerHTML = title;
-        return this;
-    };
-
-    Dialog.prototype.destroy = function () {
-        destroy(this.dialogId);
-    };
-
-    Dialog.prototype.hideTopButton = function (index) {
-        let dialogHtmlCache = DialogHtmlCache[this.dialogId];
-        dialogHtmlCache._dialogTopHtml.buttons.childrenHtml[index].style.display = 'none';
-        return this;
-    };
-
-    Dialog.prototype.showTopButton = function (index) {
-        let dialogHtmlCache = DialogHtmlCache[this.dialogId];
-        dialogHtmlCache._dialogTopHtml.buttons.childrenHtml[index].style.display = '';
-        return this;
-    };
-
-    Dialog.prototype.hideBottomButton = function (index) {
-        let dialogHtmlCache = DialogHtmlCache[this.dialogId];
-        dialogHtmlCache._dialogBottomHtml.childrenHtml[index].style.display = 'none';
-        let display = 'none';
-        for(let index in dialogHtmlCache._dialogBottomHtml.childrenHtml){
-            let _itemHtml = dialogHtmlCache._dialogBottomHtml.childrenHtml[index];
-            if(_itemHtml.style.display === ''){
-                display = 'block';
-                break;
+    Dialog.prototype = {
+        open: function () {
+            DialogHtmlCache[this.dialogId]._dialogHtml.style.display = 'block';
+            return this;
+        },
+        close: function () {
+            DialogHtmlCache[this.dialogId]._dialogHtml.style.display = '';
+            return this;
+        },
+        setTitle: function (title) {
+            let dialogHtmlCache = DialogHtmlCache[this.dialogId];
+            dialogHtmlCache._dialogTopHtml.title.selfHtml.innerHTML = title;
+            return this;
+        },
+        destroy: function () {
+            destroy(this.dialogId);
+        },
+        hideTopButton: function (index) {
+            let dialogHtmlCache = DialogHtmlCache[this.dialogId];
+            if(index){
+                dialogHtmlCache._dialogTopHtml.buttons.childrenHtml[index].style.display = 'none';
+            }else{
+                dialogHtmlCache._dialogTopHtml.buttons.childrenHtml.forEach(function(_item){
+                    item.style.display = 'none';
+                });
             }
-        }
-        dialogHtmlCache._dialogBottomHtml.selfHtml.style.display = display;
-        return this;
-    };
+            return this;
+        },
+        showTopButton: function (index) {
+            let dialogHtmlCache = DialogHtmlCache[this.dialogId];
+            dialogHtmlCache._dialogTopHtml.buttons.childrenHtml[index].style.display = '';
+            return this;
+        },
+        hideBottomButton: function (index) {
+            let dialogHtmlCache = DialogHtmlCache[this.dialogId];
+            if(index){
+                dialogHtmlCache._dialogBottomHtml.childrenHtml[index].style.display = 'none';
+            }else{
+                dialogHtmlCache._dialogBottomHtml.childrenHtml.forEach(function(_item){
+                    _item.style.display = 'none';
+                });
+            }
 
-    Dialog.prototype.showBottomButton = function (index) {
-        let dialogHtmlCache = DialogHtmlCache[this.dialogId];
-        dialogHtmlCache._dialogBottomHtml.childrenHtml[index].style.display = '';
-        dialogHtmlCache._dialogBottomHtml.selfHtml.style.display = 'block';
-        return this;
+            let display = 'none';
+            for (let index in dialogHtmlCache._dialogBottomHtml.childrenHtml) {
+                let _itemHtml = dialogHtmlCache._dialogBottomHtml.childrenHtml[index];
+                if (_itemHtml.style.display === '') {
+                    display = 'block';
+                    break;
+                }
+            }
+            dialogHtmlCache._dialogBottomHtml.selfHtml.style.display = display;
+            return this;
+        },
+        showBottomButton: function (index) {
+            let dialogHtmlCache = DialogHtmlCache[this.dialogId];
+            dialogHtmlCache._dialogBottomHtml.childrenHtml[index].style.display = '';
+            dialogHtmlCache._dialogBottomHtml.selfHtml.style.display = 'block';
+            return this;
+        },
     };
 
     function destroy(dialogId) {
@@ -96,6 +102,7 @@ const DialogCache = {};
     function init(option) {
         let dialogHtmlCache = {
             option: option,
+            operator: null,
             _dialogHtml: null,
             _dialogBodyHtml: null,
             _dialogTopHtml: {
@@ -122,15 +129,15 @@ const DialogCache = {};
 
         DialogHtmlCache[option.dialogId] = dialogHtmlCache;
 
-        return initDialog.call(dialogHtmlCache);
+        initDialog.call(dialogHtmlCache);
+
+        dialogHtmlCache.operator = new Dialog();
+        dialogHtmlCache.operator.dialogId = option.dialogId;
+        return dialogHtmlCache;
     }
 
     function initDialog() {
         let _this = this;
-
-        let dialog = new Dialog();
-        dialog.dialogId = _this.option.dialogId;
-        DialogCache[dialog.dialogId] = dialog;
 
         _this._dialogHtml = document.getElementById(_this.option.dialogId);
         _this._dialogHtml.innerHTML = '<div class="dialog-body">' + _this._dialogHtml.innerHTML + '</div>';
@@ -142,8 +149,6 @@ const DialogCache = {};
 
         initTop.call(_this);
         initBottom.call(_this);
-
-        return dialog;
     }
 
     function initTop() {
@@ -162,7 +167,7 @@ const DialogCache = {};
             let _buttonHtml = document.createElement('span');
             _buttonHtml.innerHTML = button.title;
             _buttonHtml.classList.add('dialog-top-buttons-item', 'margin-left-5');
-            if(button.classNames){
+            if (button.classNames) {
                 _buttonHtml.classList.add(button.classNames);
             }
             _buttonHtml.onclick = function () {
@@ -177,7 +182,7 @@ const DialogCache = {};
         _this._dialogBodyHtml.insertBefore(_this._dialogTopHtml.selfHtml, _this._dialogContentHtml);
     }
 
-    function initBottom(){
+    function initBottom() {
         let _this = this;
 
         _this._dialogBottomHtml.selfHtml = document.createElement('div');
@@ -187,19 +192,22 @@ const DialogCache = {};
             let _buttonHtml = document.createElement('button');
             _buttonHtml.innerHTML = button.title;
             _buttonHtml.classList.add('dialog-bottom-button', 'margin-left-10');
-            if(button.classNames){
+            if (button.classNames) {
                 _buttonHtml.classList.add(button.classNames);
             }
             _buttonHtml.onclick = function () {
                 if (typeof button.onclick === 'function') {
                     button.onclick.call(_buttonHtml);
                 }
+                if(button.closeAfterClick === true){
+                    _this.operator.close();
+                }
             };
             _this._dialogBottomHtml.selfHtml.appendChild(_buttonHtml);
             _this._dialogBottomHtml.selfHtml.style.display = 'block';
             _this._dialogBottomHtml.childrenHtml[index] = _buttonHtml;
         });
-        if(_this.option.bottomButtons.length>0){
+        if (_this.option.bottomButtons.length > 0) {
             _this._dialogBottomHtml.selfHtml.style.display = 'block';
         }
     }

@@ -7,6 +7,8 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSON;
 import com.jwzhu.platform.common.exception.SystemException;
@@ -36,7 +38,7 @@ public class TokenUtiAES implements TokenUtil {
             this.DecryptCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             this.DecryptCipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(Base64.decodeBase64(this.tokenConfig.getAesIv())));
         } catch (Exception e) {
-            throw new SystemException("init AES exception", e);
+            throw new SystemException("初始化AES Token组件失败", e);
         }
     }
 
@@ -50,9 +52,9 @@ public class TokenUtiAES implements TokenUtil {
     public String createToken(TokenSubject subject) {
         byte[] token;
         try {
-            token = this.EncryptCipher.doFinal(JSON.toJSONString(subject).getBytes());
+            token = this.EncryptCipher.doFinal(JSON.toJSONString(subject).getBytes("UTF-8"));
         } catch (Exception e) {
-            throw new SystemException("create AES Token exception", e);
+            throw new SystemException("创建AES Token异常", e);
         }
         return Base64.encodeBase64URLSafeString(token);
     }
@@ -63,7 +65,7 @@ public class TokenUtiAES implements TokenUtil {
         if (subject.getCreateMillis() == null) {
             throw new TokenErrorException("Token错误");
         }
-        if (this.tokenConfig.getExpiredTime() != null && this.tokenConfig.getExpiredTime() > 0) {
+        if (this.tokenConfig.getExpiredTime() > 0) {
             if (System.currentTimeMillis() - subject.getCreateMillis() > this.tokenConfig.getExpiredTime()) {
                 throw new TokenTimeOutException();
             }
@@ -73,12 +75,12 @@ public class TokenUtiAES implements TokenUtil {
 
     @Override
     public TokenSubject analyzeToken(String token) {
-        byte[] subject;
         try {
-            subject = this.DecryptCipher.doFinal(Base64.decodeBase64(token));
+            byte[] subject = this.DecryptCipher.doFinal(Base64.decodeBase64(token));
+            String subjectStr = new String(subject, "UTF-8");
+            return JSON.parseObject(subjectStr, TokenSubject.class);
         } catch (Exception e) {
-            throw new SystemException("create AES Token exception", e);
+            throw new SystemException("解析AES Token异常", e);
         }
-        return JSON.parseObject(new String(subject), TokenSubject.class);
     }
 }

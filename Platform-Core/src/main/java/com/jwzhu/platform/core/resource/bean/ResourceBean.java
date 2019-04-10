@@ -13,7 +13,7 @@ public class ResourceBean extends BaseBean {
     private String url;
     private Integer sort;
     private Short type;
-    private Short isShow;
+    private Short menuShow;
     private Short availableStatus;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
@@ -74,12 +74,12 @@ public class ResourceBean extends BaseBean {
         this.type = type;
     }
 
-    public Short getIsShow() {
-        return isShow;
+    public Short getMenuShow() {
+        return menuShow;
     }
 
-    public void setIsShow(Short isShow) {
-        this.isShow = isShow;
+    public void setMenuShow(Short menuShow) {
+        this.menuShow = menuShow;
     }
 
     public Short getAvailableStatus() {

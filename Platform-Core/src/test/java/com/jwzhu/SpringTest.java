@@ -48,11 +48,15 @@ public class SpringTest {
     }
 
     @Test
-    public void testToken(){
-        String token = tokenService.createToken(new TokenSubject(1,(short) 1));
-        redisTemplate.boundValueOps("Test_Valid_Token_" + token).set(token, 200);
-        System.out.println(redisTemplate.boundValueOps("Test_Valid_Token_" + token).get());
-        System.out.println(JSON.toJSONString(tokenService.analyzeToken(token)));
+    public void testToken() throws InterruptedException {
+//        for (int i = 0;i<10000;i++){
+            String token = tokenService.createToken(new TokenSubject(1,(short) 1));
+            System.out.println("密文："+token);
+            TokenSubject subject = tokenService.analyzeToken(token);
+            System.out.println("明文："+JSON.toJSONString(subject));
+            System.out.println();
+//            Thread.sleep(1000);
+//        }
     }
 
     public static void main(String[] args){

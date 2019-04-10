@@ -38,20 +38,7 @@ public enum ResourceType {
         return message;
     }
 
-    /**
-     * 枚举键值对列表
-     */
-    public static List<Map<Short, String>> list = new ArrayList<>();
-
-    static {
-        for (ResourceType enumItem : ResourceType.values()) {
-            Map<Short, String> item = new HashMap<>();
-            item.put(enumItem.code, enumItem.message);
-            list.add(item);
-        }
-    }
-
-    private static Map<Short, String> map = new HashMap<>();
+    public static Map<Short, String> map = new HashMap<>();
 
     static {
         for (ResourceType item : ResourceType.values()) {

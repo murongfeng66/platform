@@ -12,13 +12,13 @@ const Request = {};
      * @return {string}
      */
     Request.JsonToUrlParam = function (json) {
-        let urlParam = '';
-        for (let name in json) {
-            if (!json.hasOwnProperty(name)) {
-                continue;
-            }
-            urlParam += name + '=' + json[name] + '&';
+        if(!json){
+            return '';
         }
+        let urlParam = '';
+        json.forEach(function(key, value){
+            urlParam += key + '=' + value + '&';
+        });
         return urlParam.endsWith('&') ? urlParam.substr(0, urlParam.length - 1) : urlParam;
     };
 
@@ -65,23 +65,23 @@ const Request = {};
                                     if (data.code === 1) {
                                         resolve(returnAll === true ? data : data.data);
                                     } else {
-                                        common.toast.error(data.message);
+                                        Toast.error(data.message);
                                     }
                                     if (data.redirect) {
                                         window.location.href = data.redirect;
                                     }
                                 } catch (e) {
-                                    common.toast.error('请求失败');
+                                    Toast.error('请求失败');
                                     console.error('响应内容错误：' + url);
                                     console.error(e);
                                 }
                             } else {
-                                common.toast.error('请求失败');
+                                Toast.error('请求失败');
                                 console.error('响应类型[' + responseContentTypes + ']不支持：' + url);
                             }
                         }
                     } else {
-                        common.toast.error('请求失败');
+                        Toast.error('请求失败');
                         console.error('请求失败：' + url);
                     }
                 }

@@ -242,7 +242,7 @@
         }
         _itemHtml.onclick = function () {
             if (document.querySelectorAll('.content-body').length >= 10) {
-                common.toast.info('最多打开10个页面');
+                Toast.info('最多打开10个页面');
                 return;
             }
             let _activeNav = document.querySelector('.content-top-nav-item.active');

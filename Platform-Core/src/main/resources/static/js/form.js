@@ -12,7 +12,7 @@
         let _formItems = this.querySelectorAll('[name]');
         let formJson = {};
 
-        _formItems.forEach(function(_item){
+        _formItems.forEach(function (_item) {
             if (FormConfig.serializeJsonConfig.notEmpty && _item.value === '') {
                 return
             }
@@ -23,27 +23,36 @@
     };
 
     HTMLElement.prototype.setForm = function (formData) {
-        if(FormConfig.loadFormConfig){
-            this.reset();
+        let _this = this;
+        if (FormConfig.loadFormConfig.resetForm) {
+            _this.reset();
         }
-        for (let name in formData) {
-            if (!formData.hasOwnProperty(name)) {
-                continue
+
+        formData.forEach(function (key, value) {
+            if (FormConfig.loadFormConfig.notEmpty && value === '') {
+                return
             }
 
-            if (FormConfig.loadFormConfig.notEmpty && formData[name] === '') {
-                continue
-            }
+            let _formItems = _this.querySelectorAll('[name=' + key + ']');
+            _formItems.forEach(function (_item) {
+                _item.setValue(value);
+            });
+        });
+    };
 
-            let formItems = this.querySelectorAll('[name='+name+']');
-            for (let i in formItems) {
-                if (!formItems.hasOwnProperty(i)) {
-                    continue
-                }
+    HTMLElement.prototype.addReadOnly = function (readOnly) {
+        this.removeReadOnly();
+        let selector = readOnly ? '[data-readonly*="|' + readOnly + '|"]': '[data-readonly]';
+        this.querySelectorAll(selector).forEach(function (_item) {
+            _item.setAttribute('readonly', '');
+        })
+    };
 
-                formItems[i].value = formData[name];
-            }
-        }
+    HTMLElement.prototype.removeReadOnly = function (readOnly) {
+        let selector = readOnly ? '[data-readonly*="|' + readOnly + '|"]': '[data-readonly]';
+        this.querySelectorAll(selector).forEach(function (_item) {
+            _item.removeAttribute('readonly');
+        })
     };
 
     Object.defineProperties(HTMLElement.prototype, {

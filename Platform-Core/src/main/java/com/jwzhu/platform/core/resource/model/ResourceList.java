@@ -8,7 +8,7 @@ public class ResourceList {
     private String name;
     private Integer sort;
     private Short type;
-    private Short isShow;
+    private Short menuShow;
 
     public Long getId() {
         return id;
@@ -58,11 +58,11 @@ public class ResourceList {
         this.type = type;
     }
 
-    public Short getIsShow() {
-        return isShow;
+    public Short getMenuShow() {
+        return menuShow;
     }
 
-    public void setIsShow(Short isShow) {
-        this.isShow = isShow;
+    public void setMenuShow(Short menuShow) {
+        this.menuShow = menuShow;
     }
 }

@@ -31,7 +31,8 @@ public class ResourceService {
     public void insert(ResourceBean bean) {
         bean.setCreateTime(bean.getCreateTime() == null ? RequestBaseParam.getRequestTime() : bean.getCreateTime());
         bean.setAvailableStatus(bean.getAvailableStatus() == null ? AvailableStatus.Enable.getCode() : bean.getAvailableStatus());
-        bean.setIsShow(bean.getIsShow() == null ? YesOrNo.No.getCode() : bean.getIsShow());
+        bean.setMenuShow(bean.getMenuShow() == null ? YesOrNo.No.getCode() : bean.getMenuShow());
+        bean.setMenuShow(bean.getMenuShow() == null ? YesOrNo.No.getCode() : bean.getMenuShow());
         resourceDao.insert(bean);
     }
 
@@ -42,7 +43,7 @@ public class ResourceService {
     public List<Menu> queryMenu() {
         QueryMenuBean bean = new QueryMenuBean();
         bean.setUserId(RequestBaseParam.getRequestUser().getUserId());
-        bean.setIsShow(YesOrNo.Yes.getCode());
+        bean.setMenuShow(YesOrNo.Yes.getCode());
         bean.setAvailableStatus(AvailableStatus.Enable.getCode());
         bean.setTypes(ResourceType.Menu.getCode(), ResourceType.Page.getCode());
         Map<String, Menu> map = resourceDao.queryMenu(bean);

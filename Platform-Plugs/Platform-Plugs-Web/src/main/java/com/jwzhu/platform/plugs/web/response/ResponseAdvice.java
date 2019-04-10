@@ -2,6 +2,8 @@ package com.jwzhu.platform.plugs.web.response;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -17,12 +19,16 @@ import com.jwzhu.platform.common.bean.PageBean;
 import com.jwzhu.platform.common.exception.SystemException;
 import com.jwzhu.platform.plugs.web.request.RequestBaseParam;
 import com.jwzhu.platform.plugs.web.request.RequestUtil;
+import com.jwzhu.platform.plugs.web.token.TokenService;
 
 @ControllerAdvice
 public class ResponseAdvice implements ResponseBodyAdvice {
 
+    private static Logger logger = LoggerFactory.getLogger(ResponseAdvice.class);
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private TokenService tokenService;
 
     @Override
     public boolean supports(MethodParameter returnType, Class converterType) {
@@ -53,7 +59,8 @@ public class ResponseAdvice implements ResponseBodyAdvice {
 
         if (!StringUtils.isEmpty(RequestBaseParam.getRefreshToken())) {
             webResult.setToken(RequestBaseParam.getRefreshToken());
-            RequestUtil.setSession("Token", RequestBaseParam.getRefreshToken());
+            logger.info("存入Token：{}", RequestBaseParam.getRefreshToken());
+            RequestUtil.setSession(tokenService.getTokenConfig().getParamName(), RequestBaseParam.getRefreshToken());
         }
 
         if (body instanceof String) {
