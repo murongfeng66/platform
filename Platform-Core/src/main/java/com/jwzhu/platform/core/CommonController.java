@@ -48,9 +48,9 @@ public class CommonController {
         return view;
     }
 
-    @ControllerHandler
     @GetMapping("queryMenu")
     @ResponseBody
+    @ControllerHandler
     public List<Menu> queryMenu(){
         return resourceManager.queryMenu();
     }

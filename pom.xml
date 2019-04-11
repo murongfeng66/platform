@@ -34,6 +34,8 @@
         <platform-plugs-mybatis.version>1.0-SNAPSHOT</platform-plugs-mybatis.version>
         <platform-plugs-redis.version>1.0-SNAPSHOT</platform-plugs-redis.version>
         <platform-plugs-web.version>1.0-SNAPSHOT</platform-plugs-web.version>
+        <platform-plugs-jsonescape-bind.version>1.0-SNAPSHOT</platform-plugs-jsonescape-bind.version>
+        <platform-plugs-jsonescape-jackson.version>1.0-SNAPSHOT</platform-plugs-jsonescape-jackson.version>
 
         <mybatis-spring-boot-starter.version>1.3.1</mybatis-spring-boot-starter.version>
         <servlet-api.version>2.5</servlet-api.version>
@@ -77,6 +79,16 @@
                 <groupId>com.jwzhu</groupId>
                 <artifactId>platform-plugs-web</artifactId>
                 <version>${platform-plugs-web.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.jwzhu</groupId>
+                <artifactId>platform-plugs-jsonescape-bind</artifactId>
+                <version>${platform-plugs-jsonescape-bind.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.jwzhu</groupId>
+                <artifactId>platform-plugs-jsonescape-jackson</artifactId>
+                <version>${platform-plugs-jsonescape-jackson.version}</version>
             </dependency>
 
             <dependency>

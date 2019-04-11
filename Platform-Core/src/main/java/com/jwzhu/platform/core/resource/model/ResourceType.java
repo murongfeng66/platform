@@ -1,8 +1,6 @@
 package com.jwzhu.platform.core.resource.model;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.jwzhu.platform.common.exception.SystemException;
@@ -24,6 +22,8 @@ public enum ResourceType {
      * 描述
      */
     private String message;
+
+    ResourceType(){}
 
     ResourceType(short code, String message) {
         this.code = code;
@@ -58,5 +58,4 @@ public enum ResourceType {
         }
         throw new SystemException("无此[" + code + "]枚举");
     }
-
 }
