@@ -95,7 +95,7 @@ public class ResourceAddParam extends BaseParam<ResourceBean> {
 
     @Override
     protected void exValid() {
-        this.code = this.parentCode + "." + this.code;
+        this.code = StringUtils.isEmpty(this.parentCode) ? this.code : this.parentCode + "." + this.code;
         if ((this.type == ResourceType.Page.getCode() || this.type == ResourceType.Function.getCode()) && StringUtils.isEmpty(this.url)) {
             throw new BusinessException("页面和功能的URL不能为空");
         }

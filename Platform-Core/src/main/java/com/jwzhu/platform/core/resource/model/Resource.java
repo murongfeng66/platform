@@ -1,6 +1,6 @@
 package com.jwzhu.platform.core.resource.model;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import com.jwzhu.platform.common.enums.AvailableStatusEscaper;
 import com.jwzhu.platform.common.enums.YesOrNoEscaper;
@@ -20,8 +20,8 @@ public class Resource {
     private Short menuShow;
     @ShortEscape(AvailableStatusEscaper.class)
     private Short availableStatus;
-    private Timestamp createTime;
-    private Timestamp updateTime;
+    private LocalDateTime createTime;
+    private LocalDateTime updateTime;
 
     public Long getId() {
         return id;
@@ -95,19 +95,19 @@ public class Resource {
         this.availableStatus = availableStatus;
     }
 
-    public Timestamp getCreateTime() {
+    public LocalDateTime getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Timestamp createTime) {
+    public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
     }
 
-    public Timestamp getUpdateTime() {
+    public LocalDateTime getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Timestamp updateTime) {
+    public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
     }
 }

@@ -28,7 +28,7 @@ public class JsonEscaperScanner extends ClassPathBeanDefinitionScanner {
     public Set<BeanDefinitionHolder> doScan(String... basePackages) {
         Set<BeanDefinitionHolder> beanDefinitionHolders = super.doScan(basePackages);
         for (BeanDefinitionHolder beanDefinitionHolder : beanDefinitionHolders) {
-            logger.info("扫描到：{}",beanDefinitionHolder.getBeanName());
+            logger.info("JSON转义序列化器：{}",beanDefinitionHolder.getBeanDefinition().getBeanClassName());
         }
         return beanDefinitionHolders;
     }

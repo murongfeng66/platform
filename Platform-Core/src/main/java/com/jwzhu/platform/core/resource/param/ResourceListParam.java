@@ -8,6 +8,7 @@ public class ResourceListParam extends PageParam<ResourceListBean> {
     private String key;
     private Short type;
     private Short menuShow;
+    private Short availableStatus;
 
     public String getKey() {
         return key;
@@ -31,6 +32,14 @@ public class ResourceListParam extends PageParam<ResourceListBean> {
 
     public void setMenuShow(Short menuShow) {
         this.menuShow = menuShow;
+    }
+
+    public Short getAvailableStatus() {
+        return availableStatus;
+    }
+
+    public void setAvailableStatus(Short availableStatus) {
+        this.availableStatus = availableStatus;
     }
 
     @Override

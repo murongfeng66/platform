@@ -1,12 +1,12 @@
 package com.jwzhu.platform.core.user.service;
 
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jwzhu.platform.common.date.DateUtil;
 import com.jwzhu.platform.common.enums.AvailableStatus;
 import com.jwzhu.platform.common.exception.BusinessException;
 import com.jwzhu.platform.core.user.bean.LoginBean;
@@ -23,7 +23,7 @@ public class LoginService {
         if (loginDao.getByUsername(bean.getUsername()) != null) {
             throw new BusinessException("账号已存在");
         }
-        bean.setCreateTime(bean.getCreateTime() == null ? DateUtil.now() : bean.getCreateTime());
+        bean.setCreateTime(bean.getCreateTime() == null ? LocalDateTime.now() : bean.getCreateTime());
         bean.setStatus(bean.getStatus() == null ? AvailableStatus.Enable.getCode() : bean.getStatus());
         bean.setSalt(createSalt());
         bean.setPassword(encryptPassword(bean.getPassword(),bean.getSalt()));

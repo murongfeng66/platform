@@ -20,11 +20,11 @@
         </div>
         <div class="form-input-group">
             <label class="form-label">类型：</label>
-            <select name="type" class="form-input">
-                <option value="">全部</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-            </select>
+            <select id="form_resource_query_type" name="type" class="form-input"></select>
+        </div>
+        <div class="form-input-group">
+            <label class="form-label">状态：</label>
+            <select id="form_resource_query_availableStatus" name="availableStatus" class="form-input"></select>
         </div>
         <div class="form-input-group">
             <button type="button" class="button" onclick="(function(){tableResource.reload();})()">查询</button>
@@ -91,6 +91,8 @@
     window.onload = function () {
         document.getElementById('form_resource_menuShow').initSelect('/yesOrNo');
         document.getElementById('form_resource_type').initSelect('/resource/resourceType');
+        document.getElementById('form_resource_query_type').initSelect('/resource/resourceType', true);
+        document.getElementById('form_resource_query_availableStatus').initSelect('/availableStatus', true);
     };
 
     let dialogResource = Dialog.create({
@@ -126,9 +128,9 @@
         column: [
             {title: '父编码', name: 'parentCode'},
             {title: '编码', name: 'code'},
-            {title: '类型', name: 'typeText',width:60},
-            {title: '状态', name: 'availableStatusText',width:60},
-            {title: '名称', name: 'name'}
+            {title: '名称', name: 'name'},
+            {title: '类型', name: 'typeText',width:80},
+            {title: '状态', name: 'availableStatusText',width:80}
         ],
         bottomButtons: [{
             title: '添加',

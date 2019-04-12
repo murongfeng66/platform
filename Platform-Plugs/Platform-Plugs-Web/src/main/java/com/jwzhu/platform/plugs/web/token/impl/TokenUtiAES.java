@@ -1,13 +1,8 @@
 package com.jwzhu.platform.plugs.web.token.impl;
 
-import java.security.Key;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.Base64;
 
 import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -26,26 +21,11 @@ public class TokenUtiAES implements TokenUtil {
 
     private Logger logger = LoggerFactory.getLogger(TokenUtiAES.class);
     private TokenConfig tokenConfig;
-    private Cipher EncryptCipher;
-    private Cipher DecryptCipher;
     private static final String ALGORITHM = "AES/CBC/PKCS5Padding";
 
     public TokenUtiAES(TokenConfig tokenConfig) {
         this.tokenConfig = tokenConfig;
-        init();
-    }
-
-    private void init() {
         checkConfig();
-        Key key = new SecretKeySpec(Base64.getDecoder().decode(this.tokenConfig.getSecretKey()), "AES");
-        try {
-            this.EncryptCipher = Cipher.getInstance(ALGORITHM);
-            this.EncryptCipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(Base64.getDecoder().decode(this.tokenConfig.getAesIv())));
-            this.DecryptCipher = Cipher.getInstance(ALGORITHM);
-            this.DecryptCipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(Base64.getDecoder().decode(this.tokenConfig.getAesIv())));
-        } catch (Exception e) {
-            throw new SystemException("初始化AES Token组件失败", e);
-        }
     }
 
     private void checkConfig() {
@@ -58,7 +38,11 @@ public class TokenUtiAES implements TokenUtil {
     public String createToken(TokenSubject subject) {
         byte[] token;
         try {
-            token = this.EncryptCipher.doFinal(JSON.toJSONString(subject).getBytes("UTF-8"));
+            SecretKeySpec key = new SecretKeySpec(Base64.getDecoder().decode(this.tokenConfig.getSecretKey()), "AES");
+            Cipher encryptCipher = Cipher.getInstance(ALGORITHM);
+            encryptCipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(Base64.getDecoder().decode(this.tokenConfig.getAesIv())));
+
+            token = encryptCipher.doFinal(JSON.toJSONString(subject).getBytes("UTF-8"));
         } catch (Exception e) {
             throw new SystemException("创建AES Token异常", e);
         }
@@ -82,7 +66,11 @@ public class TokenUtiAES implements TokenUtil {
     @Override
     public TokenSubject analyzeToken(String token) {
         try {
-            byte[] subject = this.DecryptCipher.doFinal(Base64.getUrlDecoder().decode(token));
+            SecretKeySpec key = new SecretKeySpec(Base64.getDecoder().decode(this.tokenConfig.getSecretKey()), "AES");
+            Cipher decryptCipher = Cipher.getInstance(ALGORITHM);
+            decryptCipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(Base64.getDecoder().decode(this.tokenConfig.getAesIv())));
+
+            byte[] subject = decryptCipher.doFinal(Base64.getUrlDecoder().decode(token));
             String subjectStr = new String(subject, "UTF-8");
             logger.debug("Token明文：{}", subjectStr);
             return JSON.parseObject(subjectStr, TokenSubject.class);

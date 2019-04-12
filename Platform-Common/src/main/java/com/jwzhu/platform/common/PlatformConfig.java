@@ -7,7 +7,8 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "com.jwzhu.platform", ignoreUnknownFields = false, ignoreInvalidFields = true)
 public class PlatformConfig {
 
-    private String name;
+    private String name = "统一管理平台";
+    private String loginUrl = "/";
 
     public String getName() {
         return name;
@@ -15,5 +16,13 @@ public class PlatformConfig {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getLoginUrl() {
+        return loginUrl;
+    }
+
+    public void setLoginUrl(String loginUrl) {
+        this.loginUrl = loginUrl;
     }
 }

@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -16,13 +17,11 @@ import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.jdbc.ConnectionLogger;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
 import org.apache.ibatis.plugin.Plugin;
 import org.apache.ibatis.plugin.Signature;
-import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
@@ -34,19 +33,6 @@ import com.jwzhu.platform.common.reflect.ReflectUtils;
 
 @Intercepts({@Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class})})
 public class MybatisCutPageInterceptor implements Interceptor {
-
-    public static class BoundSqlSqlSource implements SqlSource {
-        BoundSql boundSql;
-
-        BoundSqlSqlSource(BoundSql boundSql) {
-            this.boundSql = boundSql;
-        }
-
-        @Override
-        public BoundSql getBoundSql(Object parameterObject) {
-            return boundSql;
-        }
-    }
 
     private enum DataBaseType {
         ORACLE {
@@ -98,57 +84,42 @@ public class MybatisCutPageInterceptor implements Interceptor {
 
     private HashSet<String> sqlNames = new HashSet<>();
 
-    private MappedStatement copyFromMappedStatement(MappedStatement ms, SqlSource newSqlSource) {
-        MappedStatement.Builder builder = new MappedStatement.Builder(ms.getConfiguration(), ms.getId(), newSqlSource, ms.getSqlCommandType());
-        builder.resource(ms.getResource());
-        builder.fetchSize(ms.getFetchSize());
-        builder.statementType(ms.getStatementType());
-        builder.keyGenerator(ms.getKeyGenerator());
-        if (ms.getKeyProperties() != null) {
-            for (String keyProperty : ms.getKeyProperties()) {
-                builder.keyProperty(keyProperty);
-            }
-        }
-        builder.timeout(ms.getTimeout());
-        builder.parameterMap(ms.getParameterMap());
-        builder.resultMaps(ms.getResultMaps());
-        builder.cache(ms.getCache());
-        return builder.build();
-    }
-
     /**
      * 进行切分
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
     private Object doCutPage(Invocation invocation, PageBean pageBean) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, SQLException {
         MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
-        Configuration configuration = mappedStatement.getConfiguration();
+        ReflectUtils.setFieldValue(mappedStatement.getParameterMap(), "parameterMappings", new ArrayList<>());
         BoundSql boundSql = mappedStatement.getBoundSql(pageBean);
+
+        List parameterMappings = (List) ReflectUtils.getFieldValue(boundSql, "parameterMappings");
+        ReflectUtils.setFieldValue(mappedStatement.getParameterMap(), "parameterMappings", parameterMappings);
+
+        Configuration configuration = mappedStatement.getConfiguration();
         if (sqlNames.isEmpty()) {
             this.initStatementMap(configuration);
         }
+
         if (pageBean.needCut()) {
             pageBean.setTotalCount(this.getCount(invocation, configuration, mappedStatement, boundSql, pageBean));
+        }
+
+        if (pageBean.getTotalCount() == 0 || pageBean.getCurrentPage() > pageBean.getTotalPage()) {
+            pageBean.setList(new ArrayList<>());
+            return new ArrayList<>();
         }
 
         String limitSql = getLimitSql(boundSql, pageBean);
         BoundSql dataBoundSql = new BoundSql(mappedStatement.getConfiguration(), limitSql, boundSql.getParameterMappings(), boundSql.getParameterObject());
 
-        if (ReflectUtils.getFieldValue(boundSql, "metaParameters") != null) {
-            MetaObject mo = (MetaObject) ReflectUtils.getFieldValue(boundSql, "metaParameters");
-            ReflectUtils.setFieldValue(dataBoundSql, "metaParameters", mo);
-        }
-
-        MappedStatement DataMappedStatement = copyFromMappedStatement(mappedStatement, new BoundSqlSqlSource(dataBoundSql));
-
-        invocation.getArgs()[0] = DataMappedStatement;
         Object object = invocation.proceed();
         if (object instanceof List) {
             List<?> data = (List<?>) object;
             pageBean.setList(data);
-            if (!pageBean.needCut() && pageBean.getList() != null) {
-                pageBean.setTotalCount(pageBean.getList().size());
-            }
+        }
+        if (!pageBean.needCut() && pageBean.getList() != null) {
+            pageBean.setTotalCount(pageBean.getList().size());
         }
         return object;
     }
@@ -158,7 +129,7 @@ public class MybatisCutPageInterceptor implements Interceptor {
      */
     private int exeCountSql(Configuration configuration, MappedStatement mappedStatement, BoundSql boundSql, Connection connection, Object parameter) {
         int totalSize = 0;
-        try  {
+        try {
             PreparedStatement stmt = connection.prepareStatement(this.getCountSql(boundSql.getSql()));
             ParameterHandler handler = configuration.newParameterHandler(mappedStatement, parameter, boundSql);
             handler.setParameters(stmt);
@@ -170,14 +141,6 @@ public class MybatisCutPageInterceptor implements Interceptor {
             throw new SystemException("执行统计SQL失败", e);
         }
         return totalSize;
-    }
-
-    /**
-     * 执行查询
-     */
-    private Object exeProceed(Invocation invocation, MappedStatement statement) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        invocation.getArgs()[0] = statement;
-        return invocation.proceed();
     }
 
     /**
@@ -204,7 +167,8 @@ public class MybatisCutPageInterceptor implements Interceptor {
             countSqlId = statement.getId() + countSQLSuffix;
         }
         if (sqlNames.contains(countSqlId)) {
-            List<?> data = (List<?>) exeProceed(invocation, statement.getConfiguration().getMappedStatement(countSqlId));
+            invocation.getArgs()[0] = statement;
+            List<?> data = (List<?>) invocation.proceed();
             if (data.size() > 0) {
                 count = Integer.parseInt(data.get(0).toString());
             }

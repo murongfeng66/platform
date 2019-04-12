@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jwzhu.platform.core.service.db.ServiceDao">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into Service(serviceCode, serviceName, ownerId, createTime, availableStatus) values
+            (#{serviceCode}, #{serviceName}, #{ownerId}, #{createTime}, #{availableStatus})
+    </insert>
+    <update id="updateById">
+        update Service
+        <set>
+            <trim suffixOverrides=",">
+                <if test="serviceName != null">
+                    serviceName = #{serviceName},
+                </if>
+                <if test="ownerId != null">
+                    ownerId = #{ownerId},
+                </if>
+                <if test="createTime != null">
+                    createTime = #{createTime},
+                </if>
+                <if test="availableStatus != null">
+                    availableStatus = #{availableStatus},
+                </if>
+            </trim>
+        </set>
+        where id = #{id}
+    </update>
+    <select id="queryByParam" resultType="com.jwzhu.platform.core.service.model.Service">
+        select id, serviceCode, serviceName, ownerId, createTime, updateTime, availableStatus
+        from Service
+        <where>
+            <trim suffixOverrides="and">
+                <if test="key != null">
+                    (serviceCode like concat(#{key}, '%') or serviceName like concat(#{key}, '%')) and
+                </if>
+                <if test="ownerId != null">
+                    ownerId = #{ownerId} and
+                </if>
+                <if test="availableStatus != null">
+                    availableStatus = #{availableStatus} and
+                </if>
+            </trim>
+        </where>
+        order by
+        <trim suffixOverrides=",">
+            <if test="sorts != null and sorts.size() > 0">
+                <foreach collection="sorts" item="item">
+                    ${item.columnName} ${item.sortType},
+                </foreach>
+            </if>
+            id desc,
+        </trim>
+    </select>
+    <select id="getById" resultType="com.jwzhu.platform.core.service.model.Service">
+        select id, serviceCode, serviceName, ownerId, createTime, updateTime, availableStatus
+        from Service
+        where id = #{id}
+    </select>
+</mapper>

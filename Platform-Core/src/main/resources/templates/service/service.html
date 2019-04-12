@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>系统资源</title>
+    <title>平台服务</title>
     <link rel="icon" type="image/x-icon" href="/image/icon.ico">
 
     <link rel="stylesheet" href="/css/common.css">
@@ -12,11 +12,15 @@
     <link rel="stylesheet" href="/font-awesome-4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-<form id="form_role_query" class="form margin-top-10">
+<form id="form_service_query" class="form margin-top-10">
     <div class="form-row">
         <div class="form-input-group">
-            <label class="form-label">编码：</label>
-            <input name="key" class="form-input">
+            <label class="form-label">关键词：</label>
+            <input type="text" name="key" class="form-input">
+        </div>
+        <div class="form-input-group">
+            <label class="form-label">时间：</label>
+            <input type="date" name="datetime" class="form-input">
         </div>
         <div class="form-input-group">
             <button type="button" class="button" onclick="(function(){tableRole.reload();})()">查询</button>
@@ -24,21 +28,16 @@
         </div>
     </div>
 </form>
-<div id="table_role">
+<div id="table_service">
 </div>
-<div id="dialog_role" class="dialog">
-    <form id="form_role" class="form dialog-content">
-        <input id="form_role_id" type="hidden" name="id">
-        <div class="form-row">
-            <div class="form-input-group flex-1">
-                <label class="form-label">编码：</label>
-                <input type="text" name="code" class="form-input" data-readonly="|Edit|">
-            </div>
-        </div>
+
+<div id="dialog_service" class="dialog">
+    <form id="form_service" class="form dialog-content">
+        <input id="form_service_id" type="hidden" name="id">
         <div class="form-row">
             <div class="form-input-group flex-1">
                 <label class="form-label">名称：</label>
-                <input type="text" name="name" class="form-input">
+                <input type="text" name="serviceName" class="form-input">
             </div>
         </div>
     </form>
@@ -54,7 +53,7 @@
     };
 
     let dialogRole = Dialog.create({
-        dialogId: 'dialog_role',
+        dialogId: 'dialog_service',
         topButtons: [{
             title: '查看',
             classNames: '',
@@ -80,15 +79,18 @@
     });
 
     let tableRole = Table.init({
-        tableId: 'table_role',
-        queryFormId: 'form_role_query',
-        url: '/role/queryByParam',
+        tableId: 'table_service',
+        queryFormId: 'form_service_query',
+        url: '/service/queryByParam',
         column: [{
-            title: '编码',
-            name: 'code'
+            title: '服务编码',
+            name: 'serviceCode'
         }, {
-            title: '名称',
-            name: 'name'
+            title: '服务名称',
+            name: 'serviceName'
+        }, {
+            title: '添加时间',
+            name: 'createTime'
         }],
         bottomButtons: [{
             title: '添加',
@@ -109,31 +111,31 @@
     });
 
     let addRoleView = function () {
-        document.getElementById('form_role').reset();
-        let dialogTitle = '添加资源';
+        document.getElementById('form_service').reset();
+        let dialogTitle = '添加服务';
 
         dialogRole.setTitle(dialogTitle).hideBottomButton().showBottomButton(1).open();
     };
 
     let updateRoleView = function () {
-        Request.get('/role/getById', {id: this.id}).then(function (data) {
-            let _formHtml = document.getElementById('form_role');
+        Request.get('/service/getById', {id: this.id}).then(function (data) {
+            let _formHtml = document.getElementById('form_service');
             _formHtml.addReadOnly('Edit');
             _formHtml.setForm(data);
-            dialogRole.setTitle('编辑资源').hideBottomButton().showBottomButton(0).open();
+            dialogRole.setTitle('编辑服务').hideBottomButton().showBottomButton(0).open();
         });
     };
 
     let addRole = function () {
-        let formData = document.getElementById('form_role').getForm();
-        Request.post('/role/add', formData).then(function () {
+        let formData = document.getElementById('form_service').getForm();
+        Request.post('/service/add', formData).then(function () {
             tableRole.reload();
         });
     };
 
     let updateRole = function () {
-        let formData = document.getElementById('form_role').getForm();
-        Request.post('/role/updateById', formData).then(function () {
+        let formData = document.getElementById('form_service').getForm();
+        Request.post('/service/updateById', formData).then(function () {
             tableRole.reload();
         });
     };

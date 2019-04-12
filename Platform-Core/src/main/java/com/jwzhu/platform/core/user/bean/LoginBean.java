@@ -1,6 +1,6 @@
 package com.jwzhu.platform.core.user.bean;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import com.jwzhu.platform.common.bean.BaseBean;
 
@@ -11,8 +11,8 @@ public class LoginBean extends BaseBean {
     private String password;
     private Short userType;
     private Long userId;
-    private Timestamp createTime;
-    private Timestamp updateTime;
+    private LocalDateTime createTime;
+    private LocalDateTime updateTime;
     private Short status;
     private String salt;
 
@@ -72,19 +72,19 @@ public class LoginBean extends BaseBean {
         this.userId = userId;
     }
 
-    public Timestamp getCreateTime() {
+    public LocalDateTime getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Timestamp createTime) {
+    public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
     }
 
-    public Timestamp getUpdateTime() {
+    public LocalDateTime getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Timestamp updateTime) {
+    public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
     }
 }

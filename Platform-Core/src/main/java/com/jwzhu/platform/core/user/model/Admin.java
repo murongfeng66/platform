@@ -1,13 +1,13 @@
 package com.jwzhu.platform.core.user.model;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class Admin {
 
     private Long id;
     private String nickname;
-    private Timestamp createTime;
-    private Timestamp updateTime;
+    private LocalDateTime createTime;
+    private LocalDateTime updateTime;
     private String roleCode;
     private Short status;
 
@@ -35,19 +35,19 @@ public class Admin {
         this.nickname = nickname;
     }
 
-    public Timestamp getCreateTime() {
+    public LocalDateTime getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Timestamp createTime) {
+    public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
     }
 
-    public Timestamp getUpdateTime() {
+    public LocalDateTime getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Timestamp updateTime) {
+    public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
     }
 

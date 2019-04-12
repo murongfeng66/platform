@@ -18,14 +18,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jwzhu.platform.common.exception.SystemException;
+import com.jwzhu.platform.plugs.web.annotations.ControllerHandler;
 import com.jwzhu.platform.plugs.web.exception.JsonException;
 import com.jwzhu.platform.plugs.web.exception.PageException;
 import com.jwzhu.platform.plugs.web.exception.token.TokenEmptyException;
 import com.jwzhu.platform.plugs.web.param.BaseParam;
-import com.jwzhu.platform.plugs.web.annotations.ControllerHandler;
 import com.jwzhu.platform.plugs.web.request.RequestBaseParam;
 import com.jwzhu.platform.plugs.web.request.RequestType;
 import com.jwzhu.platform.plugs.web.request.RequestUtil;
@@ -62,41 +63,33 @@ public class ControllerAspect {
         for (Object arg : joinPoint.getArgs()) {
             if (arg instanceof BaseParam) {
                 BaseParam param = (BaseParam) arg;
-
+                logger.info("请求参数：{}", JSON.toJSONString(param));
                 if (controllerHandler.validParam()) {
                     param.valid(controllerHandler.validGroups());
                 }
             }
         }
 
-        String token = analyzeToken(controllerHandler);
-
-        if(controllerHandler.needToken() && RequestBaseParam.getRequestUser() == null){
-            if(RequestBaseParam.getRequestType() == RequestType.Page){
-                HttpServletResponse response = RequestUtil.getResponse();
-                if(response != null){
-                    try {
-                        response.sendRedirect("/login");
-                    } catch (IOException e) {
-                        throw new SystemException(e);
-                    }
-                }
-            }else{
+        if (controllerHandler.needToken()) {
+            String token = getToken(controllerHandler);
+            if (StringUtils.isEmpty(token)) {
                 throw new TokenEmptyException();
             }
+            logger.debug("取出Token：{}", token);
+            analyzeToken(token);
         }
     }
 
-    private void initRequestType(HttpServletRequest request){
+    private void initRequestType(HttpServletRequest request) {
         String requestTypeString = request.getParameter("requestType");
-        if(StringUtils.isEmpty(requestTypeString)){
+        if (StringUtils.isEmpty(requestTypeString)) {
             RequestBaseParam.initRequestType(RequestUtil.isAjax() ? RequestType.Ajax.getCode() : RequestType.Page.getCode());
-        }else{
+        } else {
             RequestBaseParam.initRequestType(Short.valueOf(requestTypeString));
         }
     }
 
-    private String analyzeToken(ControllerHandler controllerHandler) {
+    private String getToken(ControllerHandler controllerHandler) {
         HttpServletRequest request = RequestUtil.getRequest();
         if (request == null) {
             return null;
@@ -110,9 +103,9 @@ public class ControllerAspect {
         }
         if (StringUtils.isEmpty(token)) {
             Object temp = request.getSession().getAttribute(tokenService.getTokenConfig().getParamName());
-            if(!StringUtils.isEmpty(temp)){
+            if (!StringUtils.isEmpty(temp)) {
                 token = temp.toString();
-                if(controllerHandler.clearToken()){
+                if (controllerHandler.clearToken()) {
                     request.getSession().removeAttribute(tokenService.getTokenConfig().getParamName());
                 }
                 logger.info("Token来源：session");
@@ -120,14 +113,13 @@ public class ControllerAspect {
         } else {
             logger.info("Token来源：请求头");
         }
-
-        if (controllerHandler.needToken() && !StringUtils.isEmpty(token)) {
-            logger.debug("取出Token：{}", token);
-            TokenSubject subject = tokenService.checkToken(token);
-            RequestBaseParam.setRefreshToken(tokenService.updateToken(subject));
-            RequestBaseParam.setRequestUser(subject);
-        }
         return token;
+    }
+
+    private void analyzeToken(String token) {
+        TokenSubject subject = tokenService.checkToken(token);
+        RequestBaseParam.setRefreshToken(tokenService.updateToken(subject));
+        RequestBaseParam.setRequestUser(subject);
     }
 
     @AfterThrowing(value = "pointCut(controllerHandler)", argNames = "e,controllerHandler", throwing = "e")
@@ -152,7 +144,7 @@ public class ControllerAspect {
 
     @AfterReturning(value = "pointCut(controllerHandler)", argNames = "controllerHandler,returnValue", returning = "returnValue")
     public void afterReturning(ControllerHandler controllerHandler, Object returnValue) throws JsonProcessingException {
-        if(controllerHandler.printResponse()){
+        if (controllerHandler.printResponse()) {
             logger.info("接口响应：{}\n", objectMapper.writeValueAsString(returnValue));
         }
     }
