@@ -1,9 +1,13 @@
 package com.jwzhu.platform.plugs.web.token.impl;
 
 import java.security.Key;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Base64;
 
 import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -24,6 +28,7 @@ public class TokenUtiAES implements TokenUtil {
     private TokenConfig tokenConfig;
     private Cipher EncryptCipher;
     private Cipher DecryptCipher;
+    private static final String ALGORITHM = "AES/CBC/PKCS5Padding";
 
     public TokenUtiAES(TokenConfig tokenConfig) {
         this.tokenConfig = tokenConfig;
@@ -34,9 +39,9 @@ public class TokenUtiAES implements TokenUtil {
         checkConfig();
         Key key = new SecretKeySpec(Base64.getDecoder().decode(this.tokenConfig.getSecretKey()), "AES");
         try {
-            this.EncryptCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            this.EncryptCipher = Cipher.getInstance(ALGORITHM);
             this.EncryptCipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(Base64.getDecoder().decode(this.tokenConfig.getAesIv())));
-            this.DecryptCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            this.DecryptCipher = Cipher.getInstance(ALGORITHM);
             this.DecryptCipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(Base64.getDecoder().decode(this.tokenConfig.getAesIv())));
         } catch (Exception e) {
             throw new SystemException("初始化AES Token组件失败", e);
@@ -79,7 +84,7 @@ public class TokenUtiAES implements TokenUtil {
         try {
             byte[] subject = this.DecryptCipher.doFinal(Base64.getUrlDecoder().decode(token));
             String subjectStr = new String(subject, "UTF-8");
-            logger.info("Token明文：{}", subjectStr);
+            logger.debug("Token明文：{}", subjectStr);
             return JSON.parseObject(subjectStr, TokenSubject.class);
         } catch (Exception e) {
             throw new SystemException("解析AES Token异常", e);

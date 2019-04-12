@@ -1,5 +1,9 @@
 package com.jwzhu.platform.core.resource.model;
 
+import com.jwzhu.platform.common.enums.AvailableStatusEscaper;
+import com.jwzhu.platform.common.enums.YesOrNoEscaper;
+import com.jwzhu.platform.plugs.jsonEscape.bind.ShortEscape;
+
 public class ResourceList {
 
     private Long id;
@@ -7,8 +11,12 @@ public class ResourceList {
     private String parentCode;
     private String name;
     private Integer sort;
+    @ShortEscape(ResourceTypeEscaper.class)
     private Short type;
+    @ShortEscape(YesOrNoEscaper.class)
     private Short menuShow;
+    @ShortEscape(AvailableStatusEscaper.class)
+    private Short availableStatus;
 
     public Long getId() {
         return id;
@@ -64,5 +72,13 @@ public class ResourceList {
 
     public void setMenuShow(Short menuShow) {
         this.menuShow = menuShow;
+    }
+
+    public Short getAvailableStatus() {
+        return availableStatus;
+    }
+
+    public void setAvailableStatus(Short availableStatus) {
+        this.availableStatus = availableStatus;
     }
 }

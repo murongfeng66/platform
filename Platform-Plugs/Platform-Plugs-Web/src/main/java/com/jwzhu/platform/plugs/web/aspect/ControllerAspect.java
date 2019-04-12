@@ -71,7 +71,7 @@ public class ControllerAspect {
 
         String token = analyzeToken(controllerHandler);
 
-        if(controllerHandler.needToken() && StringUtils.isEmpty(token)){
+        if(controllerHandler.needToken() && RequestBaseParam.getRequestUser() == null){
             if(RequestBaseParam.getRequestType() == RequestType.Page){
                 HttpServletResponse response = RequestUtil.getResponse();
                 if(response != null){
@@ -121,8 +121,8 @@ public class ControllerAspect {
             logger.info("Token来源：请求头");
         }
 
-        if (!StringUtils.isEmpty(token)) {
-            logger.info("取出Token：{}", token);
+        if (controllerHandler.needToken() && !StringUtils.isEmpty(token)) {
+            logger.debug("取出Token：{}", token);
             TokenSubject subject = tokenService.checkToken(token);
             RequestBaseParam.setRefreshToken(tokenService.updateToken(subject));
             RequestBaseParam.setRequestUser(subject);

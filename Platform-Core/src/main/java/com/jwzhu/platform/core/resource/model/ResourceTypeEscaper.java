@@ -1,6 +1,6 @@
 package com.jwzhu.platform.core.resource.model;
 
-import com.jwzhu.platform.plugs.jsonEscape.base.JsonEscaper;
+import com.jwzhu.platform.plugs.jsonEscape.bind.JsonEscaper;
 import com.jwzhu.platform.plugs.jsonEscape.bind.JsonEscapeInterface;
 
 /**

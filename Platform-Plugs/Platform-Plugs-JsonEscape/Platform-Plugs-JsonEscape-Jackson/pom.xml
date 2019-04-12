@@ -14,10 +14,6 @@
     <dependencies>
         <dependency>
             <groupId>com.jwzhu</groupId>
-            <artifactId>platform-plugs-jsonescape-bind</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.jwzhu</groupId>
             <artifactId>platform-plugs-jsonescape-base</artifactId>
         </dependency>
         <dependency>

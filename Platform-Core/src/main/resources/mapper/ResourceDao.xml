@@ -34,7 +34,7 @@
         where id = #{id}
     </update>
     <select id="queryByParam" resultType="com.jwzhu.platform.core.resource.model.ResourceList">
-        select id, `code`, parentCode, `name`, sort, type, menuShow
+        select id, `code`, parentCode, `name`, sort, type, menuShow, availableStatus
         from Resource
         <where>
             <trim suffixOverrides="and">

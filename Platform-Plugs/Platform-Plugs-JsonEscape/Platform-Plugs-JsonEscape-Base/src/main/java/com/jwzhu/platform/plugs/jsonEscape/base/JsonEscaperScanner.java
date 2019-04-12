@@ -11,6 +11,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 
+import com.jwzhu.platform.plugs.jsonEscape.bind.JsonEscaper;
+
 /**
  * JSON转义序列化器扫描器
  */

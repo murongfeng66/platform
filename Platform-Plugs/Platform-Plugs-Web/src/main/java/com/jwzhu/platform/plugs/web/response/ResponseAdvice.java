@@ -59,7 +59,7 @@ public class ResponseAdvice implements ResponseBodyAdvice {
 
         if (!StringUtils.isEmpty(RequestBaseParam.getRefreshToken())) {
             webResult.setToken(RequestBaseParam.getRefreshToken());
-            logger.info("存入Token：{}", RequestBaseParam.getRefreshToken());
+            logger.debug("存入Token：{}", RequestBaseParam.getRefreshToken());
             RequestUtil.setSession(tokenService.getTokenConfig().getParamName(), RequestBaseParam.getRefreshToken());
         }
 

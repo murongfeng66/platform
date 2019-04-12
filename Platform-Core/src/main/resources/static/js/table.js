@@ -113,14 +113,20 @@ function Table() {
         let htmlString = '<table class="table"><thead class="table-head">';
         htmlString += '<tr>';
 
+        let averageColumnNum = _this.option.column.length;
         let tableRemainWidth = _this._tableDivHtml.clientWidth;
-        let columnDefaultWidth = (tableRemainWidth / _this.option.column.length).toFixed(0);
+        _this.option.column.forEach(function (item) {
+            if (item.width) {
+                averageColumnNum--;
+                tableRemainWidth -= item.width;
+            }
+        });
+        let columnDefaultWidth = (tableRemainWidth / averageColumnNum / _this._tableDivHtml.clientWidth * 100).toFixed(2);
+
         _this.option.column.forEach(function (item, index) {
-            let width = item.width ? item.width : columnDefaultWidth;
-            width = index === _this.option.column.length - 1 ? tableRemainWidth : width;
-            tableRemainWidth -= width;
+            let width = item.width ? (item.width / _this._tableDivHtml.clientWidth * 100).toFixed(2) : columnDefaultWidth;
             _this.option.column[index].width = width;
-            htmlString += '<th style="width: ' + width + 'px">' + item.title + '</th>';
+            htmlString += '<th style="width: ' + width + '%">' + item.title + '</th>';
         });
         htmlString += '</tr></thead>';
         htmlString += '<tbody class="table-body table-interval"></tbody></table>';

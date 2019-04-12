@@ -2,6 +2,10 @@ package com.jwzhu.platform.core.resource.model;
 
 import java.sql.Timestamp;
 
+import com.jwzhu.platform.common.enums.AvailableStatusEscaper;
+import com.jwzhu.platform.common.enums.YesOrNoEscaper;
+import com.jwzhu.platform.plugs.jsonEscape.bind.ShortEscape;
+
 public class Resource {
 
     private Long id;
@@ -10,8 +14,11 @@ public class Resource {
     private String name;
     private String url;
     private Integer sort;
+    @ShortEscape(ResourceTypeEscaper.class)
     private Short type;
+    @ShortEscape(YesOrNoEscaper.class)
     private Short menuShow;
+    @ShortEscape(AvailableStatusEscaper.class)
     private Short availableStatus;
     private Timestamp createTime;
     private Timestamp updateTime;

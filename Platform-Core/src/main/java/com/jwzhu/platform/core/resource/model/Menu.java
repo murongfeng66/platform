@@ -2,15 +2,12 @@ package com.jwzhu.platform.core.resource.model;
 
 import java.util.List;
 
-import com.jwzhu.platform.plugs.jsonEscape.bind.ShortEscape;
-
 public class Menu {
 
     private String code;
     private String parentCode;
     private String name;
     private String url;
-    @ShortEscape(value = ResourceTypeEscaper.class)
     private Short type;
     private Short sort;
     private List<Menu> children;

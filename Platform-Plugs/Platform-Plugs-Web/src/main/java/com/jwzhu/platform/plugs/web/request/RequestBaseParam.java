@@ -141,11 +141,7 @@ public class RequestBaseParam {
     }
 
     public static TokenSubject getRequestUser() {
-        TokenSubject subject = REQUEST_USER.get();
-        if(subject == null){
-            throw new NoPermissionException();
-        }
-        return subject;
+        return REQUEST_USER.get();
     }
 
     public static void setRefreshToken(String token){

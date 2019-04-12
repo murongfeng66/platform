@@ -123,16 +123,13 @@
         tableId: 'table_resource',
         queryFormId: 'form_resource_query',
         url: '/resource/queryByParam',
-        column: [{
-            title: '父编码',
-            name: 'parentCode'
-        }, {
-            title: '编码',
-            name: 'code'
-        }, {
-            title: '名称',
-            name: 'name'
-        }],
+        column: [
+            {title: '父编码', name: 'parentCode'},
+            {title: '编码', name: 'code'},
+            {title: '类型', name: 'typeText',width:60},
+            {title: '状态', name: 'availableStatusText',width:60},
+            {title: '名称', name: 'name'}
+        ],
         bottomButtons: [{
             title: '添加',
             faClass: 'fa-plus',
@@ -178,7 +175,7 @@
             dialogTitle = '添加功能';
             type = 3;
             _formHtml.addReadOnly('Add');
-        }else{
+        } else {
             _formHtml.removeReadOnly();
         }
 

@@ -1,4 +1,4 @@
-package com.jwzhu.platform.plugs.jsonEscape.base;
+package com.jwzhu.platform.plugs.jsonEscape.bind;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
