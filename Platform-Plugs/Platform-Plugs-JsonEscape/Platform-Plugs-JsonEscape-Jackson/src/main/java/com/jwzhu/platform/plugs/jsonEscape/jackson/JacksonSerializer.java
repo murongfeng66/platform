@@ -39,6 +39,10 @@ public abstract class JacksonSerializer <T> extends JsonSerializer<T> {
     }
 
     void writeEscape(JsonGenerator gen, String fieldName, String[] targetNames, Object messages) throws IOException {
+        if(messages == null){
+            return;
+        }
+
         if (targetNames.length == 0) {
             targetNames = new String[]{fieldName + "Text"};
         }

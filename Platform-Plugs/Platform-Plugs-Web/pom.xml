@@ -14,15 +14,11 @@
     <dependencies>
         <dependency>
             <groupId>com.jwzhu</groupId>
-            <artifactId>platform-plugs-redis</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.jwzhu</groupId>
-            <artifactId>platform-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.jwzhu</groupId>
             <artifactId>platform-plugs-jsonescape-jackson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jwzhu</groupId>
+            <artifactId>platform-plugs-cache-redis</artifactId>
         </dependency>
     </dependencies>
 

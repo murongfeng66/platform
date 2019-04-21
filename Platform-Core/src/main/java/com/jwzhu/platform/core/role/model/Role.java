@@ -2,6 +2,9 @@ package com.jwzhu.platform.core.role.model;
 
 import java.time.LocalDateTime;
 
+import com.jwzhu.platform.core.service.model.ServiceEscaper;
+import com.jwzhu.platform.plugs.jsonEscape.bind.LongEscape;
+
 public class Role {
 
     private Long id;
@@ -9,6 +12,8 @@ public class Role {
     private String name;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
+    @LongEscape(value = ServiceEscaper.class, targetNames = {"serviceCode", "serviceName"})
+    private Long serviceId;
 
     public Long getId() {
         return id;
@@ -48,5 +53,13 @@ public class Role {
 
     public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Long getServiceId() {
+        return serviceId;
+    }
+
+    public void setServiceId(Long serviceId) {
+        this.serviceId = serviceId;
     }
 }

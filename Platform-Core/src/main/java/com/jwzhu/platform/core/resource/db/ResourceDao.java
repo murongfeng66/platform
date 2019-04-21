@@ -21,11 +21,12 @@ public interface ResourceDao {
 
     List<ResourceList> queryByParam(ResourceListBean bean);
 
-    @MapKey("code")
-    Map<String, Menu> queryMenu(QueryMenuBean bean);
+    List<Menu> queryMenu(QueryMenuBean bean);
 
     int updateById(ResourceBean bean);
 
     Resource getById(long id);
+
+    Resource getByCode(String code);
 
 }

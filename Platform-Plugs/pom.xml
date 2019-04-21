@@ -12,10 +12,10 @@
     <artifactId>platform-plugs</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>Platform-Plugs-MyBatis</module>
-        <module>Platform-Plugs-Redis</module>
-        <module>Platform-Plugs-Web</module>
-        <module>Platform-Plugs-JsonEscape</module>
+        <module>platform-plugs-myBatis</module>
+        <module>platform-plugs-web</module>
+        <module>platform-plugs-jsonEscape</module>
+        <module>platform-plugs-cache</module>
     </modules>
 
 

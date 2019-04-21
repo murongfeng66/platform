@@ -19,7 +19,7 @@
             <input name="key" class="form-input">
         </div>
         <div class="form-input-group">
-            <button type="button" class="button" onclick="(function(){tableRole.reload();})()">查询</button>
+            <button type="button" class="button" onclick="(()=>tableRole.reload())()">查询</button>
             <button type="reset" class="button">重置</button>
         </div>
     </div>
@@ -27,21 +27,23 @@
 <div id="table_role">
 </div>
 <div id="dialog_role" class="dialog">
-    <form id="form_role" class="form dialog-content">
-        <input id="form_role_id" type="hidden" name="id">
-        <div class="form-row">
-            <div class="form-input-group flex-1">
-                <label class="form-label">编码：</label>
-                <input type="text" name="code" class="form-input" data-readonly="|Edit|">
+    <div class="dialog-body">
+        <form id="form_role" class="form dialog-content">
+            <input id="form_role_id" type="hidden" name="id">
+            <div class="form-row">
+                <div class="form-input-group flex-1">
+                    <label class="form-label">编码：</label>
+                    <input type="text" name="code" class="form-input" data-readonly="|Edit|">
+                </div>
             </div>
-        </div>
-        <div class="form-row">
-            <div class="form-input-group flex-1">
-                <label class="form-label">名称：</label>
-                <input type="text" name="name" class="form-input">
+            <div class="form-row">
+                <div class="form-input-group flex-1">
+                    <label class="form-label">名称：</label>
+                    <input type="text" name="name" class="form-input">
+                </div>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 </body>
 <script src="/js/common.js"></script>
@@ -80,16 +82,21 @@
     });
 
     let tableRole = Table.init({
-        tableId: 'table_role',
+        tableDivId: 'table_role',
         queryFormId: 'form_role_query',
         url: '/role/queryByParam',
-        column: [{
-            title: '编码',
-            name: 'code'
-        }, {
-            title: '名称',
-            name: 'name'
-        }],
+        column: [
+            {
+                title: '服务', name: 'serviceName', formatter: function () {
+                    return this.serviceName + ' [' + this.serviceCode + ']'
+                }
+            }, {
+                title: '编码',
+                name: 'code'
+            }, {
+                title: '名称',
+                name: 'name'
+            }],
         bottomButtons: [{
             title: '添加',
             faClass: 'fa-plus',

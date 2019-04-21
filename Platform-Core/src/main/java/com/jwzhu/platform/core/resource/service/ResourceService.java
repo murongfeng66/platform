@@ -1,6 +1,6 @@
 package com.jwzhu.platform.core.resource.service;
 
-import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +29,10 @@ public class ResourceService {
     private ResourceDao resourceDao;
 
     public void insert(ResourceBean bean) {
+        Resource resource = resourceDao.getByCode(bean.getCode());
+        if(resource != null){
+            throw new BusinessException("存在相同的资源编号");
+        }
         bean.setCreateTime(bean.getCreateTime() == null ? RequestBaseParam.getRequestTime() : bean.getCreateTime());
         bean.setAvailableStatus(bean.getAvailableStatus() == null ? AvailableStatus.Enable.getCode() : bean.getAvailableStatus());
         bean.setMenuShow(bean.getMenuShow() == null ? YesOrNo.No.getCode() : bean.getMenuShow());
@@ -46,13 +50,18 @@ public class ResourceService {
         bean.setMenuShow(YesOrNo.Yes.getCode());
         bean.setAvailableStatus(AvailableStatus.Enable.getCode());
         bean.setTypes(ResourceType.Menu.getCode(), ResourceType.Page.getCode());
-        Map<String, Menu> map = resourceDao.queryMenu(bean);
+        List<Menu> resources = resourceDao.queryMenu(bean);
+        Map<String, Menu> resourceMap = new LinkedHashMap<>();
+        for (Menu resource : resources) {
+            resourceMap.put(resource.getCode(), resource);
+        }
+
         List<Menu> menus = new LinkedList<>();
-        for (Menu item : map.values()) {
+        for (Menu item : resourceMap.values()) {
             if (StringUtils.isEmpty(item.getParentCode())) {
                 menus.add(item);
             } else {
-                Menu parent = map.get(item.getParentCode());
+                Menu parent = resourceMap.get(item.getParentCode());
                 if (parent != null) {
                     if (parent.getChildren() == null) {
                         parent.setChildren(new LinkedList<>());
@@ -62,7 +71,7 @@ public class ResourceService {
             }
         }
 
-        menus.sort(Comparator.comparingInt(Menu::getSort).reversed());
+//        menus.sort(Comparator.comparingInt(Menu::getSort).reversed());
         return menus;
     }
 

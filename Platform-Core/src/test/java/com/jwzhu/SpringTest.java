@@ -1,5 +1,7 @@
 package com.jwzhu;
 
+import java.util.Random;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +10,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.alibaba.fastjson.JSON;
-import com.jwzhu.platform.core.user.bean.LoginBean;
-import com.jwzhu.platform.core.user.model.Login;
-import com.jwzhu.platform.core.user.service.LoginService;
+import com.jwzhu.platform.core.admin.bean.LoginBean;
+import com.jwzhu.platform.core.admin.model.Login;
+import com.jwzhu.platform.core.admin.service.LoginService;
 import com.jwzhu.platform.plugs.web.token.TokenService;
 import com.jwzhu.platform.plugs.web.token.TokenSubject;
 
@@ -60,7 +62,10 @@ public class SpringTest {
     }
 
     public static void main(String[] args){
-
+        Random random = new Random();
+        for (int i=0;i<100;i++){
+            System.out.println((Math.random() * 9 + 1) * 1000);
+        }
     }
 
 }

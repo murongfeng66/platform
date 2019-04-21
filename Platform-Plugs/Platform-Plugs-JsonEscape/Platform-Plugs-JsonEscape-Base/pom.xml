@@ -25,6 +25,10 @@
         </dependency>
         <dependency>
             <groupId>com.jwzhu</groupId>
+            <artifactId>platform-plugs-cache-base</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jwzhu</groupId>
             <artifactId>platform-plugs-jsonescape-bind</artifactId>
         </dependency>
     </dependencies>

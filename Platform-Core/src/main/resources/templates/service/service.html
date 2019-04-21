@@ -23,7 +23,7 @@
             <input type="date" name="datetime" class="form-input">
         </div>
         <div class="form-input-group">
-            <button type="button" class="button" onclick="(function(){tableRole.reload();})()">查询</button>
+            <button type="button" class="button" onclick="(function(){tableService.reload();})()">查询</button>
             <button type="reset" class="button">重置</button>
         </div>
     </div>
@@ -32,15 +32,31 @@
 </div>
 
 <div id="dialog_service" class="dialog">
-    <form id="form_service" class="form dialog-content">
-        <input id="form_service_id" type="hidden" name="id">
-        <div class="form-row">
-            <div class="form-input-group flex-1">
-                <label class="form-label">名称：</label>
-                <input type="text" name="serviceName" class="form-input">
+    <div class="dialog-body">
+        <form id="form_service" class="form dialog-content">
+            <input id="form_service_id" type="hidden" name="id">
+            <div class="form-row">
+                <div class="form-input-group flex-1">
+                    <label class="form-label">编码：</label>
+                    <input type="text" name="serviceCode" class="form-input" data-readonly="|Edit|">
+                </div>
             </div>
+            <div class="form-row">
+                <div class="form-input-group flex-1">
+                    <label class="form-label">名称：</label>
+                    <input type="text" name="serviceName" class="form-input">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="dialog_member" class="dialog">
+    <input type="hidden" id="dialog_member_serviceId">
+    <div class="dialog-body">
+        <div id="table_member" class="dialog-content">
         </div>
-    </form>
+    </div>
 </div>
 </body>
 <script src="/js/common.js"></script>
@@ -50,53 +66,57 @@
 <script src="/js/dialog.js"></script>
 <script type="text/javascript">
     window.onload = function () {
+        common.removeOnSubmitEvent();
     };
 
-    let dialogRole = Dialog.create({
+    let dialogService = Dialog.create({
         dialogId: 'dialog_service',
-        topButtons: [{
-            title: '查看',
-            classNames: '',
-            onclick: function () {
-
-            }
-        }],
         bottomButtons: [{
+            id: 'save',
             title: '保存',
             classNames: 'float-right',
             closeAfterClick: true,
             onclick: function () {
-                updateRole();
+                updateService();
             }
         }, {
+            id: 'submit',
             title: '提交',
             classNames: 'float-right',
             closeAfterClick: true,
             onclick: function () {
-                addRole();
+                addService();
             }
         }]
     });
 
-    let tableRole = Table.init({
-        tableId: 'table_service',
+    let dialogMember = Dialog.create({
+        dialogId: 'dialog_member',
+        title: '成员列表',
+        minWidth: '600px',
+        topButtons: [{
+            id: 'add',
+            title: '添加',
+            classNames: '',
+            onclick: function () {
+                selectUser.call(this);
+            }
+        }]
+    });
+
+    let tableService = Table.init({
+        tableDivId: 'table_service',
         queryFormId: 'form_service_query',
         url: '/service/queryByParam',
-        column: [{
-            title: '服务编码',
-            name: 'serviceCode'
-        }, {
-            title: '服务名称',
-            name: 'serviceName'
-        }, {
-            title: '添加时间',
-            name: 'createTime'
-        }],
+        column: [
+            {title: '服务编码', name: 'serviceCode'},
+            {title: '服务名称', name: 'serviceName'},
+            {title: '添加时间', name: 'createTime'}],
         bottomButtons: [{
             title: '添加',
             faClass: 'fa-plus',
             onclick: function () {
-                addRoleView();
+                addServiceView();
             }
         }],
         rowOperate: function () {
@@ -104,39 +124,91 @@
             operates.push({
                 title: '编辑',
                 classNames: '',
-                onclick: updateRoleView
+                onclick: updateServiceView
+            }, {
+                title: '成员',
+                classNames: '',
+                onclick: memberListView
             });
             return operates;
         }
     });
 
-    let addRoleView = function () {
-        document.getElementById('form_service').reset();
-        let dialogTitle = '添加服务';
+    let tableMember = Table.init({
+        tableDivId: 'table_member',
+        column: [
+            {title: '用户名称', name: 'username'},
+            {title: '添加时间', name: 'createTime'}],
+        rowOperate: function () {
+            let operates = [];
+            operates.push({
+                title: '移除',
+                classNames: '',
+                onclick: removeMember
+            });
+            return operates;
+        }
+    });
 
-        dialogRole.setTitle(dialogTitle).hideBottomButton().showBottomButton(1).open();
+    let addServiceView = function () {
+        let _formHtml = document.getElementById('form_service');
+        _formHtml.reset();
+        _formHtml.addReadOnly('Add');
+
+        dialogService.setTitle('添加服务').hideBottomButton().showBottomButton('submit').open();
     };
 
-    let updateRoleView = function () {
+    let updateServiceView = function () {
         Request.get('/service/getById', {id: this.id}).then(function (data) {
             let _formHtml = document.getElementById('form_service');
             _formHtml.addReadOnly('Edit');
             _formHtml.setForm(data);
-            dialogRole.setTitle('编辑服务').hideBottomButton().showBottomButton(0).open();
+            dialogService.setTitle('编辑服务').hideBottomButton().showBottomButton('save').open();
         });
     };
 
-    let addRole = function () {
+    let addService = function () {
         let formData = document.getElementById('form_service').getForm();
         Request.post('/service/add', formData).then(function () {
-            tableRole.reload();
+            tableService.reload();
         });
     };
 
-    let updateRole = function () {
+    let updateService = function () {
         let formData = document.getElementById('form_service').getForm();
         Request.post('/service/updateById', formData).then(function () {
-            tableRole.reload();
+            tableService.reload();
+        });
+    };
+
+    let memberListView = function () {
+        dialogMember.open();
+        tableMember.reload('/service/queryMember', {serviceId: this.id});
+        document.getElementById('dialog_member_serviceId').setValue(this.id);
+    };
+
+    let removeMember = function () {
+        let data = {
+            serviceId: this.serviceId,
+            userId: this.userId
+        };
+        Request.post('/service/removeMember', data).then(function () {
+            tableMember.reload();
+        });
+    };
+
+    let selectUser = function () {
+        SelectDialog.admin({
+            id: 'selectMember',
+            selectBack: function () {
+                let formData = {
+                    serviceId: document.getElementById('dialog_member_serviceId').value,
+                    userId: this.id
+                };
+                Request.post('/service/addMember', formData).then(function () {
+                    tableMember.reload();
+                });
+            }
         });
     };
 

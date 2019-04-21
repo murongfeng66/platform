@@ -5,6 +5,10 @@
         insert into Service(serviceCode, serviceName, ownerId, createTime, availableStatus) values
             (#{serviceCode}, #{serviceName}, #{ownerId}, #{createTime}, #{availableStatus})
     </insert>
+    <insert id="addMember">
+        insert into ServiceMember(serviceId, userId, createTime) values
+            (#{serviceId}, #{userId}, #{createTime})
+    </insert>
     <update id="updateById">
         update Service
         <set>
@@ -25,6 +29,9 @@
         </set>
         where id = #{id}
     </update>
+    <delete id="removeMember">
+        delete from ServiceMember where serviceId = #{serviceId} and userId = #{userId}
+    </delete>
     <select id="queryByParam" resultType="com.jwzhu.platform.core.service.model.Service">
         select id, serviceCode, serviceName, ownerId, createTime, updateTime, availableStatus
         from Service
@@ -55,5 +62,29 @@
         select id, serviceCode, serviceName, ownerId, createTime, updateTime, availableStatus
         from Service
         where id = #{id}
+    </select>
+    <select id="getByServiceCode" resultType="com.jwzhu.platform.core.service.model.Service">
+        select id, serviceCode, serviceName, ownerId, createTime, updateTime, availableStatus
+        from Service
+        where serviceCode = #{serviceCode}
+        for update
+    </select>
+    <select id="existsMember" resultType="java.lang.Boolean">
+        select exists(select serviceId from ServiceMember where serviceId = #{serviceId} and userId = #{userId}
+    </select>
+    <select id="queryMember" resultType="com.jwzhu.platform.core.service.model.ServiceMember">
+        select id, serviceId, userId, createTime
+        from ServiceMember
+        <where>
+            <trim suffixOverrides="and">
+                <if test="serviceId != null">
+                    serviceId = #{serviceId} and
+                </if>
+                <if test="userId != null">
+                    userId = #{userId} and
+                </if>
+            </trim>
+        </where>
+        order by id desc
     </select>
 </mapper>

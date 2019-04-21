@@ -267,7 +267,7 @@
             } else {
                 document.getElementById('content_top_nav').innerHTML += '<li id="' + navItemId + '" class="content-top-nav-item active" onclick="navClick()" data-iFrameId="' + iFrameId + '">' + item.name + '<div class="close fa fa-times" onclick="navClose()"></div></li>';
 
-                document.getElementById('content').innerHTML += '<iframe id="' + iFrameId + '" class="content-body active" src="' + item.url + '"></iframe>';
+                document.getElementById('content').innerHTML += '<iframe id="' + iFrameId + '" class="content-body active" src="' + item.url + '" scrolling="yes"></iframe>';
             }
         };
     };

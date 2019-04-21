@@ -9,7 +9,12 @@ public class TokenSubject {
     public TokenSubject() {
     }
 
-    public TokenSubject(long userId, short userType) {
+    public TokenSubject(Long userId) {
+        this.userId = userId;
+        this.createMillis = System.currentTimeMillis();
+    }
+
+    public TokenSubject(long userId, Short userType) {
         this.userId = userId;
         this.userType = userType;
         this.createMillis = System.currentTimeMillis();

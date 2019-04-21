@@ -1,10 +1,10 @@
 function Dialog() {
 }
 
-(function () {
-    const DialogHtmlCache = {};
+(() => {
+    const DialogCache = {};
 
-    Dialog.create = function (o) {
+    Dialog.create = (o) => {
         if (!o.dialogId) {
             throw 'ID不能为空';
         }
@@ -14,201 +14,186 @@ function Dialog() {
             title: o.title,
             topButtons: o.topButtons || [],
             bottomButtons: o.bottomButtons || [],
-            width: o.width || '30%'
+            width: o.width || '30%',
+            minWidth: o.minWidth
         };
 
-        let dialogHtmlCache = DialogHtmlCache[option.dialogId];
-        if (!dialogHtmlCache) {
-            dialogHtmlCache = init(option);
+        let dialogCache = DialogCache[option.dialogId];
+        if (!dialogCache) {
+            dialogCache = init(option);
         }
-        return dialogHtmlCache.operator
+        return dialogCache;
     };
 
-    Dialog.get = function (dialogId) {
+    Dialog.get = (dialogId) => {
         return DialogCache[dialogId];
     };
 
     Dialog.prototype = {
         open: function () {
-            DialogHtmlCache[this.dialogId]._dialogHtml.style.display = 'block';
+            document.getElementById(this.dialogId).style.display = 'block';
             return this;
         },
         close: function () {
-            DialogHtmlCache[this.dialogId]._dialogHtml.style.display = '';
+            document.getElementById(this.dialogId).style.display = '';
             return this;
         },
         setTitle: function (title) {
-            let dialogHtmlCache = DialogHtmlCache[this.dialogId];
-            dialogHtmlCache._dialogTopHtml.title.selfHtml.innerHTML = title;
+            document.getElementById(DialogCache[this.dialogId].dialogTopTitleId).innerHTML = title;
             return this;
         },
         destroy: function () {
             destroy(this.dialogId);
         },
-        hideTopButton: function (index) {
-            let dialogHtmlCache = DialogHtmlCache[this.dialogId];
-            if(index){
-                dialogHtmlCache._dialogTopHtml.buttons.childrenHtml[index].style.display = 'none';
-            }else{
-                dialogHtmlCache._dialogTopHtml.buttons.childrenHtml.forEach(function(_item){
-                    item.style.display = 'none';
+        hideTopButton: function (id) {
+            if (id) {
+                document.getElementById(this.dialogTopId + '_button_' + id).style.display = 'none';
+            } else {
+                document.querySelectorAll('#' + this.dialogTopId + ' .button').forEach((_item) => {
+                    _item.style.display = 'none';
                 });
             }
             return this;
         },
-        showTopButton: function (index) {
-            let dialogHtmlCache = DialogHtmlCache[this.dialogId];
-            dialogHtmlCache._dialogTopHtml.buttons.childrenHtml[index].style.display = '';
+        showTopButton: function (id) {
+            if (id) {
+                document.getElementById(this.dialogTopId + '_button_' + id).style.display = '';
+            }
             return this;
         },
-        hideBottomButton: function (index) {
-            let dialogHtmlCache = DialogHtmlCache[this.dialogId];
-            if(index){
-                dialogHtmlCache._dialogBottomHtml.childrenHtml[index].style.display = 'none';
-            }else{
-                dialogHtmlCache._dialogBottomHtml.childrenHtml.forEach(function(_item){
+        hideBottomButton: function (id) {
+            if (id) {
+                document.getElementById(this.dialogBottomId + '_button_' + id).style.display = 'none';
+            } else {
+                document.querySelectorAll('#' + this.dialogBottomId + ' .button').forEach((_item) => {
                     _item.style.display = 'none';
                 });
             }
 
             let display = 'none';
-            for (let index in dialogHtmlCache._dialogBottomHtml.childrenHtml) {
-                let _itemHtml = dialogHtmlCache._dialogBottomHtml.childrenHtml[index];
-                if (_itemHtml.style.display === '') {
+            let $buttonsHtml = document.querySelectorAll('#' + this.dialogBottomId + ' .button');
+            for (let index = 0; index < $buttonsHtml.length; index++) {
+                let $itemHtml = $buttonsHtml[index];
+                if ($itemHtml.style.display === '') {
                     display = 'block';
                     break;
                 }
             }
-            dialogHtmlCache._dialogBottomHtml.selfHtml.style.display = display;
+            document.getElementById(this.dialogBottomId).style.display = display;
             return this;
         },
-        showBottomButton: function (index) {
-            let dialogHtmlCache = DialogHtmlCache[this.dialogId];
-            dialogHtmlCache._dialogBottomHtml.childrenHtml[index].style.display = '';
-            dialogHtmlCache._dialogBottomHtml.selfHtml.style.display = 'block';
+        showBottomButton: function (id) {
+            if (id) {
+                document.getElementById(this.dialogBottomId).style.display = 'block';
+                document.getElementById(this.dialogBottomId + '_button_' + id).style.display = '';
+            }
             return this;
         },
     };
 
     function destroy(dialogId) {
+        let dialogCache = DialogCache[dialogId];
+        document.getElementById(dialogCache.dialogTopId).remove();
+        document.getElementById(dialogCache.dialogBottomId).remove();
+        document.getElementById(dialogCache.dialogId).style.display = '';
         delete DialogCache[dialogId];
-        let dialogHtmlCache = DialogHtmlCache[dialogId];
-        dialogHtmlCache._dialogTopHtml.selfHtml.remove();
-        dialogHtmlCache._dialogBottomHtml.remove();
-        dialogHtmlCache._dialogHtml.style.display = '';
-        delete DialogHtmlCache[dialogId];
     }
 
     function init(option) {
-        let dialogHtmlCache = {
-            option: option,
-            operator: null,
-            _dialogHtml: null,
-            _dialogBodyHtml: null,
-            _dialogTopHtml: {
-                selfHtml: null,
-                title: {
-                    selfHtml: null
-                },
-                buttons: {
-                    selfHtml: null,
-                    childrenHtml: []
-                },
-                closeButton: {
-                    selfHtml: null
-                }
-            },
-            _dialogContentHtml: {
-                selfHtml: null
-            },
-            _dialogBottomHtml: {
-                selfHtml: null,
-                childrenHtml: []
-            }
-        };
+        let dialog = new Dialog();
+        dialog.option = option;
+        dialog.dialogId = option.dialogId;
 
-        DialogHtmlCache[option.dialogId] = dialogHtmlCache;
+        dialog.dialogTopId = dialog.dialogId + '_top';
+        dialog.dialogTopTitleId = dialog.dialogTopId + '_title';
+        dialog.dialogBodyId = dialog.dialogId + '_body';
+        dialog.dialogContentId = dialog.dialogBodyId + '_content';
+        dialog.dialogBottomId = dialog.dialogId + '_bottom';
 
-        initDialog.call(dialogHtmlCache);
+        DialogCache[dialog.dialogId] = dialog;
 
-        dialogHtmlCache.operator = new Dialog();
-        dialogHtmlCache.operator.dialogId = option.dialogId;
-        return dialogHtmlCache;
+        initDialog.call(dialog);
+
+        return dialog;
     }
 
     function initDialog() {
-        let _this = this;
+        let $dialogBodyHtml = document.querySelector('#' + this.option.dialogId + ' .dialog-body');
+        if ($dialogBodyHtml.getAttribute('id')) {
+            this.dialogBodyId = $dialogBodyHtml.getAttribute('id');
+        } else {
+            $dialogBodyHtml.id = this.dialogBodyId;
+        }
+        $dialogBodyHtml.style.width = this.option.width;
+        $dialogBodyHtml.style.minWidth = this.option.minWidth;
+        let $dialogContentHtml = $dialogBodyHtml.querySelector('.dialog-content');
+        if ($dialogContentHtml.getAttribute('id')) {
+            this.dialogContentId = $dialogContentHtml.getAttribute('id');
+        } else {
+            $dialogContentHtml.id = this.dialogContentId;
+        }
 
-        _this._dialogHtml = document.getElementById(_this.option.dialogId);
-        _this._dialogHtml.innerHTML = '<div class="dialog-body">' + _this._dialogHtml.innerHTML + '</div>';
-
-        _this._dialogBodyHtml = _this._dialogHtml.querySelector('.dialog-body');
-        _this._dialogBodyHtml.style.width = _this.option.width;
-
-        _this._dialogContentHtml = _this._dialogHtml.querySelector('.dialog-content');
-
-        initTop.call(_this);
-        initBottom.call(_this);
+        initTop.call(this);
+        initBottom.call(this);
     }
 
     function initTop() {
-        let _this = this;
-
-        _this._dialogTopHtml.selfHtml = document.createElement('div');
-        _this._dialogTopHtml.selfHtml.classList.add('dialog-top');
-        _this._dialogTopHtml.selfHtml.innerHTML = '<span class="dialog-top-title">' + _this.option.title + '</span><div class="dialog-top-buttons"></div><div class="close fa fa-times">';
-        _this._dialogTopHtml.selfHtml.querySelector('.close').onclick = function () {
-            _this._dialogHtml.style.display = '';
+        let $dialogTopHtml = document.createElement('div');
+        $dialogTopHtml.id = this.dialogTopId;
+        $dialogTopHtml.classList.add('dialog-top');
+        $dialogTopHtml.innerHTML = '<span id="' + this.dialogTopTitleId + '" class="dialog-top-title">' + common.string.dealEmpty(this.option.title) + '</span><div class="dialog-top-buttons"></div><div class="close fa fa-times"></div>';
+        $dialogTopHtml.querySelector('.close').onclick = () => {
+            document.getElementById(this.dialogId).style.display = '';
         };
-        _this._dialogTopHtml.title.selfHtml = _this._dialogTopHtml.selfHtml.querySelector('.dialog-top-title');
-        _this._dialogTopHtml.buttons.selfHtml = _this._dialogTopHtml.selfHtml.querySelector('.dialog-top-buttons');
-        _this._dialogTopHtml.closeButton.selfHtml = _this._dialogTopHtml.selfHtml.querySelector('.close');
-        _this.option.topButtons.forEach(function (button, index) {
-            let _buttonHtml = document.createElement('span');
-            _buttonHtml.innerHTML = button.title;
-            _buttonHtml.classList.add('dialog-top-buttons-item', 'margin-left-5');
+
+        let $dialogTopButtonsHtml = $dialogTopHtml.querySelector('.dialog-top-buttons');
+        this.option.topButtons.forEach((button) => {
+            let $buttonHtml = document.createElement('span');
+            $buttonHtml.id = this.dialogTopId + '_button_' + button.id;
+            $buttonHtml.innerHTML = button.title;
+            $buttonHtml.classList.add('dialog-top-buttons-item', 'margin-left-5');
             if (button.classNames) {
-                _buttonHtml.classList.add(button.classNames);
+                $buttonHtml.classList.add(button.classNames);
             }
-            _buttonHtml.onclick = function () {
+
+            $buttonHtml.onclick = () => {
                 if (typeof button.onclick === 'function') {
-                    button.onclick.call(_buttonHtml);
+                    button.onclick.call($buttonHtml);
                 }
             };
-            _this._dialogTopHtml.buttons.selfHtml.appendChild(_buttonHtml);
-            _this._dialogTopHtml.buttons.childrenHtml[index] = _buttonHtml;
+            $dialogTopButtonsHtml.appendChild($buttonHtml);
         });
 
-        _this._dialogBodyHtml.insertBefore(_this._dialogTopHtml.selfHtml, _this._dialogContentHtml);
+        document.getElementById(this.dialogBodyId).insertBefore($dialogTopHtml, document.getElementById(this.dialogContentId));
     }
 
     function initBottom() {
-        let _this = this;
+        let $dialogBottomHtml = document.createElement('div');
+        $dialogBottomHtml.id = this.dialogBottomId;
+        $dialogBottomHtml.classList.add('dialog-bottom');
+        document.getElementById(this.dialogBodyId).appendChild($dialogBottomHtml);
 
-        _this._dialogBottomHtml.selfHtml = document.createElement('div');
-        _this._dialogBottomHtml.selfHtml.classList.add('dialog-bottom');
-        _this._dialogBodyHtml.appendChild(_this._dialogBottomHtml.selfHtml);
-        _this.option.bottomButtons.forEach(function (button, index) {
-            let _buttonHtml = document.createElement('button');
-            _buttonHtml.innerHTML = button.title;
-            _buttonHtml.classList.add('dialog-bottom-button', 'margin-left-10');
+        this.option.bottomButtons.forEach((button) => {
+            let $buttonHtml = document.createElement('button');
+            $buttonHtml.id = this.dialogBottomId + '_button_' + button.id;
+            $buttonHtml.innerHTML = button.title;
+            $buttonHtml.classList.add('button', 'button-s', 'margin-left-10');
             if (button.classNames) {
-                _buttonHtml.classList.add(button.classNames);
+                $buttonHtml.classList.add(button.classNames);
             }
-            _buttonHtml.onclick = function () {
+
+            $buttonHtml.onclick = () => {
                 if (typeof button.onclick === 'function') {
-                    button.onclick.call(_buttonHtml);
+                    button.onclick.call($buttonHtml);
                 }
-                if(button.closeAfterClick === true){
-                    _this.operator.close();
+                if (button.closeAfterClick === true) {
+                    document.getElementById(this.dialogId).style.display = '';
                 }
             };
-            _this._dialogBottomHtml.selfHtml.appendChild(_buttonHtml);
-            _this._dialogBottomHtml.selfHtml.style.display = 'block';
-            _this._dialogBottomHtml.childrenHtml[index] = _buttonHtml;
+            $dialogBottomHtml.appendChild($buttonHtml);
         });
-        if (_this.option.bottomButtons.length > 0) {
-            _this._dialogBottomHtml.selfHtml.style.display = 'block';
+        if (this.option.bottomButtons.length > 0) {
+            $dialogBottomHtml.style.display = 'block';
         }
     }
 

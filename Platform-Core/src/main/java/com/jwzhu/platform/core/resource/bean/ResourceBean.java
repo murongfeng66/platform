@@ -17,6 +17,7 @@ public class ResourceBean extends BaseBean {
     private Short availableStatus;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
+    private Long serviceId;
 
     public Long getId() {
         return id;
@@ -104,5 +105,13 @@ public class ResourceBean extends BaseBean {
 
     public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Long getServiceId() {
+        return serviceId;
+    }
+
+    public void setServiceId(Long serviceId) {
+        this.serviceId = serviceId;
     }
 }

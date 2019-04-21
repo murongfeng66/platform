@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jwzhu.platform.common.cache.CacheUtil;
+import com.jwzhu.platform.plugs.cache.base.CacheUtil;
 import com.jwzhu.platform.plugs.web.exception.token.TokenTimeOutException;
 
 @Service

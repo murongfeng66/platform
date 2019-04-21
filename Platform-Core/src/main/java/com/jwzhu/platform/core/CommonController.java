@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -16,8 +15,7 @@ import com.jwzhu.platform.common.enums.AvailableStatus;
 import com.jwzhu.platform.common.enums.YesOrNo;
 import com.jwzhu.platform.core.resource.manager.ResourceManager;
 import com.jwzhu.platform.core.resource.model.Menu;
-import com.jwzhu.platform.core.resource.model.ResourceType;
-import com.jwzhu.platform.core.user.manager.UserManager;
+import com.jwzhu.platform.core.admin.manager.LoginManager;
 import com.jwzhu.platform.plugs.web.annotations.ControllerHandler;
 import com.jwzhu.platform.plugs.web.request.RequestBaseParam;
 
@@ -29,7 +27,7 @@ public class CommonController {
     @Autowired
     private PlatformConfig platformConfig;
     @Autowired
-    private UserManager userManager;
+    private LoginManager userManager;
 
     @ControllerHandler(needToken = false)
     @GetMapping({"", "login"})

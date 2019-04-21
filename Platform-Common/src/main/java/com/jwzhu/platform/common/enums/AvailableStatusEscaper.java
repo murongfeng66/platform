@@ -1,5 +1,6 @@
 package com.jwzhu.platform.common.enums;
 
+
 import com.jwzhu.platform.plugs.jsonEscape.bind.JsonEscapeInterface;
 import com.jwzhu.platform.plugs.jsonEscape.bind.JsonEscaper;
 

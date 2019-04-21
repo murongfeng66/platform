@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jwzhu.platform.core.resource.db.ResourceDao">
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        insert into Resource (`code`, parentCode, `name`, url, sort, type, menuShow, availableStatus, createTime) values (#{code}, #{parentCode}, #{name}, #{url}, #{sort}, #{type}, #{menuShow}, #{availableStatus}, #{createTime})
+        insert into Resource (`code`, parentCode, `name`, url, sort, type, menuShow, availableStatus, createTime, serviceId) values (#{code}, #{parentCode}, #{name}, #{url}, #{sort}, #{type}, #{menuShow}, #{availableStatus}, #{createTime}, #{serviceId})
     </insert>
     <update id="updateById">
         update Resource
@@ -29,12 +29,15 @@
                 <if test="updateTime != null">
                     updateTime = #{updateTime},
                 </if>
+                <if test="serviceId != null">
+                    serviceId = #{serviceId},
+                </if>
             </trim>
         </set>
         where id = #{id}
     </update>
     <select id="queryByParam" resultType="com.jwzhu.platform.core.resource.model.ResourceList">
-        select id, `code`, parentCode, `name`, sort, type, menuShow, availableStatus
+        select id, `code`, parentCode, `name`, sort, type, menuShow, availableStatus, serviceId
         from Resource
         <where>
             <trim suffixOverrides="and">
@@ -49,6 +52,9 @@
                 </if>
                 <if test="availableStatus != null">
                     availableStatus = #{availableStatus} and
+                </if>
+                <if test="serviceId != null">
+                    serviceId = #{serviceId} and
                 </if>
             </trim>
         </where>
@@ -80,13 +86,22 @@
                 <if test="availableStatus != null">
                     availableStatus = #{availableStatus} and
                 </if>
+                <if test="serviceId != null">
+                    serviceId = #{serviceId} and
+                </if>
             </trim>
         </where>
         order by `sort` desc
     </select>
     <select id="getById" resultType="com.jwzhu.platform.core.resource.model.Resource">
-        select id, `code`, parentCode, `name`, url, sort, type, menuShow, createTime, updateTime, availableStatus
+        select id, `code`, parentCode, `name`, url, sort, type, menuShow, createTime, updateTime, availableStatus, serviceId
         from Resource
         where id = #{id}
+    </select>
+    <select id="getByCode" resultType="com.jwzhu.platform.core.resource.model.Resource">
+        select id, `code`, parentCode, `name`, url, sort, type, menuShow, createTime, updateTime, availableStatus, serviceId
+        from Resource
+        where `code` = #{code}
+        for update
     </select>
 </mapper>

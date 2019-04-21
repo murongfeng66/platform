@@ -12,7 +12,6 @@ import com.jwzhu.platform.common.exception.BusinessException;
 import com.jwzhu.platform.common.exception.SystemException;
 import com.jwzhu.platform.plugs.jsonEscape.bind.BooleanEscape;
 import com.jwzhu.platform.plugs.jsonEscape.bind.JsonEscapeInterface;
-import com.jwzhu.platform.plugs.jsonEscape.bind.StringEscape;
 
 public class BooleanSerializer extends JacksonSerializer<Boolean> {
 

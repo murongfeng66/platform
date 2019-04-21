@@ -17,11 +17,13 @@ import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.jdbc.ConnectionLogger;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
 import org.apache.ibatis.plugin.Plugin;
 import org.apache.ibatis.plugin.Signature;
+import org.apache.ibatis.scripting.defaults.RawSqlSource;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
@@ -39,12 +41,12 @@ public class MybatisCutPageInterceptor implements Interceptor {
             @Override
             public String getLimitSql(String sql, PageBean<?> pageBean) {
                 StringBuilder pageSql = new StringBuilder(100);
-                String beginRow = String.valueOf((pageBean.getCurrentPage() - 1) * pageBean.getPageSize());
-                String endRow = String.valueOf(pageBean.getCurrentPage() * pageBean.getPageSize());
+                int beginIndex = (pageBean.getCurrentPage() - 1) * pageBean.getPageSize();
+                int endIndex = pageBean.getCurrentPage() * pageBean.getPageSize();
                 pageSql.append("select * from (select temp.*, rownum row_id from ( ");
                 pageSql.append(sql);
-                pageSql.append(" ) temp where rownum <= ").append(endRow);
-                pageSql.append(") where row_id > ").append(beginRow);
+                pageSql.append(" ) temp where rownum <= ").append(endIndex);
+                pageSql.append(") where row_id > ").append(beginIndex);
                 return pageSql.toString();
             }
         },
@@ -52,9 +54,9 @@ public class MybatisCutPageInterceptor implements Interceptor {
             @Override
             public String getLimitSql(String sql, PageBean<?> pageBean) {
                 StringBuilder pageSql = new StringBuilder(100);
-                String beginrow = String.valueOf((pageBean.getCurrentPage() - 1) * pageBean.getPageSize());
+                int beginIndex = (pageBean.getCurrentPage() - 1) * pageBean.getPageSize();
                 pageSql.append(sql);
-                pageSql.append(" limit ").append(beginrow).append(",").append(pageBean.getPageSize());
+                pageSql.append(" limit ").append(beginIndex).append(",").append(pageBean.getPageSize());
                 return pageSql.toString();
             }
         };
@@ -89,7 +91,7 @@ public class MybatisCutPageInterceptor implements Interceptor {
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
     private Object doCutPage(Invocation invocation, PageBean pageBean) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, SQLException {
-        MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
+        MappedStatement mappedStatement = (MappedStatement)invocation.getArgs()[0];
         ReflectUtils.setFieldValue(mappedStatement.getParameterMap(), "parameterMappings", new ArrayList<>());
         BoundSql boundSql = mappedStatement.getBoundSql(pageBean);
 
@@ -111,7 +113,9 @@ public class MybatisCutPageInterceptor implements Interceptor {
         }
 
         String limitSql = getLimitSql(boundSql, pageBean);
-        BoundSql dataBoundSql = new BoundSql(mappedStatement.getConfiguration(), limitSql, boundSql.getParameterMappings(), boundSql.getParameterObject());
+        BoundSql dataBoundSql = new BoundSql(configuration, limitSql, boundSql.getParameterMappings(), boundSql.getParameterObject());
+        MappedStatement newMappedStatement = copyFromMappedStatement(mappedStatement, new PageSqlSource(dataBoundSql));
+        invocation.getArgs()[0] = newMappedStatement;
 
         Object object = invocation.proceed();
         if (object instanceof List) {
@@ -122,6 +126,45 @@ public class MybatisCutPageInterceptor implements Interceptor {
             pageBean.setTotalCount(pageBean.getList().size());
         }
         return object;
+    }
+
+    public static class PageSqlSource implements SqlSource{
+        private BoundSql boundSql;
+
+        PageSqlSource(BoundSql boundSql) {
+            this.boundSql = boundSql;
+        }
+
+        @Override
+        public BoundSql getBoundSql(Object parameterObject) {
+            return this.boundSql;
+        }
+    }
+
+    private MappedStatement copyFromMappedStatement(MappedStatement ms, SqlSource newSqlSource) {
+        MappedStatement.Builder builder = new MappedStatement.Builder(ms.getConfiguration(),ms.getId(),newSqlSource,ms.getSqlCommandType());
+
+        builder.resource(ms.getResource());
+        builder.fetchSize(ms.getFetchSize());
+        builder.statementType(ms.getStatementType());
+        builder.keyGenerator(ms.getKeyGenerator());
+        builder.timeout(ms.getTimeout());
+        builder.parameterMap(ms.getParameterMap());
+        builder.resultMaps(ms.getResultMaps());
+        builder.resultSetType(ms.getResultSetType());
+        builder.cache(ms.getCache());
+        builder.flushCacheRequired(ms.isFlushCacheRequired());
+        builder.useCache(ms.isUseCache());
+        if(ms.getKeyProperties() != null && ms.getKeyProperties().length !=0){
+            StringBuilder keyProperties = new StringBuilder();
+            for(String keyProperty : ms.getKeyProperties()){
+                keyProperties.append(keyProperty).append(",");
+            }
+            keyProperties.delete(keyProperties.length()-1, keyProperties.length());
+            builder.keyProperty(keyProperties.toString());
+        }
+
+        return builder.build();
     }
 
     /**

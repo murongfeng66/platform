@@ -7,8 +7,18 @@ import com.jwzhu.platform.plugs.web.param.BaseParam;
 
 public class ServiceAddParam extends BaseParam<ServiceBean> {
 
+    @NotEmpty(message = "服务编码不能为空")
+    private String serviceCode;
     @NotEmpty(message = "服务名称不能为空")
     private String serviceName;
+
+    public String getServiceCode() {
+        return serviceCode;
+    }
+
+    public void setServiceCode(String serviceCode) {
+        this.serviceCode = serviceCode;
+    }
 
     public String getServiceName() {
         return serviceName;

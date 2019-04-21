@@ -23,6 +23,7 @@ public class ResourceAddParam extends BaseParam<ResourceBean> {
     private Short type;
     private Short menuShow;
     private Short availableStatus;
+    private Long serviceId;
 
     public String getCode() {
         return code;
@@ -99,5 +100,13 @@ public class ResourceAddParam extends BaseParam<ResourceBean> {
         if ((this.type == ResourceType.Page.getCode() || this.type == ResourceType.Function.getCode()) && StringUtils.isEmpty(this.url)) {
             throw new BusinessException("页面和功能的URL不能为空");
         }
+    }
+
+    public Long getServiceId() {
+        return serviceId;
+    }
+
+    public void setServiceId(Long serviceId) {
+        this.serviceId = serviceId;
     }
 }

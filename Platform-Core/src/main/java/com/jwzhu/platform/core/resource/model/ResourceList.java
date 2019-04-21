@@ -2,6 +2,8 @@ package com.jwzhu.platform.core.resource.model;
 
 import com.jwzhu.platform.common.enums.AvailableStatusEscaper;
 import com.jwzhu.platform.common.enums.YesOrNoEscaper;
+import com.jwzhu.platform.core.service.model.ServiceEscaper;
+import com.jwzhu.platform.plugs.jsonEscape.bind.LongEscape;
 import com.jwzhu.platform.plugs.jsonEscape.bind.ShortEscape;
 
 public class ResourceList {
@@ -17,6 +19,8 @@ public class ResourceList {
     private Short menuShow;
     @ShortEscape(AvailableStatusEscaper.class)
     private Short availableStatus;
+    @LongEscape(value = ServiceEscaper.class, targetNames = {"serviceCode","serviceName"})
+    private Long serviceId;
 
     public Long getId() {
         return id;
@@ -80,5 +84,13 @@ public class ResourceList {
 
     public void setAvailableStatus(Short availableStatus) {
         this.availableStatus = availableStatus;
+    }
+
+    public Long getServiceId() {
+        return serviceId;
+    }
+
+    public void setServiceId(Long serviceId) {
+        this.serviceId = serviceId;
     }
 }

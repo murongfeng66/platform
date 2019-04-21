@@ -30,8 +30,11 @@ public class JacksonSerializerRegister {
         ObjectMapper objectMapper = new ObjectMapper();
 
         SimpleModule module = new SimpleModule();
+        module.addSerializer(Boolean.class, new BooleanSerializer(applicationContext));
         module.addSerializer(Integer.class, new IntegerSerializer(applicationContext));
+        module.addSerializer(Long.class, new LongSerializer(applicationContext));
         module.addSerializer(Short.class, new ShortSerializer(applicationContext));
+        module.addSerializer(String.class, new StringSerializer(applicationContext));
         objectMapper.registerModule(module);
 
         JavaTimeModule javaTimeModule = new JavaTimeModule();

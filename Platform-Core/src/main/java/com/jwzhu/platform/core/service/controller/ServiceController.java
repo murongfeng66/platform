@@ -9,10 +9,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jwzhu.platform.core.service.bean.ServiceListBean;
+import com.jwzhu.platform.core.service.bean.ServiceMemberListBean;
 import com.jwzhu.platform.core.service.manager.ServiceManager;
 import com.jwzhu.platform.core.service.model.Service;
 import com.jwzhu.platform.core.service.param.ServiceAddParam;
 import com.jwzhu.platform.core.service.param.ServiceListParam;
+import com.jwzhu.platform.core.service.param.ServiceMemberListParam;
+import com.jwzhu.platform.core.service.param.ServiceMemberParam;
 import com.jwzhu.platform.core.service.param.ServiceUpdateParam;
 import com.jwzhu.platform.plugs.web.annotations.ControllerHandler;
 import com.jwzhu.platform.plugs.web.param.LongParam;
@@ -61,6 +64,31 @@ public class ServiceController {
     public String updateById(ServiceUpdateParam param){
         serviceManager.updateById(param.initBean());
         return "服务修改成功";
+    }
+
+    @PostMapping("addMember")
+    @ResponseBody
+    @ControllerHandler
+    public String addMember(ServiceMemberParam param){
+        serviceManager.addMember(param.initBean());
+        return "成员添加成功";
+    }
+
+    @PostMapping("removeMember")
+    @ResponseBody
+    @ControllerHandler
+    public String removeMember(ServiceMemberParam param){
+        serviceManager.removeMember(param.initBean());
+        return "成员移除成功";
+    }
+
+    @GetMapping("queryMember")
+    @ResponseBody
+    @ControllerHandler
+    public ServiceMemberListBean queryMember(ServiceMemberListParam param){
+        ServiceMemberListBean bean = param.initBean();
+        serviceManager.queryMember(bean);
+        return bean;
     }
     
 }

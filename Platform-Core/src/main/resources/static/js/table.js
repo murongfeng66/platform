@@ -1,254 +1,309 @@
 function Table() {
 }
 
-(function () {
-    const TableHtmlCache = {};
+(() => {
+    const TableCache = {};
 
-    Table.init = function (o) {
+    Table.init = function(o)  {
         let option = {
-            tableId: o.tableId,
+            tableDivId: o.tableDivId,
             queryFormId: o.queryFormId,
             url: o.url,
             queryParam: o.queryParam || {},
+            defaultQueryParam: o.defaultQueryParam,
             column: o.column,
             selectModel: o.selectModel || 'single',
             bottomButtons: o.bottomButtons || [],
             reloadButton: o.reloadButton || true,
             pageSizes: o.pageSizes || [15, 30, 45],
             rowClick: o.rowClick,
+            rowDbClick: o.rowDbClick,
             columnClick: o.columnClick,
             rowOperate: o.rowOperate
         };
 
-        if (!option.tableId) {
+        if (!option.tableDivId) {
             throw 'ID为空';
         }
 
-        let tableHtmlCache = TableHtmlCache[option.tableId];
-        if (!tableHtmlCache) {
-            if (!option.url) {
-                throw 'URL为空';
-            }
+        let tableCache = TableCache[option.tableDivId];
+        if (tableCache) {
+            requestData.call(tableCache);
+        } else {
             if (!option.column || option.column.length === 0) {
                 throw '列为空';
             }
 
-            tableHtmlCache = init(option);
+            tableCache = init(option);
         }
-        return tableHtmlCache.operator;
+        return tableCache;
     };
 
     Table.prototype = {
-        reload: function () {
-            let tableHtmlCache = TableHtmlCache[this.tableId];
-            if (!tableHtmlCache) {
+        reload: function (param1, param2) {
+            let tableCache = TableCache[this.tableDivId];
+            if (!tableCache) {
                 return;
             }
-            requestData.call(tableHtmlCache);
+            if (param1) {
+                if (typeof param1 === 'string') {
+                    tableCache.option.url = param1;
+                } else if (typeof param1 === 'object') {
+                    updateDefaultQueryParam.call(param1);
+                }
+            }
+            if (param2) {
+                if (param2 === 'string') {
+                    tableCache.option.url = param2;
+                } else if (typeof param2 === 'object') {
+                    this.updateDefaultQueryParam(param2);
+                }
+            }
+            requestData.call(tableCache);
+        },
+        updateDefaultQueryParam: function (param) {
+            if (this.option.defaultQueryParam) {
+                this.option.defaultQueryParam.forEach((item, index) => {
+                    delete this.option.queryParam[index];
+                });
+            }
+
+            this.option.defaultQueryParam = param;
+            if (this.option.defaultQueryParam) {
+                this.option.defaultQueryParam.forEach((item, index) => {
+                    if (item) {
+                        this.option.queryParam[index] = item;
+                    } else {
+                        delete this.option.queryParam[index];
+                    }
+                });
+            }
         }
     };
 
     function init(option) {
-        let tableHtmlCache = {
-            option: option,
-            operator: null,
-            data: {list: [], currentPage: 1, totalPage: 0},
-            _tableDivHtml: null,
-            _tBodyHtml: null,
-            _tPageHtml: null,
-            _tableBottomInfoHtml: null,
-            _pageHtmlList: {},
-            _queryItemsHtml: [],
-            operateButtons: []
-        };
+        let table = new Table();
+        table.option = option;
+        table.tableDivId = option.tableDivId;
 
-        if (tableHtmlCache.option.reloadButton) {
-            tableHtmlCache.option.bottomButtons.unshift({
+        table.data = {list: [], currentPage: 1, totalPage: 0};
+        table.tableId = table.tableDivId + '_table';
+        table.tableHeadId = table.tableId + '_head';
+        table.tableBodyId = table.tableId + '_body';
+        table.tableBottomId = table.tableId + '_bottom';
+        table.tableBottomPageId = table.tableBottomId + '_page';
+        table.tableBottomPageFirstId = table.tableBottomPageId + '_first';
+        table.tableBottomPagePreId = table.tableBottomPageId + '_pre';
+        table.tableBottomPagePageId = table.tableBottomPageId + '_page';
+        table.tableBottomPageNextId = table.tableBottomPageId + '_next';
+        table.tableBottomPageLastId = table.tableBottomPageId + '_last';
+        table.tableBottomPageSizeId = table.tableBottomPageId + '_size';
+        table.tableBottomInfoId = table.tableBottomId + '_info';
+        table.operateButtons = [];
+
+        if (table.option.reloadButton) {
+            table.option.bottomButtons.unshift({
                 title: '刷新',
                 faClass: 'fa-refresh',
                 onclick: requestData
             });
         }
 
-        if (typeof tableHtmlCache.option.rowOperate === 'function') {
-            tableHtmlCache.option.column.push({
+        if (typeof table.option.rowOperate === 'function') {
+            table.option.column.push({
                 title: '操作',
                 name: 'operate'
             });
         }
 
-        initTable.call(tableHtmlCache);
+        initTable.call(table);
 
-        requestData.call(tableHtmlCache);
+        requestData.call(table);
 
-        TableHtmlCache[tableHtmlCache.option.tableId] = tableHtmlCache;
+        TableCache[table.option.tableDivId] = table;
 
-        tableHtmlCache.operator = new Table();
-        tableHtmlCache.operator.tableId = tableHtmlCache.option.tableId;
-        return tableHtmlCache;
+        return table;
     }
 
     function initTable() {
         this.option.queryParam.needCut = this.option.queryParam.needCut ? this.option.queryParam.needCut : 1;
-        this._tableDivHtml = document.getElementById(this.option.tableId);
-
         createTable.call(this);
 
-        this._tPageHtml = this._tableDivHtml.querySelector('.table-bottom-page');
-        this._tableBottomInfoHtml = this._tableDivHtml.querySelector('.table-bottom-info');
+        let $tableBodyHtml = document.getElementById(this.tableBodyId);
+        $tableBodyHtml.onclick = () => {
+            bodyClick.call(this);
+        };
+        $tableBodyHtml.ondblclick = () => {
+            bodyDbClick.call(this);
+        };
 
-
-        this._tBodyHtml = this._tableDivHtml.querySelector('.table-body');
-
-        initPage.call(this);
+        bindPageEvent.call(this);
         initBottom.call(this);
-
-        let selector = '#' + this.option.queryFormId + ' [name]';
-        this._queryItemsHtml = document.querySelectorAll(selector);
     }
 
     function createTable() {
-        let _this = this;
-
-        let htmlString = '<table class="table"><thead class="table-head">';
-        htmlString += '<tr>';
-
-        let averageColumnNum = _this.option.column.length;
-        let tableRemainWidth = _this._tableDivHtml.clientWidth;
-        _this.option.column.forEach(function (item) {
+        let $tableDivHtml = document.getElementById(this.tableDivId);
+        let averageColumnNum = this.option.column.length;
+        let tableRemainWidth = $tableDivHtml.clientWidth;
+        this.option.column.forEach((item) => {
             if (item.width) {
                 averageColumnNum--;
                 tableRemainWidth -= item.width;
             }
         });
-        let columnDefaultWidth = (tableRemainWidth / averageColumnNum / _this._tableDivHtml.clientWidth * 100).toFixed(2);
+        let columnDefaultWidth = (tableRemainWidth / averageColumnNum / $tableDivHtml.clientWidth * 100).toFixed(2);
 
-        _this.option.column.forEach(function (item, index) {
-            let width = item.width ? (item.width / _this._tableDivHtml.clientWidth * 100).toFixed(2) : columnDefaultWidth;
-            _this.option.column[index].width = width;
-            htmlString += '<th style="width: ' + width + '%">' + item.title + '</th>';
+        let htmlString = '<table id="' + this.tableId + '" class="table"><thead id="' + this.tableHeadId + '" class="table-head">';
+        htmlString += '<tr>';
+
+        this.option.column.forEach((item) => {
+            item.width = item.width ? (item.width / $tableDivHtml.clientWidth * 100).toFixed(2) : columnDefaultWidth;
+
+            htmlString += '<th style="width: ' + item.width + '%">' + item.title + '</th>';
         });
         htmlString += '</tr></thead>';
-        htmlString += '<tbody class="table-body table-interval"></tbody></table>';
 
-        htmlString += '<div class="table-bottom">';
-        htmlString += '<span class="table-bottom-buttons"></span>';
+        htmlString += '<tbody id="' + this.tableBodyId + '" class="table-body table-interval">';
+        htmlString += '<tr id="' + this.tableBodyId + '_row_empty" class="opacity-0-1"><td class="text-center table-empty" colspan="' + this.option.column.length + '">暂无数据</td></tr>';
+        htmlString += '</tbody></table>';
 
-        htmlString += '<div class="table-bottom-page">';
-        htmlString += '<span class="page-item" data-page="firstPage">&laquo;</span>';
-        htmlString += '<span class="page-item" data-page="prePage">&lt;</span>';
-        htmlString += '<input type="number" class="page-item page-input" min="1">';
-        htmlString += '<span class="page-item" data-page="nextPage">&gt;</span>';
-        htmlString += '<span class="page-item" data-page="lastPage">&raquo;</span>';
-        htmlString += '<select class="page-item page-size">';
-        _this.option.pageSizes.forEach(function (pageSize) {
+        htmlString += '<div id="' + this.tableBottomId + '" class="table-bottom">';
+        htmlString += '<div id="' + this.tableBottomPageId + '" class="table-bottom-page">';
+        htmlString += '<span id="' + this.tableBottomPageFirstId + '" class="page-item" data-page="firstPage" disabled>&laquo;</span>';
+        htmlString += '<span id="' + this.tableBottomPagePreId + '" class="page-item" data-page="prePage" disabled>&lt;</span>';
+        htmlString += '<input id="' + this.tableBottomPagePageId + '" type="number" class="page-item page-input" min="1">';
+        htmlString += '<span id="' + this.tableBottomPageNextId + '" class="page-item" data-page="nextPage" disabled>&gt;</span>';
+        htmlString += '<span id="' + this.tableBottomPageLastId + '" class="page-item" data-page="lastPage" disabled>&raquo;</span>';
+        htmlString += '<select id="' + this.tableBottomPageSizeId + '" class="page-item page-size">';
+        this.option.pageSizes.forEach((pageSize) => {
             htmlString += '<option value="' + pageSize + '">' + pageSize + '</option>';
         });
         htmlString += '</select>';
         htmlString += '</div>';
 
-        htmlString += '<span class="table-bottom-info">';
+        htmlString += '<span id="' + this.tableBottomInfoId + '" class="table-bottom-info">';
         htmlString += '</span>';
 
         htmlString += '</div>';
 
-        _this._tableDivHtml.innerHTML = htmlString;
+        $tableDivHtml.innerHTML = htmlString;
     }
 
-    function initPage() {
-        let _this = this;
-
-        _this._pageHtmlList.firstPage = _this._tPageHtml.querySelector('[data-page=firstPage]');
-        _this._pageHtmlList.firstPage.onclick = function () {
-            gotoPage.call(_this);
+    function bindPageEvent() {
+        document.getElementById(this.tableBottomPageFirstId).onclick = () => {
+            gotoPage.call(this);
         };
-        _this._pageHtmlList.prePage = _this._tPageHtml.querySelector('[data-page=prePage]');
-        _this._pageHtmlList.prePage.onclick = function () {
-            gotoPage.call(_this);
+        document.getElementById(this.tableBottomPagePreId).onclick = () => {
+            gotoPage.call(this);
         };
-        _this._pageHtmlList.nextPage = _this._tPageHtml.querySelector('[data-page=nextPage]');
-        _this._pageHtmlList.nextPage.onclick = function () {
-            gotoPage.call(_this);
+        document.getElementById(this.tableBottomPageNextId).onclick = () => {
+            gotoPage.call(this);
         };
-        _this._pageHtmlList.lastPage = _this._tPageHtml.querySelector('[data-page=lastPage]');
-        _this._pageHtmlList.lastPage.onclick = function () {
-            gotoPage.call(_this);
+        document.getElementById(this.tableBottomPageLastId).onclick = () => {
+            gotoPage.call(this);
         };
-        _this._pageHtmlList.input = _this._tPageHtml.querySelector('.page-input');
-        _this._pageHtmlList.input.onkeydown = function () {
+        document.getElementById(this.tableBottomPagePageId).onkeydown = () => {
             if (window.event.keyCode === 13) {
-                _this.option.queryParam.currentPage = this.value;
-                gotoPage.call(_this);
+                this.option.queryParam.currentPage = this.value;
+                gotoPage.call(this);
             }
         };
-        _this._pageHtmlList.size = _this._tPageHtml.querySelector('.page-size');
-        _this._pageHtmlList.size.onchange = function () {
-            _this.option.queryParam.pageSize = this.value;
-            requestData.call(_this);
+        document.getElementById(this.tableBottomPageSizeId).onchange = () => {
+            this.option.queryParam.pageSize = this.value;
+            requestData.call(this);
         };
     }
 
     function initBottom() {
-        let _this = this;
-        let _bottomButtons = _this._tableDivHtml.querySelector('.table-bottom-buttons');
-        _this.option.bottomButtons.forEach(function (button) {
-            let _buttonHtml = document.createElement('span');
-            _buttonHtml.classList.add('table-bottom-button', 'margin-right-10');
-            _buttonHtml.style.color = button.color;
-            let htmlString = '<span class="margin-left-10 ' + button.classNames + '">';
+        let $bottomButtonsHtml = document.createElement('span');
+        $bottomButtonsHtml.classList.add('table-bottom-buttons');
+        this.option.bottomButtons.forEach((button) => {
+            let $buttonHtml = document.createElement('span');
+            $buttonHtml.classList.add('table-bottom-button', 'margin-right-10');
+            $buttonHtml.style.color = button.color;
+            let htmlString = '<span class="margin-left-10 ' + (button.classNames || '') + '">';
             if (button.faClass) {
                 htmlString += '<i class="fa ' + button.faClass + '"></i>';
             }
             htmlString += button.title + '</span>';
-            _buttonHtml.innerHTML = htmlString;
-            _buttonHtml.onclick = function () {
+            $buttonHtml.innerHTML = htmlString;
+            $buttonHtml.onclick = () => {
                 if (typeof button.onclick === 'function') {
-                    button.onclick.call(_this);
+                    button.onclick.call(this);
                 }
             };
-            _bottomButtons.appendChild(_buttonHtml);
+            $bottomButtonsHtml.appendChild($buttonHtml);
         });
+
+        document.getElementById(this.tableBottomId).insertBefore($bottomButtonsHtml, document.getElementById(this.tableBottomPageId));
     }
 
     function bodyClick() {
-        let _this = this;
         window.event.stopPropagation();
-        let _target = window.event.target;
 
-        let _tr;
-        let _trResearch = _target.parentElement;
-        while (true) {
-            if (_trResearch.localName === 'tr') {
-                _tr = _trResearch;
-            }
-            if (_tr || _trResearch.classList.contains('table-body')) {
-                break;
-            }
-            _trResearch = _trResearch.parentElement;
-        }
+        let data = getClickData.call(this);
 
-        let selected = _tr.getAttribute('selected') !== null;
-
-        if (_this.option.selectModel !== 'double') {
-            _this._tBodyHtml.querySelectorAll('tr[selected]').forEach(function (_selectedItem) {
-                _selectedItem.removeAttribute('selected');
+        if (this.option.selectModel !== 'double') {
+            document.getElementById(this.tableBodyId).querySelectorAll('tr[selected]').forEach(($selectedItem) => {
+                $selectedItem.removeAttribute('selected');
             });
         }
 
-        if (selected) {
-            _tr.removeAttribute('selected');
+        if (data.selected) {
+            data.$tr.removeAttribute('selected');
         } else {
-            _tr.setAttribute('selected', '');
+            data.$tr.setAttribute('selected', '');
         }
 
-        let rowIndex;
-        let columnIndex;
-        let currentHtml = _target;
-        while (true) {
-            rowIndex = currentHtml.getAttribute('data-rowIndex');
-            columnIndex = currentHtml.getAttribute('data-columnIndex');
+        if (typeof this.option.rowClick === 'function') {
+            this.option.rowClick.call(data.rowData, data.rowData, data.rowIndex);
+        }
 
-            if (rowIndex != null && columnIndex != null) {
+        if (typeof this.option.columnClick === 'function') {
+            let columnName = this.option.column[data.columnIndex].name;
+            let columnData = rowData[columnName];
+            this.option.columnClick.call(data.rowData, columnData, data.columnIndex, columnName);
+        }
+
+        if (data.$target.classList.contains('table-row-operate')) {
+            let buttonIndex = data.$target.getAttribute('data-buttonIndex');
+            let button = this.operateButtons[data.rowIndex][buttonIndex];
+            if (button && typeof button.onclick === 'function') {
+                button.onclick.call(data.rowData);
+            }
+        }
+    }
+
+    function getClickData() {
+        let data = {
+            $tr: null,
+            $target: null,
+            selected: false,
+            rowIndex: null,
+            columnIndex: null,
+            rowData: null
+        };
+
+        data.$target = window.event.target;
+        let $trResearch = data.$target.parentElement;
+        while (true) {
+            if ($trResearch.localName === 'tr') {
+                data.$tr = $trResearch;
+            }
+            if (data.$tr || $trResearch.classList.contains('table-body')) {
+                break;
+            }
+            $trResearch = $trResearch.parentElement;
+        }
+
+        data.selected = data.$tr.getAttribute('selected') !== null;
+
+        let currentHtml = data.$target;
+        while (true) {
+            data.rowIndex = currentHtml.getAttribute('data-rowIndex');
+            data.columnIndex = currentHtml.getAttribute('data-columnIndex');
+
+            if (data.rowIndex != null && data.columnIndex != null) {
                 break;
             }
             if (currentHtml.classList.contains('table-body')) {
@@ -257,59 +312,53 @@ function Table() {
             currentHtml = currentHtml.parentElement;
         }
 
+        data.rowData = this.data.list[data.rowIndex];
+        return data;
+    }
 
-        let rowData = _this.data.list[rowIndex];
+    function bodyDbClick() {
+        window.event.stopPropagation();
 
-        if (typeof _this.option.rowClick === 'function') {
-            _this.option.rowClick.call(rowData, rowData, rowIndex);
-        }
-
-        if (typeof _this.option.columnClick === 'function') {
-            let columnName = _this.option.column[columnIndex].name;
-            let columnData = rowData[columnName];
-            _this.option.columnClick.call(rowData, columnData, columnIndex, columnName);
-        }
-
-        if (_target.classList.contains('table-row-operate')) {
-            let buttonIndex = _target.getAttribute('data-buttonIndex');
-            let button = _this.operateButtons[rowIndex][buttonIndex];
-            if (button && typeof button.onclick === 'function') {
-                button.onclick.call(rowData);
-            }
+        if (typeof this.option.rowDbClick === 'function') {
+            let data = getClickData.call(this);
+            this.option.rowDbClick.call(data.rowData, data.rowData, data.rowIndex);
         }
     }
 
     function requestData() {
-        let _this = this;
+        if (!this.option.url) {
+            return;
+        }
 
-        _this._queryItemsHtml.forEach(function (_item) {
-            if (_item.value === '') {
-                delete _this.option.queryParam[_item.name];
-            } else {
-                _this.option.queryParam[_item.name] = _item.value;
-            }
-        });
+        if (this.option.queryFormId) {
+            document.getElementById(this.option.queryFormId).querySelectorAll('[name]').forEach(($item) => {
+                if ($item.value === '') {
+                    delete this.option.queryParam[$item.name];
+                } else {
+                    this.option.queryParam[$item.name] = $item.value;
+                }
+            });
+        }
 
-        _this.option.queryParam.pageSize = _this.option.queryParam.pageSize ? _this.option.queryParam.pageSize : _this._pageHtmlList.size.value;
+        this.option.queryParam.pageSize = this.option.queryParam.pageSize ? this.option.queryParam.pageSize : document.getElementById(this.tableBottomPageSizeId).value;
 
-        Request.get(_this.option.url, _this.option.queryParam, true).then(function (data) {
-            _this._tBodyHtml.onclick = null;
+        Request.get(this.option.url, this.option.queryParam, true).then((data) => {
             let htmlString = '';
             if (data.totalCount === 0) {
-                htmlString += '<tr class="opacity-0-1"><td class="text-center table-empty" colspan="' + _this.option.column.length + '">暂无数据</td></tr>';
+                htmlString += '<tr id="' + this.tableBodyId + 'row_empty" class="opacity-0-1"><td class="text-center table-empty" colspan="' + this.option.column.length + '">暂无数据</td></tr>';
             } else {
-                data.data.forEach(function (rowItem, rowIndex) {
-                    _this.data.list[rowIndex] = rowItem;
-                    _this.operateButtons[rowIndex] = [];
+                data.data.forEach((rowItem, rowIndex) => {
+                    this.data.list[rowIndex] = rowItem;
+                    this.operateButtons[rowIndex] = [];
 
-                    htmlString += '<tr class="opacity-0-1" data-rowIndex="' + rowIndex + '">';
+                    htmlString += '<tr id="' + this.tableBodyId + '_row_' + rowIndex + '" class="opacity-0-1" data-rowIndex="' + rowIndex + '">';
 
-                    _this.option.column.forEach(function (columnItem, columnIndex) {
+                    this.option.column.forEach((columnItem, columnIndex) => {
                         htmlString += '<td data-rowIndex="' + rowIndex + '" data-columnIndex="' + columnIndex + '">';
-                        if (columnItem.name === 'operate' && typeof _this.option.rowOperate === 'function') {
-                            let buttons = _this.option.rowOperate.call(rowItem);
-                            buttons.forEach(function (button, index) {
-                                _this.operateButtons[rowIndex][index] = button;
+                        if (columnItem.name === 'operate' && typeof this.option.rowOperate === 'function') {
+                            let buttons = this.option.rowOperate.call(rowItem);
+                            buttons.forEach((button, index) => {
+                                this.operateButtons[rowIndex][index] = button;
 
                                 htmlString += '<span class="table-row-operate margin-left-10 ' + button.classNames + '" data-buttonIndex="' + index + '">';
                                 if (button.faClass) {
@@ -318,54 +367,59 @@ function Table() {
                                 htmlString += button.title + '</span>';
                             });
                         } else {
-                            htmlString += common.string.dealEmpty(rowItem[columnItem.name]);
+                            if (columnItem.formatter && typeof columnItem.formatter === 'function') {
+                                htmlString += common.string.dealEmpty(columnItem.formatter.call(rowItem, rowItem[columnItem.name]));
+                            } else {
+                                htmlString += common.string.dealEmpty(rowItem[columnItem.name]);
+                            }
                         }
                         htmlString += '</td>';
                     });
 
                     htmlString += '</tr>';
                 });
-
-                _this._tBodyHtml.onclick = function () {
-                    bodyClick.call(_this);
-                };
             }
-            _this._tBodyHtml.innerHTML = htmlString;
+            document.getElementById(this.tableBodyId).innerHTML = htmlString;
 
-            _this.data.currentPage = data.currentPage;
-            _this.data.totalPage = data.totalPage;
-            _this.data.totalCount = data.totalCount;
-            _this.data.pageSize = data.pageSize;
-            updatePage.call(_this);
+            this.data.currentPage = data.currentPage;
+            this.data.totalPage = data.totalPage;
+            this.data.totalCount = data.totalCount;
+            this.data.pageSize = data.pageSize;
+            updatePage.call(this);
         }, true);
     }
 
     function updatePage() {
-        this._tableBottomInfoHtml.innerHTML = '共' + this.data.totalPage + '页  ' + this.data.totalCount + '行';
+        document.getElementById(this.tableBottomInfoId).innerHTML = '共' + this.data.totalPage + '页  ' + this.data.totalCount + '行';
 
-        this._pageHtmlList.input.value = this.data.currentPage;
-        this._pageHtmlList.input.setAttribute('max', this.data.totalPage);
+        let $pageInput = document.getElementById(this.tableBottomPagePageId);
+        $pageInput.value = this.data.currentPage;
+        $pageInput.setAttribute('max', this.data.totalPage);
 
+        let $firstHtml = document.getElementById(this.tableBottomPageFirstId);
+        let $preHtml = document.getElementById(this.tableBottomPagePreId);
         if (this.data.currentPage === 1) {
-            this._pageHtmlList.firstPage.setAttribute('disabled', '');
-            this._pageHtmlList.prePage.setAttribute('disabled', '');
+            $firstHtml.setAttribute('disabled', '');
+            $preHtml.setAttribute('disabled', '');
         } else {
-            this._pageHtmlList.firstPage.removeAttribute('disabled');
-            this._pageHtmlList.prePage.removeAttribute('disabled');
+            $firstHtml.removeAttribute('disabled');
+            $preHtml.removeAttribute('disabled');
         }
 
+        let $nextHtml = document.getElementById(this.tableBottomPageNextId);
+        let $lastHtml = document.getElementById(this.tableBottomPageLastId);
         if (this.data.currentPage >= this.data.totalPage) {
-            this._pageHtmlList.nextPage.setAttribute('disabled', '');
-            this._pageHtmlList.lastPage.setAttribute('disabled', '');
+            $nextHtml.setAttribute('disabled', '');
+            $lastHtml.setAttribute('disabled', '');
         } else {
-            this._pageHtmlList.nextPage.removeAttribute('disabled');
-            this._pageHtmlList.lastPage.removeAttribute('disabled');
+            $nextHtml.removeAttribute('disabled');
+            $lastHtml.removeAttribute('disabled');
         }
     }
 
     function gotoPage() {
-        let _liHtml = window.event.target;
-        let page = _liHtml.getAttribute('data-page');
+        let $liHtml = window.event.target;
+        let page = $liHtml.getAttribute('data-page');
 
         if (page === 'firstPage') {
             this.option.queryParam.currentPage = 1;

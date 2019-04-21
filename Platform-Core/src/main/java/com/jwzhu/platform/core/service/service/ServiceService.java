@@ -10,8 +10,11 @@ import com.jwzhu.platform.common.exception.BusinessException;
 import com.jwzhu.platform.common.util.StringUtil;
 import com.jwzhu.platform.core.service.bean.ServiceBean;
 import com.jwzhu.platform.core.service.bean.ServiceListBean;
+import com.jwzhu.platform.core.service.bean.ServiceMemberBean;
+import com.jwzhu.platform.core.service.bean.ServiceMemberListBean;
 import com.jwzhu.platform.core.service.db.ServiceDao;
 import com.jwzhu.platform.core.service.model.Service;
+import com.jwzhu.platform.core.service.model.ServiceMember;
 
 @org.springframework.stereotype.Service
 public class ServiceService {
@@ -20,6 +23,11 @@ public class ServiceService {
     private ServiceDao serviceDao;
 
     public void insert(ServiceBean bean) {
+        bean.setServiceCode(bean.getServiceCode() == null ? StringUtil.create("PS") : bean.getServiceCode());
+        Service service = serviceDao.getByServiceCode(bean.getServiceCode());
+        if(service != null){
+            throw new BusinessException("存在相同的服务编码");
+        }
         bean.setCreateTime(bean.getCreateTime() == null ? LocalDateTime.now() : bean.getCreateTime());
         bean.setAvailableStatus(bean.getAvailableStatus() == null ? AvailableStatus.Enable.getCode() : bean.getAvailableStatus());
         bean.setServiceCode(bean.getServiceCode() == null ? StringUtil.create("PS") : bean.getServiceCode());
@@ -39,6 +47,23 @@ public class ServiceService {
 
     public Service getById(long id) {
         return serviceDao.getById(id);
+    }
+
+    public List<ServiceMember> queryMember(ServiceMemberListBean bean){
+        return serviceDao.queryMember(bean);
+    }
+
+    public void addMember(ServiceMemberBean bean){
+        bean.setCreateTime(bean.getCreateTime() == null ? LocalDateTime.now() : bean.getCreateTime());
+        serviceDao.addMember(bean);
+    }
+
+    public void removeMember(ServiceMemberBean bean){
+        serviceDao.removeMember(bean);
+    }
+
+    public boolean existsMember(ServiceMemberBean bean){
+        return serviceDao.existsMember(bean);
     }
 
 }

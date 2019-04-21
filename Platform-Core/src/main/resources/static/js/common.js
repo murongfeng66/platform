@@ -31,6 +31,17 @@ common.string.dealEmpty = function (str) {
 };
 
 /**
+ * 移除所有form元素的onsubmit事件默认行为
+ */
+common.removeOnSubmitEvent = function () {
+    document.querySelectorAll('form').forEach(function (_form) {
+        _form.onsubmit = function () {
+            window.event.preventDefault();
+        };
+    })
+};
+
+/**
  * 隐藏Html元素<br>
  * 添加.hide
  */
@@ -59,6 +70,13 @@ Object.prototype.forEach = function (itemFunction) {
         }
         itemFunction.call(this, objectKey, this[objectKey]);
     }
+};
+
+/**
+ * 遍历Object对象中的数据
+ */
+Object.prototype.dealEmpty = function () {
+    return this || '';
 };
 
 /**
@@ -110,3 +128,68 @@ HTMLElement.prototype.keyDownEnter = function (resolve) {
         }
     };
 };
+
+const SelectDialog = {};
+
+SelectDialog.admin = function (o) {
+    let option = {
+        id: o.id,
+        title: o.title || '选择管理员',
+        selectBack: o.selectBack,
+        url: o.url || '/admin/queryByParam',
+        column: o.column || [
+            {title: '名称', name: 'nickname'}]
+    };
+    SelectDialog.createSelect(option);
+};
+
+SelectDialog.createSelect = function(o) {
+    let option = {
+        id: o.id,
+        title: o.title,
+        selectBack: o.selectBack,
+        url: o.url,
+        column: o.column
+    };
+
+    if (!option.id) {
+        throw 'id不能为空';
+    }
+
+    if (!option.url) {
+        throw 'url不能为空';
+    }
+
+    if (!option.column || option.column.length === 0) {
+        throw 'column不能为空';
+    }
+
+    option.dialogId = 'dialog_select_' + option.id;
+    option.tableId = 'table_select_' + option.id;
+
+    if (!document.getElementById(option.dialogId)) {
+        let $dialog = document.createElement('div');
+        $dialog.id = option.dialogId;
+        $dialog.classList.add('dialog');
+        $dialog.innerHTML = '<div class="dialog-body"><div id="' + option.tableId + '" class="dialog-content"></div></div>';
+        document.body.appendChild($dialog);
+    }
+
+    let dialogSelectAdmin = Dialog.create({
+        dialogId: option.dialogId,
+        title: option.title,
+        minWidth:'600px'
+    }).open();
+
+    Table.init({
+        tableDivId: option.tableId,
+        url: option.url,
+        column: option.column,
+        rowDbClick: function () {
+            if (option.selectBack && typeof option.selectBack === 'function') {
+                option.selectBack.call(this);
+            }
+            dialogSelectAdmin.close();
+        }
+    });
+}
