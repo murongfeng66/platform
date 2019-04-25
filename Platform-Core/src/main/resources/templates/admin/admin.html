@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>管理员</title>
+    <link rel="icon" type="image/x-icon" href="/image/icon.ico">
+
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/table.css">
+    <link rel="stylesheet" href="/css/dialog.css">
+    <link rel="stylesheet" href="/font-awesome-4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<form id="form_admin_query" class="form margin-top-10">
+    <div class="form-row">
+        <div class="form-input-group">
+            <label class="form-label">编码：</label>
+            <input name="key" class="form-input">
+        </div>
+        <div class="form-input-group">
+            <button type="button" class="button" onclick="(()=>tableAdmin.reload())()">查询</button>
+            <button type="reset" class="button">重置</button>
+        </div>
+    </div>
+</form>
+<div id="table_admin">
+</div>
+<div id="dialog_admin" class="dialog">
+    <div class="dialog-body">
+        <form id="form_admin" class="form dialog-content">
+            <input id="form_admin_id" type="hidden" name="id">
+            <div class="form-row">
+                <div class="form-input-group flex-1">
+                    <label class="form-label">编码：</label>
+                    <input type="text" name="code" class="form-input" data-readonly="|Edit|">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-input-group flex-1">
+                    <label class="form-label">名称：</label>
+                    <input type="text" name="nickname" class="form-input">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script src="/js/common.js"></script>
+<script src="/js/form.js"></script>
+<script src="/js/table.js"></script>
+<script src="/js/request.js"></script>
+<script src="/js/dialog.js"></script>
+<script type="text/javascript">
+    window.onload = function () {
+    };
+
+    let dialogAdmin = Dialog.create({
+        dialogId: 'dialog_admin',
+        topButtons: [{
+            id: 'view',
+            title: '查看',
+            classNames: '',
+            onclick: function () {
+
+            }
+        }],
+        bottomButtons: [{
+            id: 'save',
+            title: '保存',
+            classNames: 'float-right',
+            closeAfterClick: true,
+            onclick: function () {
+                updateAdmin();
+            }
+        }, {
+            id: 'submit',
+            title: '提交',
+            classNames: 'float-right',
+            closeAfterClick: true,
+            onclick: function () {
+                addAdmin();
+            }
+        }]
+    });
+
+    let tableAdmin = Table.init({
+        tableDivId: 'table_admin',
+        queryFormId: 'form_admin_query',
+        url: '/admin/queryByParam',
+        column: [
+            {
+                title: '服务', name: 'serviceName', formatter: function () {
+                    return this.serviceName + ' [' + this.serviceCode + ']'
+                }
+            },
+            {title: '名称', name: 'nickname'},
+            {title: '状态', name: 'adminStatusText'},
+            {title: '添加时间', name: 'createTime'}],
+        bottomButtons: [{
+            id: 'add',
+            title: '添加',
+            faClass: 'fa-plus',
+            onclick: function () {
+                addAdminView();
+            }
+        }],
+        rowOperate: function () {
+            let operates = [];
+            operates.push({
+                id: 'edit',
+                title: '编辑',
+                classNames: '',
+                onclick: updateAdminView
+            });
+            return operates;
+        }
+    });
+
+    let addAdminView = function () {
+        document.getElementById('form_admin').reset();
+        let dialogTitle = '添加管理员';
+
+        dialogAdmin.setTitle(dialogTitle).hideBottomButton().showBottomButton('submit').open();
+    };
+
+    let updateAdminView = function () {
+        Request.get('/admin/getById', {id: this.id}).then(function (data) {
+            let _formHtml = document.getElementById('form_admin');
+            _formHtml.addReadOnly('Edit');
+            _formHtml.setForm(data);
+            dialogAdmin.setTitle('编辑管理员').hideBottomButton().showBottomButton('save').open();
+        });
+    };
+
+    let addAdmin = function () {
+        let formData = document.getElementById('form_admin').getForm();
+        Request.post('/admin/add', formData).then(function () {
+            tableAdmin.reload();
+        });
+    };
+
+    let updateAdmin = function () {
+        let formData = document.getElementById('form_admin').getForm();
+        Request.post('/admin/updateById', formData).then(function () {
+            tableAdmin.reload();
+        });
+    };
+
+</script>
+</html>

@@ -37,6 +37,7 @@ public class ResourceService {
         bean.setAvailableStatus(bean.getAvailableStatus() == null ? AvailableStatus.Enable.getCode() : bean.getAvailableStatus());
         bean.setMenuShow(bean.getMenuShow() == null ? YesOrNo.No.getCode() : bean.getMenuShow());
         bean.setSort(bean.getSort() == null ? 10 : bean.getSort());
+        bean.setServiceId(bean.getServiceId()==null?RequestBaseParam.getRequestUser().getsId():bean.getServiceId());
         resourceDao.insert(bean);
     }
 
@@ -46,7 +47,7 @@ public class ResourceService {
 
     public List<Menu> queryMenu() {
         QueryMenuBean bean = new QueryMenuBean();
-        bean.setUserId(RequestBaseParam.getRequestUser().getUserId());
+        bean.setUserId(RequestBaseParam.getRequestUser().getId());
         bean.setMenuShow(YesOrNo.Yes.getCode());
         bean.setAvailableStatus(AvailableStatus.Enable.getCode());
         bean.setTypes(ResourceType.Menu.getCode(), ResourceType.Page.getCode());

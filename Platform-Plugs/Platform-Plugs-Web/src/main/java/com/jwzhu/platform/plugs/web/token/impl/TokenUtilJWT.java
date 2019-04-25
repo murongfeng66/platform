@@ -41,12 +41,12 @@ public class TokenUtilJWT implements TokenUtil {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         JwtBuilder builder = Jwts.builder();
         builder.setId(UUID.randomUUID().toString());
-        builder.setIssuedAt(new Date(subject.getCreateMillis()));
+        builder.setIssuedAt(new Date(subject.getTime()));
         builder.setSubject(JSON.toJSONString(subject));
         builder.signWith(signatureAlgorithm, this.secretKey);
 
         if (tokenConfig.getExpiredTime() >= 0) {
-            long expMillis = subject.getCreateMillis() + tokenConfig.getExpiredTime();
+            long expMillis = subject.getTime() + tokenConfig.getExpiredTime();
             Date exp = new Date(expMillis);
             builder.setExpiration(exp);
         }

@@ -35,7 +35,11 @@ public class LoginManager {
         if (admin.getAdminStatus() != AvailableStatus.Enable.getCode()) {
             throw new BusinessException("用户被锁定");
         }
-        return tokenService.createToken(new TokenSubject(login.getUserId()));
+        TokenSubject subject = new TokenSubject();
+        subject.setId(admin.getId());
+        subject.setsId(admin.getServiceId());
+        subject.setType(admin.getAdminType());
+        return tokenService.createToken(subject);
     }
 
     public Admin getById(long id) {

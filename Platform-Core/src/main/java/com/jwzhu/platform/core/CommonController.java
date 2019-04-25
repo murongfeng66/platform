@@ -42,7 +42,7 @@ public class CommonController {
     public ModelAndView main(ModelAndView view) {
         view.setViewName("main");
         view.addObject("platformName", platformConfig.getName());
-        view.addObject("admin", userManager.getById(RequestBaseParam.getRequestUser().getUserId()));
+        view.addObject("admin", userManager.getById(RequestBaseParam.getRequestUser().getId()));
         return view;
     }
 

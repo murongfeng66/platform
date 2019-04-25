@@ -2,45 +2,44 @@ package com.jwzhu.platform.plugs.web.token;
 
 public class TokenSubject {
 
-    private Long userId;
-    private Short userType;
-    private Long createMillis;
+    private Long id;
+    private Short type;
+    private Long time;
+    private Long sId;
 
     public TokenSubject() {
+        this.time = System.currentTimeMillis();
     }
 
-    public TokenSubject(Long userId) {
-        this.userId = userId;
-        this.createMillis = System.currentTimeMillis();
+    public Long getTime() {
+        return time;
     }
 
-    public TokenSubject(long userId, Short userType) {
-        this.userId = userId;
-        this.userType = userType;
-        this.createMillis = System.currentTimeMillis();
+    public void setTime(Long createMillis) {
+        this.time = createMillis;
     }
 
-    public Long getCreateMillis() {
-        return createMillis;
+    public Long getId() {
+        return id;
     }
 
-    public void setCreateMillis(Long createMillis) {
-        this.createMillis = createMillis;
+    public void setId(Long userId) {
+        this.id = userId;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Short getType() {
+        return type;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setType(Short userType) {
+        this.type = userType;
     }
 
-    public Short getUserType() {
-        return userType;
+    public Long getsId() {
+        return sId;
     }
 
-    public void setUserType(Short userType) {
-        this.userType = userType;
+    public void setsId(Long serviceId) {
+        this.sId = serviceId;
     }
 }

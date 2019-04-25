@@ -52,11 +52,11 @@ public class TokenUtiAES implements TokenUtil {
     @Override
     public TokenSubject checkToken(String token) {
         TokenSubject subject = analyzeToken(token);
-        if (subject.getCreateMillis() == null) {
+        if (subject.getTime() == null) {
             throw new TokenErrorException("Token错误");
         }
         if (this.tokenConfig.getExpiredTime() > 0) {
-            if (System.currentTimeMillis() - subject.getCreateMillis() > this.tokenConfig.getExpiredTime()) {
+            if (System.currentTimeMillis() - subject.getTime() > this.tokenConfig.getExpiredTime()) {
                 throw new TokenTimeOutException();
             }
         }
