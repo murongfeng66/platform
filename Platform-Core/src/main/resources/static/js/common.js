@@ -143,7 +143,7 @@ SelectDialog.admin = function (o) {
     SelectDialog.createSelect(option);
 };
 
-SelectDialog.createSelect = function(o) {
+SelectDialog.createSelect = function (o) {
     let option = {
         id: o.id,
         title: o.title,
@@ -178,7 +178,7 @@ SelectDialog.createSelect = function(o) {
     let dialogSelectAdmin = Dialog.create({
         dialogId: option.dialogId,
         title: option.title,
-        minWidth:'600px'
+        minWidth: '600px'
     }).open();
 
     Table.init({
@@ -192,4 +192,41 @@ SelectDialog.createSelect = function(o) {
             dialogSelectAdmin.close();
         }
     });
-}
+};
+
+common.confirmRequest = function (id, url, tableId, info) {
+    let $dialog = document.getElementById('dialog_confirm');
+    if ($dialog) {
+        $dialog.querySelector('.dialog-content').innerHTML = info;
+    } else {
+        $dialog = document.createElement('div');
+        $dialog.id = 'dialog_confirm';
+        $dialog.classList.add('dialog');
+        $dialog.innerHTML = '<div class="dialog-body"><div class="dialog-content">' + info + '</div></div>';
+        document.body.appendChild($dialog);
+    }
+
+    Dialog.create({
+        dialogId: 'dialog_confirm',
+        titleFaClass: 'fa-exclamation-triangle dialog-confirm',
+        title: '确认提示',
+        width: '25%',
+        destroyAfterClose: true,
+        bottomButtons: [{
+            id: 'cancel',
+            title: '取消',
+            classNames: 'dialog-confirm-cancel',
+            closeAfterClick: true
+        }, {
+            id: 'ok',
+            title: '确认',
+            classNames: 'dialog-confirm-ok',
+            closeAfterClick: true,
+            onclick: function () {
+                Request.post(url, {id: id}).then(function () {
+                    Table.reload(tableId);
+                });
+            }
+        }]
+    }).open();
+};

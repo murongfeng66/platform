@@ -11,7 +11,7 @@ public class ServiceListParam extends PageParam<ServiceListBean> {
 
     private String key;
     private Long ownerId;
-    private Short availableStatus;
+    private Short serviceStatus;
     private LocalDateTime datetime;
     private LocalDate date;
     private LocalTime time;
@@ -32,12 +32,12 @@ public class ServiceListParam extends PageParam<ServiceListBean> {
         this.ownerId = ownerId;
     }
 
-    public Short getAvailableStatus() {
-        return availableStatus;
+    public Short getServiceStatus() {
+        return serviceStatus;
     }
 
-    public void setAvailableStatus(Short availableStatus) {
-        this.availableStatus = availableStatus;
+    public void setServiceStatus(Short serviceStatus) {
+        this.serviceStatus = serviceStatus;
     }
 
     public LocalDateTime getDatetime() {

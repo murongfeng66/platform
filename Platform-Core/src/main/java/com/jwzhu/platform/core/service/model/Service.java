@@ -2,6 +2,9 @@ package com.jwzhu.platform.core.service.model;
 
 import java.time.LocalDateTime;
 
+import com.jwzhu.platform.common.enums.AvailableStatusEscaper;
+import com.jwzhu.platform.plugs.jsonEscape.bind.ShortEscape;
+
 public class Service {
 
     private Long id;
@@ -10,7 +13,8 @@ public class Service {
     private Long ownerId;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
-    private Short availableStatus;
+    @ShortEscape(AvailableStatusEscaper.class)
+    private Short serviceStatus;
 
     public Long getId() {
         return id;
@@ -60,11 +64,11 @@ public class Service {
         this.updateTime = updateTime;
     }
 
-    public Short getAvailableStatus() {
-        return availableStatus;
+    public Short getServiceStatus() {
+        return serviceStatus;
     }
 
-    public void setAvailableStatus(Short availableStatus) {
-        this.availableStatus = availableStatus;
+    public void setServiceStatus(Short serviceStatus) {
+        this.serviceStatus = serviceStatus;
     }
 }

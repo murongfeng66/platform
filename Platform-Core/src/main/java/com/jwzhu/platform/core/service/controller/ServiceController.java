@@ -90,5 +90,29 @@ public class ServiceController {
         serviceManager.queryMember(bean);
         return bean;
     }
+
+    @PostMapping("disable")
+    @ResponseBody
+    @ControllerHandler
+    public String disable(LongParam param){
+        serviceManager.disable(param.initBean());
+        return "禁用成功";
+    }
+
+    @PostMapping("enable")
+    @ResponseBody
+    @ControllerHandler
+    public String enable(LongParam param){
+        serviceManager.enable(param.initBean());
+        return "启用成功";
+    }
+
+    @PostMapping("delete")
+    @ResponseBody
+    @ControllerHandler
+    public String delete(LongParam param){
+        serviceManager.delete(param.initBean());
+        return "删除成功";
+    }
     
 }

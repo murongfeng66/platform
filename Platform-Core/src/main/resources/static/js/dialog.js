@@ -1,9 +1,8 @@
 function Dialog() {
 }
 
+const DialogCache = {};
 (() => {
-    const DialogCache = {};
-
     Dialog.create = (o) => {
         if (!o.dialogId) {
             throw 'ID不能为空';
@@ -15,7 +14,9 @@ function Dialog() {
             topButtons: o.topButtons || [],
             bottomButtons: o.bottomButtons || [],
             width: o.width || '30%',
-            minWidth: o.minWidth
+            minWidth: o.minWidth,
+            titleFaClass: o.titleFaClass,
+            destroyAfterClose: o.destroyAfterClose
         };
 
         let dialogCache = DialogCache[option.dialogId];
@@ -36,6 +37,9 @@ function Dialog() {
         },
         close: function () {
             document.getElementById(this.dialogId).style.display = '';
+            if(this.option.destroyAfterClose === true){
+                this.destroy();
+            }
             return this;
         },
         setTitle: function (title) {
@@ -141,7 +145,12 @@ function Dialog() {
         let $dialogTopHtml = document.createElement('div');
         $dialogTopHtml.id = this.dialogTopId;
         $dialogTopHtml.classList.add('dialog-top');
-        $dialogTopHtml.innerHTML = '<span id="' + this.dialogTopTitleId + '" class="dialog-top-title">' + common.string.dealEmpty(this.option.title) + '</span><div class="dialog-top-buttons"></div><div class="close fa fa-times"></div>';
+        let htmlString = '<span id="' + this.dialogTopTitleId + '" class="dialog-top-title">';
+        if (this.option.titleFaClass) {
+            htmlString += '<i class="margin-right-5 fa ' + this.option.titleFaClass + '"></i>';
+        }
+        htmlString += common.string.dealEmpty(this.option.title) + '</span><div class="dialog-top-buttons"></div><div class="close fa fa-times"></div>';
+        $dialogTopHtml.innerHTML = htmlString;
         $dialogTopHtml.querySelector('.close').onclick = () => {
             document.getElementById(this.dialogId).style.display = '';
         };
@@ -151,7 +160,7 @@ function Dialog() {
             let $buttonHtml = document.createElement('span');
             $buttonHtml.id = this.dialogTopId + '_button_' + button.id;
             $buttonHtml.innerHTML = button.title;
-            $buttonHtml.classList.add('dialog-top-buttons-item', 'margin-left-5');
+            $buttonHtml.classList.add('dialog-top-buttons-item');
             if (button.classNames) {
                 $buttonHtml.classList.add(button.classNames);
             }
@@ -177,7 +186,7 @@ function Dialog() {
             let $buttonHtml = document.createElement('button');
             $buttonHtml.id = this.dialogBottomId + '_button_' + button.id;
             $buttonHtml.innerHTML = button.title;
-            $buttonHtml.classList.add('button', 'button-s', 'margin-left-10');
+            $buttonHtml.classList.add('button', 'button-s');
             if (button.classNames) {
                 $buttonHtml.classList.add(button.classNames);
             }
@@ -187,7 +196,7 @@ function Dialog() {
                     button.onclick.call($buttonHtml);
                 }
                 if (button.closeAfterClick === true) {
-                    document.getElementById(this.dialogId).style.display = '';
+                    this.close();
                 }
             };
             $dialogBottomHtml.appendChild($buttonHtml);

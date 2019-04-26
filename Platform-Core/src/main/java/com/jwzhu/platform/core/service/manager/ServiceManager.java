@@ -62,4 +62,16 @@ public class ServiceManager {
         serviceService.removeMember(bean);
     }
 
+    public void disable(LongBean bean){
+        serviceService.disable(bean);
+    }
+
+    public void enable(LongBean bean){
+        serviceService.enable(bean);
+    }
+
+    public void delete(LongBean bean){
+        serviceService.delete(bean);
+    }
+
 }

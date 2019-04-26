@@ -6,10 +6,10 @@
     <title>平台服务</title>
     <link rel="icon" type="image/x-icon" href="/image/icon.ico">
 
+    <link rel="stylesheet" href="/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="/css/table.css">
     <link rel="stylesheet" href="/css/dialog.css">
-    <link rel="stylesheet" href="/font-awesome-4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 <form id="form_service_query" class="form margin-top-10">
@@ -17,10 +17,6 @@
         <div class="form-input-group">
             <label class="form-label">关键词：</label>
             <input type="text" name="key" class="form-input">
-        </div>
-        <div class="form-input-group">
-            <label class="form-label">时间：</label>
-            <input type="date" name="datetime" class="form-input">
         </div>
         <div class="form-input-group">
             <button type="button" class="button" onclick="(function(){tableService.reload();})()">查询</button>
@@ -111,10 +107,12 @@
         column: [
             {title: '服务编码', name: 'serviceCode'},
             {title: '服务名称', name: 'serviceName'},
+            {title: '服务状态', name: 'serviceStatusText'},
             {title: '添加时间', name: 'createTime'}],
         bottomButtons: [{
             title: '添加',
             faClass: 'fa-plus',
+            classNames: 'margin-right-10',
             onclick: function () {
                 addServiceView();
             }
@@ -123,13 +121,32 @@
             let operates = [];
             operates.push({
                 title: '编辑',
-                classNames: '',
+                classNames: 'margin-right-10',
                 onclick: updateServiceView
             }, {
                 title: '成员',
-                classNames: '',
+                classNames: 'margin-right-10',
                 onclick: memberListView
             });
+            if (this.serviceStatus === 1) {
+                let id = this.id;
+                operates.push({
+                    title: '禁用',
+                    classNames: 'margin-right-10',
+                    onclick: function () {
+                        common.confirmRequest(id, '/service/disable', 'table_service', '是否确认禁用该服务');
+                    }
+                });
+            } else if (this.serviceStatus === -1) {
+                let id = this.id;
+                operates.push({
+                    title: '启用',
+                    classNames: 'margin-right-10',
+                    onclick: function () {
+                        common.confirmRequest(id, '/service/enable', 'table_service', '是否确认启用该服务');
+                    }
+                });
+            }
             return operates;
         }
     });

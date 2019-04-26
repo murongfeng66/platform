@@ -88,3 +88,21 @@
     border-radius: 0.25rem;
     cursor: pointer;
 }
+
+.dialog-confirm-cancel{
+    width: 50%;
+    height: 100%;
+    border: none;
+    border-right: 1px solid #757575;
+    border-radius: 0;
+}
+
+.dialog-confirm-ok{
+    width: 50%;
+    border: none;
+    border-radius: 0;
+}
+
+.dialog-confirm{
+    color: #f5dc00;
+}

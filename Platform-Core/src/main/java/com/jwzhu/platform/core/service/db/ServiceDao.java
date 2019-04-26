@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.jwzhu.platform.common.bean.UpdateStatusBean;
 import com.jwzhu.platform.core.service.bean.ServiceBean;
 import com.jwzhu.platform.core.service.bean.ServiceListBean;
 import com.jwzhu.platform.core.service.bean.ServiceMemberBean;
@@ -31,5 +32,7 @@ public interface ServiceDao {
     boolean existsMember(ServiceMemberBean bean);
 
     List<ServiceMember> queryMember(ServiceMemberListBean bean);
+
+    int updateStatus(UpdateStatusBean bean);
 
 }

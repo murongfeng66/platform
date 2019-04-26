@@ -7,7 +7,7 @@ public class ServiceListBean extends PageBean<Service> {
 
     private String key;
     private Long ownerId;
-    private Short availableStatus;
+    private Short serviceStatus;
 
     public String getKey() {
         return key;
@@ -25,11 +25,11 @@ public class ServiceListBean extends PageBean<Service> {
         this.ownerId = ownerId;
     }
 
-    public Short getAvailableStatus() {
-        return availableStatus;
+    public Short getServiceStatus() {
+        return serviceStatus;
     }
 
-    public void setAvailableStatus(Short availableStatus) {
-        this.availableStatus = availableStatus;
+    public void setServiceStatus(Short serviceStatus) {
+        this.serviceStatus = serviceStatus;
     }
 }

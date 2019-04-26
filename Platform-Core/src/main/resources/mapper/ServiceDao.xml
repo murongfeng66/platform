@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jwzhu.platform.core.service.db.ServiceDao">
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        insert into Service(serviceCode, serviceName, ownerId, createTime, availableStatus) values
-            (#{serviceCode}, #{serviceName}, #{ownerId}, #{createTime}, #{availableStatus})
+        insert into Service(serviceCode, serviceName, ownerId, createTime, serviceStatus) values
+            (#{serviceCode}, #{serviceName}, #{ownerId}, #{createTime}, #{serviceStatus})
     </insert>
     <insert id="addMember">
         insert into ServiceMember(serviceId, userId, createTime) values
@@ -19,21 +19,24 @@
                 <if test="ownerId != null">
                     ownerId = #{ownerId},
                 </if>
-                <if test="createTime != null">
-                    createTime = #{createTime},
+                <if test="updateTime != null">
+                    updateTime = #{updateTime},
                 </if>
-                <if test="availableStatus != null">
-                    availableStatus = #{availableStatus},
+                <if test="serviceStatus != null">
+                    serviceStatus = #{serviceStatus},
                 </if>
             </trim>
         </set>
         where id = #{id}
     </update>
+    <update id="updateStatus">
+        update Service set serviceStatus = #{newStatus}, updateTime = #{updateTime} where id = #{id} and serviceStatus = #{oldStatus}
+    </update>
     <delete id="removeMember">
         delete from ServiceMember where serviceId = #{serviceId} and userId = #{userId}
     </delete>
     <select id="queryByParam" resultType="com.jwzhu.platform.core.service.model.Service">
-        select id, serviceCode, serviceName, ownerId, createTime, updateTime, availableStatus
+        select id, serviceCode, serviceName, ownerId, createTime, updateTime, serviceStatus
         from Service
         <where>
             <trim suffixOverrides="and">
@@ -43,8 +46,8 @@
                 <if test="ownerId != null">
                     ownerId = #{ownerId} and
                 </if>
-                <if test="availableStatus != null">
-                    availableStatus = #{availableStatus} and
+                <if test="serviceStatus != null">
+                    serviceStatus = #{serviceStatus} and
                 </if>
             </trim>
         </where>
@@ -59,12 +62,12 @@
         </trim>
     </select>
     <select id="getById" resultType="com.jwzhu.platform.core.service.model.Service">
-        select id, serviceCode, serviceName, ownerId, createTime, updateTime, availableStatus
+        select id, serviceCode, serviceName, ownerId, createTime, updateTime, serviceStatus
         from Service
         where id = #{id}
     </select>
     <select id="getByServiceCode" resultType="com.jwzhu.platform.core.service.model.Service">
-        select id, serviceCode, serviceName, ownerId, createTime, updateTime, availableStatus
+        select id, serviceCode, serviceName, ownerId, createTime, updateTime, serviceStatus
         from Service
         where serviceCode = #{serviceCode}
         for update

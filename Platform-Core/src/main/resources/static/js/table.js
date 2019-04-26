@@ -1,9 +1,8 @@
 function Table() {
 }
 
+const TableCache = {};
 (() => {
-    const TableCache = {};
-
     Table.init = function(o)  {
         let option = {
             tableDivId: o.tableDivId,
@@ -37,6 +36,13 @@ function Table() {
             tableCache = init(option);
         }
         return tableCache;
+    };
+
+    Table.reload = function(tableId){
+        let tableCache = TableCache[tableId];
+        if (tableCache) {
+            tableCache.reload();
+        }
     };
 
     Table.prototype = {
@@ -105,6 +111,7 @@ function Table() {
             table.option.bottomButtons.unshift({
                 title: '刷新',
                 faClass: 'fa-refresh',
+                classNames:'margin-right-10',
                 onclick: requestData
             });
         }
@@ -219,13 +226,16 @@ function Table() {
         $bottomButtonsHtml.classList.add('table-bottom-buttons');
         this.option.bottomButtons.forEach((button) => {
             let $buttonHtml = document.createElement('span');
-            $buttonHtml.classList.add('table-bottom-button', 'margin-right-10');
+            $buttonHtml.classList.add('table-bottom-button');
+            if (button.classNames) {
+                $buttonHtml.classList.add(button.classNames);
+            }
             $buttonHtml.style.color = button.color;
-            let htmlString = '<span class="margin-left-10 ' + (button.classNames || '') + '">';
+            let htmlString = '';
             if (button.faClass) {
                 htmlString += '<i class="fa ' + button.faClass + '"></i>';
             }
-            htmlString += button.title + '</span>';
+            htmlString += button.title;
             $buttonHtml.innerHTML = htmlString;
             $buttonHtml.onclick = () => {
                 if (typeof button.onclick === 'function') {
@@ -360,7 +370,7 @@ function Table() {
                             buttons.forEach((button, index) => {
                                 this.operateButtons[rowIndex][index] = button;
 
-                                htmlString += '<span class="table-row-operate margin-left-10 ' + button.classNames + '" data-buttonIndex="' + index + '">';
+                                htmlString += '<span class="table-row-operate ' + button.classNames + '" data-buttonIndex="' + index + '">';
                                 if (button.faClass) {
                                     htmlString += '<i class="fa ' + button.faClass + '"></i>';
                                 }

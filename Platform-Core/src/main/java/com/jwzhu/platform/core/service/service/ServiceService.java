@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.jwzhu.platform.common.bean.LongBean;
+import com.jwzhu.platform.common.bean.UpdateStatusBean;
 import com.jwzhu.platform.common.enums.AvailableStatus;
 import com.jwzhu.platform.common.exception.BusinessException;
 import com.jwzhu.platform.common.util.StringUtil;
@@ -64,6 +66,36 @@ public class ServiceService {
 
     public boolean existsMember(ServiceMemberBean bean){
         return serviceDao.existsMember(bean);
+    }
+
+    private void updateStatus(UpdateStatusBean bean, String errorMessage){
+        if(serviceDao.updateStatus(bean) == 0){
+            throw new BusinessException(errorMessage);
+        }
+    }
+
+    public void disable(LongBean bean){
+        UpdateStatusBean statusBean = new UpdateStatusBean();
+        statusBean.setId(bean.getId());
+        statusBean.setOldStatus(AvailableStatus.Enable.getCode());
+        statusBean.setNewStatus(AvailableStatus.Disable.getCode());
+        updateStatus(statusBean, "禁用失败");
+    }
+
+    public void enable(LongBean bean){
+        UpdateStatusBean statusBean = new UpdateStatusBean();
+        statusBean.setId(bean.getId());
+        statusBean.setOldStatus(AvailableStatus.Disable.getCode());
+        statusBean.setNewStatus(AvailableStatus.Enable.getCode());
+        updateStatus(statusBean, "启用失败");
+    }
+
+    public void delete(LongBean bean){
+        UpdateStatusBean statusBean = new UpdateStatusBean();
+        statusBean.setId(bean.getId());
+        statusBean.setOldStatus(AvailableStatus.Disable.getCode());
+        statusBean.setNewStatus(AvailableStatus.Delete.getCode());
+        updateStatus(statusBean, "删除失败");
     }
 
 }
