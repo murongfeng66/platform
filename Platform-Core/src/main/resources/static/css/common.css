@@ -109,10 +109,6 @@
 
 body {
     margin: 0;
-    padding: 0;
-    position: fixed;
-    width: 100%;
-    height: 100%;
     background-color: #ffffff;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
@@ -297,4 +293,86 @@ select.form-input {
 .button[type=reset]{
     color: #919191;
     border-color: #919191;
+}
+
+.date-picker-body{
+    position: fixed;
+    background-color: #ffffff;
+    display: block;
+}
+
+.date-picker-body-table{
+    border-collapse: collapse;
+}
+
+.date-picker-body-table thead th{
+    /*border: 1px solid #757575;*/
+    text-align: center;
+    padding: 0 0.5rem;
+    font-weight: normal;
+    background-color: #e8e8e8;
+}
+
+.date-picker-body-table tbody td{
+    /*border: 1px solid #757575;*/
+    text-align: center;
+    padding: 0.5rem;
+    cursor: pointer;
+}
+
+.date-picker-body-table tbody td.prefix{
+    background-color: #f3f3f3;
+    color: #999999;
+}
+
+.date-picker-body-table tbody td.current{
+
+}
+
+.date-picker-body-table tbody td.next{
+    background-color: #f3f3f3;
+    color: #999999;
+}
+
+.date-picker-body-table tbody td.now{
+    background-color: #0e90ce;
+}
+
+.date-picker-body-table tbody td.active{
+    background-color: #999999;
+    color: #ffffff;
+}
+
+.date-picker-body-table tbody td:hover{
+    background-color: #999999;
+    color: #ffffff;
+}
+
+.date-picker-top{
+    padding: 5px 10px;
+    text-align: center;
+}
+
+.date-picker-top span{
+    padding: 0 5px;
+}
+
+.date-picker-top-left{
+    float: left;
+    cursor: pointer;
+}
+
+.date-picker-top-left:hover{
+    background-color: #999999;
+    color: #ffffff;
+}
+
+.date-picker-top-right{
+    float: right;
+    cursor: pointer;
+}
+
+.date-picker-top-right:hover{
+    background-color: #999999;
+    color: #ffffff;
 }

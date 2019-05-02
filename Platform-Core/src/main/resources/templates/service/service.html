@@ -19,6 +19,10 @@
             <input type="text" name="key" class="form-input">
         </div>
         <div class="form-input-group">
+            <label class="form-label">时间：</label>
+            <input type="text" name="datetime" class="form-input date-picker" data-date-format="">
+        </div>
+        <div class="form-input-group">
             <button type="button" class="button" onclick="(function(){tableService.reload();})()">查询</button>
             <button type="reset" class="button">重置</button>
         </div>
@@ -62,7 +66,7 @@
 <script src="/js/dialog.js"></script>
 <script type="text/javascript">
     window.onload = function () {
-        common.removeOnSubmitEvent();
+        common.initHtml();
     };
 
     let dialogService = Dialog.create({

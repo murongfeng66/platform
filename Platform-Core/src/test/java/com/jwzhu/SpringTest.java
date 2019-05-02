@@ -50,10 +50,11 @@ public class SpringTest {
     }
 
     public static void main(String[] args){
-        Random random = new Random();
-        for (int i=0;i<100;i++){
-            System.out.println((Math.random() * 9 + 1) * 1000);
-        }
+//        Random random = new Random();
+//        for (int i=0;i<100;i++){
+//            System.out.println((Math.random() * 9 + 1) * 1000);
+//        }
+        System.out.println(" "+'b'+1);
     }
 
 }

@@ -53,31 +53,31 @@
             <div class="form-row">
                 <div class="form-input-group flex-1">
                     <label class="form-label">名称：</label>
-                    <input type="text" name="name" class="form-input">
+                    <input type="text" name="name" class="form-input" data-readonly>
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-input-group flex-1">
                     <label class="form-label">地址：</label>
-                    <input type="text" name="url" class="form-input">
+                    <input type="text" name="url" class="form-input" data-readonly>
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-input-group flex-1">
                     <label class="form-label">排序：</label>
-                    <input type="number" name="sort" class="form-input">
+                    <input type="number" name="sort" class="form-input" data-readonly>
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-input-group flex-1">
                     <label class="form-label">类型：</label>
-                    <select id="form_resource_type" name="type" class="form-input" onchange="resourceTypeChange()"></select>
+                    <select id="form_resource_type" name="type" class="form-input" onchange="resourceTypeChange()" data-readonly></select>
                 </div>
             </div>
             <div id="form_resource_menuShow_div" class="form-row">
                 <div class="form-input-group flex-1">
                     <label class="form-label">菜单显示：</label>
-                    <select id="form_resource_menuShow" name="menuShow" class="form-input"></select>
+                    <select id="form_resource_menuShow" name="menuShow" class="form-input" data-readonly></select>
                 </div>
             </div>
         </form>
@@ -99,14 +99,6 @@
 
     let dialogResource = Dialog.create({
         dialogId: 'dialog_resource',
-        topButtons: [{
-            id:'view',
-            title: '查看',
-            classNames: '',
-            onclick: function () {
-
-            }
-        }],
         bottomButtons: [{
             id:'save',
             title: '保存',
@@ -153,12 +145,22 @@
         }],
         rowOperate: function () {
             let operates = [];
+            operates.push({
+                id:'view',
+                title: '查看',
+                classNames: 'margin-right-10',
+                onclick: viewResourceView
+            },{
+                id:'edit',
+                title: '编辑',
+                classNames: 'margin-right-10',
+                onclick: updateResourceView
+            });
             if (this.type === 1) {
                 operates.push({
                     id:'addPage',
                     title: '添加页面',
-                    classNames: '',
-                    faClass: '',
+                    classNames: 'margin-right-10',
                     onclick: addResourceView
                 });
             }
@@ -166,16 +168,10 @@
                 operates.push({
                     id:'addFunction',
                     title: '添加功能',
-                    classNames: '',
+                    classNames: 'margin-right-10',
                     onclick: addResourceView
                 });
             }
-            operates.push({
-                id:'edit',
-                title: '编辑',
-                classNames: '',
-                onclick: updateResourceView
-            });
             return operates;
         }
     });
@@ -210,6 +206,15 @@
             _formHtml.setForm(data);
             document.getElementById('form_resource_id').setValue(data.id);
             dialogResource.setTitle('编辑资源').hideBottomButton().showBottomButton('save').open();
+        });
+    };
+
+    let viewResourceView = function () {
+        Request.get('/resource/getById', {id: this.id}).then(function (data) {
+            let _formHtml = document.getElementById('form_resource');
+            _formHtml.addReadOnly();
+            _formHtml.setForm(data);
+            dialogResource.setTitle('编辑资源').hideBottomButton().open();
         });
     };
 

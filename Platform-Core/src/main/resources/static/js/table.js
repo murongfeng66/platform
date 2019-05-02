@@ -403,7 +403,7 @@ const TableCache = {};
         document.getElementById(this.tableBottomInfoId).innerHTML = '共' + this.data.totalPage + '页  ' + this.data.totalCount + '行';
 
         let $pageInput = document.getElementById(this.tableBottomPagePageId);
-        $pageInput.value = this.data.currentPage;
+        $pageInput.setValue(this.data.currentPage);
         $pageInput.setAttribute('max', this.data.totalPage);
 
         let $firstHtml = document.getElementById(this.tableBottomPageFirstId);
