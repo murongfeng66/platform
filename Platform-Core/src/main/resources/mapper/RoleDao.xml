@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jwzhu.platform.core.role.db.RoleDao">
+<mapper namespace="com.jwzhu.platform.core.permission.db.RoleDao">
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         insert into Role(`code`, `name`, createTime, serviceId) values(#{code}, #{name}, #{createTime}, #{serviceId})
+    </insert>
+    <insert id="batchInsertRoleResource">
+        insert into RoleResource(serviceId, roleCode, resourceCode, createTime) values
+        <trim suffixOverrides=",">
+            <foreach collection="resourceCodes" item="resourceCode">
+                (#{serviceId}, #{roleCode}, #{resourceCode}, #{createTime})
+            </foreach>
+        </trim>
     </insert>
     <update id="updateById">
         update Role
@@ -21,7 +29,10 @@
         </set>
         where id = #{id}
     </update>
-    <select id="queryByParam" resultType="com.jwzhu.platform.core.role.model.Role">
+    <delete id="deleteRoleResource">
+        delete from RoleResource where serviceId = #{serviceId} and roleCode = #{roleCode}
+    </delete>
+    <select id="queryByParam" resultType="com.jwzhu.platform.core.permission.model.Role">
         select id, `code`, `name`, createTime, updateTime, serviceId
         from Role
         <where>
@@ -38,7 +49,7 @@
             </trim>
         </where>
     </select>
-    <select id="getById" resultType="com.jwzhu.platform.core.role.model.Role">
+    <select id="getById" resultType="com.jwzhu.platform.core.permission.model.Role">
         select id, `code`, `name`, createTime, updateTime, serviceId
         from Role
         where id = #{id}

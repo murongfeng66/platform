@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jwzhu.platform.core.resource.db.ResourceDao">
+<mapper namespace="com.jwzhu.platform.core.permission.db.ResourceDao">
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        insert into Resource (`code`, parentCode, `name`, url, sort, type, menuShow, availableStatus, createTime, serviceId) values (#{code}, #{parentCode}, #{name}, #{url}, #{sort}, #{type}, #{menuShow}, #{availableStatus}, #{createTime}, #{serviceId})
+        insert into Resource (`code`, parentCode, `name`, url, sort, type, menuShow, availableStatus, createTime, serviceId)
+        values (#{code}, #{parentCode}, #{name}, #{url}, #{sort}, #{type}, #{menuShow}, #{availableStatus}, #{createTime}, #{serviceId})
     </insert>
     <update id="updateById">
         update Resource
@@ -36,7 +37,7 @@
         </set>
         where id = #{id}
     </update>
-    <select id="queryByParam" resultType="com.jwzhu.platform.core.resource.model.ResourceList">
+    <select id="queryByParam" resultType="com.jwzhu.platform.core.permission.model.ResourceList">
         select id, `code`, parentCode, `name`, sort, type, menuShow, availableStatus, serviceId
         from Resource
         <where>
@@ -68,40 +69,48 @@
             id desc,
         </trim>
     </select>
-    <select id="queryMenu" resultType="com.jwzhu.platform.core.resource.model.Menu">
-        select `code`, parentCode, `name`, url, type, sort
-        from Resource
+    <select id="queryMenu" resultType="com.jwzhu.platform.core.permission.model.Menu">
+        select r.`code`, r.parentCode, r.`name`, r.url, r.type, r.sort
+        from Resource r
+        <if test="roleCodes != null and roleCodes.size() > 0">
+            right join RoleResource rr on rr.resourceCode = r.`code`
+        </if>
         <where>
             <trim suffixOverrides="and">
+                <if test="roleCodes != null and roleCodes.size() > 0">
+                    rr.roleCode in
+                    <foreach collection="roleCodes" item="roleCode" open="(" separator="," close=")">
+                        #{roleCode}
+                    </foreach>
+                </if>
                 <if test="types != null and types.length > 0">
-                    type in
+                    r.type in
                     <foreach collection="types" item="item" open="(" separator="," close=")">
                         #{item}
                     </foreach>
                     and
                 </if>
                 <if test="menuShow != null">
-                    menuShow = #{menuShow} and
+                    r.menuShow = #{menuShow} and
                 </if>
                 <if test="availableStatus != null">
-                    availableStatus = #{availableStatus} and
+                    r.availableStatus = #{availableStatus} and
                 </if>
                 <if test="serviceId != null">
-                    serviceId = #{serviceId} and
+                    r.serviceId = #{serviceId} and
                 </if>
             </trim>
         </where>
-        order by `sort` desc
+        order by r.`sort` desc
     </select>
-    <select id="getById" resultType="com.jwzhu.platform.core.resource.model.Resource">
+    <select id="getById" resultType="com.jwzhu.platform.core.permission.model.Resource">
         select id, `code`, parentCode, `name`, url, sort, type, menuShow, createTime, updateTime, availableStatus, serviceId
         from Resource
         where id = #{id}
     </select>
-    <select id="getByCode" resultType="com.jwzhu.platform.core.resource.model.Resource">
+    <select id="getByCode" resultType="com.jwzhu.platform.core.permission.model.Resource">
         select id, `code`, parentCode, `name`, url, sort, type, menuShow, createTime, updateTime, availableStatus, serviceId
         from Resource
-        where `code` = #{code}
-        for update
+        where `code` = #{code} for update
     </select>
 </mapper>
