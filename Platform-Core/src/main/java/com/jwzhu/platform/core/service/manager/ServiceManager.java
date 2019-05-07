@@ -18,6 +18,7 @@ import com.jwzhu.platform.core.service.model.Service;
 import com.jwzhu.platform.core.service.model.ServiceEscaper;
 import com.jwzhu.platform.core.service.service.ServiceService;
 import com.jwzhu.platform.plugs.jsonEscape.base.JsonEscapeCacheUtil;
+import com.jwzhu.platform.plugs.web.request.RequestBaseParam;
 
 @org.springframework.stereotype.Service
 public class ServiceManager {
@@ -74,4 +75,7 @@ public class ServiceManager {
         serviceService.delete(bean);
     }
 
+    public List<Service> getHaveService() {
+        return serviceService.getHaveService(RequestBaseParam.getRequestUser().getId());
+    }
 }

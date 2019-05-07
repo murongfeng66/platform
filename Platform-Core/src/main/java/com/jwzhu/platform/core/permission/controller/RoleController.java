@@ -1,5 +1,7 @@
 package com.jwzhu.platform.core.permission.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,9 +10,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.jwzhu.platform.core.permission.bean.GetRoleResourceBean;
 import com.jwzhu.platform.core.permission.bean.RoleListBean;
 import com.jwzhu.platform.core.permission.manager.RoleManager;
+import com.jwzhu.platform.core.permission.model.Resource;
 import com.jwzhu.platform.core.permission.model.Role;
+import com.jwzhu.platform.core.permission.param.GetRoleResourceParam;
+import com.jwzhu.platform.core.permission.param.PermissionSaveParam;
 import com.jwzhu.platform.core.permission.param.RoleAddParam;
 import com.jwzhu.platform.core.permission.param.RoleListParam;
 import com.jwzhu.platform.core.permission.param.RoleUpdateParam;
@@ -27,7 +33,7 @@ public class RoleController {
     @ControllerHandler
     @RequestMapping({"page"})
     public ModelAndView login(ModelAndView view) {
-        view.setViewName("role/role");
+        view.setViewName("permission/role");
         return view;
     }
 
@@ -66,9 +72,54 @@ public class RoleController {
     @PostMapping("savePermission")
     @ResponseBody
     @ControllerHandler
-    public String savePermission(RoleUpdateParam param){
-        roleManager.updateById(param.initBean());
+    public String savePermission(PermissionSaveParam param){
+        roleManager.savePermission(param.initBean());
         return "授权成功";
+    }
+
+    @GetMapping("getRoleResource")
+    @ResponseBody
+    @ControllerHandler
+    public List<Resource> getRoleResource(GetRoleResourceParam param){
+        return roleManager.getRoleResource(param.initBean());
+    }
+
+    @GetMapping("getHaveResource")
+    @ResponseBody
+    @ControllerHandler
+    public List<Resource> getHaveResource(LongParam param){
+        return roleManager.getHaveResource(param.initBean());
+    }
+
+    @GetMapping("getHaveRole")
+    @ResponseBody
+    @ControllerHandler
+    public List<Role> getHaveRole(){
+        return roleManager.getHaveRole();
+    }
+
+    @PostMapping("disable")
+    @ResponseBody
+    @ControllerHandler
+    public String disable(LongParam param){
+        roleManager.disable(param.initBean());
+        return "禁用角色成功";
+    }
+
+    @PostMapping("enable")
+    @ResponseBody
+    @ControllerHandler
+    public String enable(LongParam param){
+        roleManager.enable(param.initBean());
+        return "启用角色成功";
+    }
+
+    @PostMapping("delete")
+    @ResponseBody
+    @ControllerHandler
+    public String delete(LongParam param){
+        roleManager.delete(param.initBean());
+        return "删除角色成功";
     }
 
 }

@@ -11,19 +11,9 @@ import com.jwzhu.platform.plugs.web.param.BaseParam;
 
 public class PermissionSaveParam extends BaseParam<PermissionSaveBean> {
 
-    @NotNull(message = "服务ID不能为空")
-    private Long serviceId;
     @NotEmpty(message = "角色编码不能为空")
     private String roleCode;
     private List<String> resourceCodes;
-
-    public Long getServiceId() {
-        return serviceId;
-    }
-
-    public void setServiceId(Long serviceId) {
-        this.serviceId = serviceId;
-    }
 
     public String getRoleCode() {
         return roleCode;

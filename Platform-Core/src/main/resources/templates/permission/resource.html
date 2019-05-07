@@ -6,10 +6,11 @@
     <title>系统资源</title>
     <link rel="icon" type="image/x-icon" href="/image/icon.ico">
 
+    <link rel="stylesheet" href="/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/form.css">
     <link rel="stylesheet" href="/css/table.css">
     <link rel="stylesheet" href="/css/dialog.css">
-    <link rel="stylesheet" href="/font-awesome-4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 <form id="form_resource_query" class="form margin-top-10">
@@ -37,7 +38,7 @@
 <div id="dialog_resource" class="dialog">
     <div class="dialog-body">
         <form id="form_resource" class="form dialog-content">
-            <input id="form_resource_id" type="hidden" name="id">
+            <input type="hidden" name="id">
             <div class="form-row">
                 <div class="form-input-group flex-1">
                     <label class="form-label">父编码：</label>
@@ -122,13 +123,7 @@
         tableDivId: 'table_resource',
         queryFormId: 'form_resource_query',
         url: '/resource/queryByParam',
-        pageSizes:[5,10,15],
         column: [
-            {
-                title: '服务', name: 'serviceName', formatter: function () {
-                    return this.serviceName + ' [' + this.serviceCode + ']'
-                }
-            },
             {title: '父编码', name: 'parentCode'},
             {title: '编码', name: 'code'},
             {title: '名称', name: 'name'},
@@ -148,19 +143,19 @@
             operates.push({
                 id:'view',
                 title: '查看',
-                classNames: 'margin-right-10',
+                classNames: '',
                 onclick: viewResourceView
             },{
                 id:'edit',
                 title: '编辑',
-                classNames: 'margin-right-10',
+                classNames: '',
                 onclick: updateResourceView
             });
             if (this.type === 1) {
                 operates.push({
                     id:'addPage',
                     title: '添加页面',
-                    classNames: 'margin-right-10',
+                    classNames: '',
                     onclick: addResourceView
                 });
             }
@@ -168,7 +163,7 @@
                 operates.push({
                     id:'addFunction',
                     title: '添加功能',
-                    classNames: 'margin-right-10',
+                    classNames: '',
                     onclick: addResourceView
                 });
             }
@@ -204,7 +199,6 @@
             let _formHtml = document.getElementById('form_resource');
             _formHtml.addReadOnly('Edit');
             _formHtml.setForm(data);
-            document.getElementById('form_resource_id').setValue(data.id);
             dialogResource.setTitle('编辑资源').hideBottomButton().showBottomButton('save').open();
         });
     };

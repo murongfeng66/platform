@@ -1,5 +1,7 @@
 package com.jwzhu.platform.core.admin.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,6 +63,13 @@ public class AdminController {
     @ControllerHandler
     public Admin getById(LongParam param){
         return adminManager.getById(param.initBean());
+    }
+
+    @GetMapping("getAddAdminType")
+    @ResponseBody
+    @ControllerHandler
+    public Map<Short, String> getAddAdminType(){
+        return adminManager.getAddAdminType();
     }
 
 }

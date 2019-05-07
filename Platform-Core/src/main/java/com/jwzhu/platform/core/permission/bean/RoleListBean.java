@@ -7,7 +7,7 @@ public class RoleListBean extends PageBean<Role> {
 
     private Long id;
     private String key;
-    private Long serviceId;
+    private Short roleStatus;
 
     public Long getId() {
         return id;
@@ -25,11 +25,11 @@ public class RoleListBean extends PageBean<Role> {
         this.key = key;
     }
 
-    public Long getServiceId() {
-        return serviceId;
+    public Short getRoleStatus() {
+        return roleStatus;
     }
 
-    public void setServiceId(Long serviceId) {
-        this.serviceId = serviceId;
+    public void setRoleStatus(Short roleStatus) {
+        this.roleStatus = roleStatus;
     }
 }

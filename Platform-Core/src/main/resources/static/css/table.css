@@ -54,6 +54,7 @@
     font-size: 0.8rem;
     border-radius: 0.5rem;
     display: inline-block;
+    margin-right: 10px;
 }
 
 .table-row-operate i{
@@ -80,6 +81,7 @@
 
 .table-bottom-button{
     cursor: pointer;
+    margin-right: 10px
 }
 
 .table-bottom-page{

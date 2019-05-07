@@ -1,5 +1,7 @@
 package com.jwzhu.platform.core.service.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -113,6 +115,13 @@ public class ServiceController {
     public String delete(LongParam param){
         serviceManager.delete(param.initBean());
         return "删除成功";
+    }
+
+    @GetMapping("getHaveService")
+    @ResponseBody
+    @ControllerHandler
+    public List<Service> getHaveService(){
+        return serviceManager.getHaveService();
     }
     
 }

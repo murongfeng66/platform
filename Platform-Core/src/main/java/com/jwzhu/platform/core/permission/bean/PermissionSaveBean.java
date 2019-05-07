@@ -7,18 +7,9 @@ import com.jwzhu.platform.common.bean.BaseBean;
 
 public class PermissionSaveBean extends BaseBean {
 
-    private Long serviceId;
     private String roleCode;
     private List<String> resourceCodes;
     private LocalDateTime createTime;
-
-    public Long getServiceId() {
-        return serviceId;
-    }
-
-    public void setServiceId(Long serviceId) {
-        this.serviceId = serviceId;
-    }
 
     public String getRoleCode() {
         return roleCode;

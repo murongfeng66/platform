@@ -76,7 +76,7 @@ const TableCache = {};
 
             this.option.defaultQueryParam = param;
             if (this.option.defaultQueryParam) {
-                this.option.defaultQueryParam.forEach((item, index) => {
+                this.option.defaultQueryParam.forEach((index, item) => {
                     if (item) {
                         this.option.queryParam[index] = item;
                     } else {
@@ -111,7 +111,7 @@ const TableCache = {};
             table.option.bottomButtons.unshift({
                 title: '刷新',
                 faClass: 'fa-refresh',
-                classNames:'margin-right-10',
+                classNames:'',
                 onclick: requestData
             });
         }
@@ -352,7 +352,7 @@ const TableCache = {};
 
         this.option.queryParam.pageSize = this.option.queryParam.pageSize ? this.option.queryParam.pageSize : document.getElementById(this.tableBottomPageSizeId).value;
 
-        Request.get(this.option.url, this.option.queryParam, true).then((data) => {
+        Request.get(this.option.url, this.option.queryParam, true, false).then((data) => {
             let htmlString = '';
             if (data.totalCount === 0) {
                 htmlString += '<tr id="' + this.tableBodyId + 'row_empty" class="opacity-0-1"><td class="text-center table-empty" colspan="' + this.option.column.length + '">暂无数据</td></tr>';

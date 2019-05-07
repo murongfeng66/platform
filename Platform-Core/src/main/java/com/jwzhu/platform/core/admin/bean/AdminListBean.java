@@ -7,7 +7,6 @@ public class AdminListBean extends PageBean<Admin> {
 
     private String key;
     private Short adminStatus;
-    private Long serviceId;
     private Short adminType;
 
     public String getKey() {
@@ -24,14 +23,6 @@ public class AdminListBean extends PageBean<Admin> {
 
     public void setAdminStatus(Short adminStatus) {
         this.adminStatus = adminStatus;
-    }
-
-    public Long getServiceId() {
-        return serviceId;
-    }
-
-    public void setServiceId(Long serviceId) {
-        this.serviceId = serviceId;
     }
 
     public Short getAdminType() {

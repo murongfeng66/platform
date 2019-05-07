@@ -9,7 +9,6 @@ public class ResourceListBean extends PageBean<ResourceList> {
     private Short type;
     private Short menuShow;
     private Short availableStatus;
-    private Long serviceId;
 
     public String getKey() {
         return key;
@@ -41,13 +40,5 @@ public class ResourceListBean extends PageBean<ResourceList> {
 
     public void setAvailableStatus(Short availableStatus) {
         this.availableStatus = availableStatus;
-    }
-
-    public Long getServiceId() {
-        return serviceId;
-    }
-
-    public void setServiceId(Long serviceId) {
-        this.serviceId = serviceId;
     }
 }

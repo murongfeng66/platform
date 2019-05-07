@@ -19,8 +19,6 @@ public class ResourceList {
     private Short menuShow;
     @ShortEscape(AvailableStatusEscaper.class)
     private Short availableStatus;
-    @LongEscape(value = ServiceEscaper.class, targetNames = {"serviceCode","serviceName"})
-    private Long serviceId;
 
     public Long getId() {
         return id;
@@ -84,13 +82,5 @@ public class ResourceList {
 
     public void setAvailableStatus(Short availableStatus) {
         this.availableStatus = availableStatus;
-    }
-
-    public Long getServiceId() {
-        return serviceId;
-    }
-
-    public void setServiceId(Long serviceId) {
-        this.serviceId = serviceId;
     }
 }

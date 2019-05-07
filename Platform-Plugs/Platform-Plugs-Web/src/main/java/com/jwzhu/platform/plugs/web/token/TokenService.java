@@ -63,7 +63,6 @@ public class TokenService {
             TokenSubject newSubject = new TokenSubject();
             newSubject.setId(subject.getId());
             newSubject.setType(subject.getType());
-            newSubject.setsId(subject.getsId());
             logger.info("刷新Token");
             return createToken(newSubject);
         }

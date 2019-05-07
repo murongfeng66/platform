@@ -8,8 +8,10 @@
 
     <link rel="stylesheet" href="/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/form.css">
     <link rel="stylesheet" href="/css/table.css">
     <link rel="stylesheet" href="/css/dialog.css">
+    <link rel="stylesheet" href="/css/date-picker.css">
 </head>
 <body>
 <form id="form_service_query" class="form margin-top-10">
@@ -64,9 +66,11 @@
 <script src="/js/table.js"></script>
 <script src="/js/request.js"></script>
 <script src="/js/dialog.js"></script>
+<script src="/js/date-picker.js"></script>
 <script type="text/javascript">
     window.onload = function () {
         common.initHtml();
+
     };
 
     let dialogService = Dialog.create({
@@ -116,7 +120,7 @@
         bottomButtons: [{
             title: '添加',
             faClass: 'fa-plus',
-            classNames: 'margin-right-10',
+            classNames: '',
             onclick: function () {
                 addServiceView();
             }
@@ -125,18 +129,18 @@
             let operates = [];
             operates.push({
                 title: '编辑',
-                classNames: 'margin-right-10',
+                classNames: '',
                 onclick: updateServiceView
             }, {
                 title: '成员',
-                classNames: 'margin-right-10',
+                classNames: '',
                 onclick: memberListView
             });
             if (this.serviceStatus === 1) {
                 let id = this.id;
                 operates.push({
                     title: '禁用',
-                    classNames: 'margin-right-10',
+                    classNames: '',
                     onclick: function () {
                         common.confirmRequest(id, '/service/disable', 'table_service', '是否确认禁用该服务');
                     }
@@ -145,9 +149,15 @@
                 let id = this.id;
                 operates.push({
                     title: '启用',
-                    classNames: 'margin-right-10',
+                    classNames: '',
                     onclick: function () {
                         common.confirmRequest(id, '/service/enable', 'table_service', '是否确认启用该服务');
+                    }
+                },{
+                    title: '删除',
+                    classNames: '',
+                    onclick: function () {
+                        common.confirmRequest(id, '/service/delete', 'table_service', '是否确认删除该服务');
                     }
                 });
             }

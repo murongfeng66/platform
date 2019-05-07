@@ -11,7 +11,6 @@ public class AdminBean extends BaseBean {
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
     private Short adminStatus;
-    private Long serviceId;
     private Short adminType;
 
     public Long getId() {
@@ -52,14 +51,6 @@ public class AdminBean extends BaseBean {
 
     public void setAdminStatus(Short adminStatus) {
         this.adminStatus = adminStatus;
-    }
-
-    public Long getServiceId() {
-        return serviceId;
-    }
-
-    public void setServiceId(Long serviceId) {
-        this.serviceId = serviceId;
     }
 
     public Short getAdminType() {

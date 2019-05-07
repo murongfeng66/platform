@@ -31,8 +31,7 @@ public class ServiceService {
             throw new BusinessException("存在相同的服务编码");
         }
         bean.setCreateTime(bean.getCreateTime() == null ? LocalDateTime.now() : bean.getCreateTime());
-        bean.setAvailableStatus(bean.getAvailableStatus() == null ? AvailableStatus.Enable.getCode() : bean.getAvailableStatus());
-        bean.setServiceCode(bean.getServiceCode() == null ? StringUtil.create("PS") : bean.getServiceCode());
+        bean.setServiceStatus(bean.getServiceStatus() == null ? AvailableStatus.Enable.getCode() : bean.getServiceStatus());
         serviceDao.insert(bean);
     }
 
@@ -98,4 +97,7 @@ public class ServiceService {
         updateStatus(statusBean, "删除失败");
     }
 
+    public List<Service> getHaveService(Long adminId) {
+        return serviceDao.getHaveService(adminId);
+    }
 }

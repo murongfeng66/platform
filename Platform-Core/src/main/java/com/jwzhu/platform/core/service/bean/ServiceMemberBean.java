@@ -7,7 +7,6 @@ import com.jwzhu.platform.common.bean.BaseBean;
 public class ServiceMemberBean extends BaseBean {
 
     private Long id;
-    private Long serviceId;
     private Long userId;
     private LocalDateTime createTime;
 
@@ -17,14 +16,6 @@ public class ServiceMemberBean extends BaseBean {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getServiceId() {
-        return serviceId;
-    }
-
-    public void setServiceId(Long serviceId) {
-        this.serviceId = serviceId;
     }
 
     public Long getUserId() {

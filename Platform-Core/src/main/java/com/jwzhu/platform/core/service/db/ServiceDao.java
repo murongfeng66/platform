@@ -35,4 +35,5 @@ public interface ServiceDao {
 
     int updateStatus(UpdateStatusBean bean);
 
+    List<Service> getHaveService(Long adminId);
 }

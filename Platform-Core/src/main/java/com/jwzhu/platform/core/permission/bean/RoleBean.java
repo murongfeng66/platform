@@ -11,7 +11,7 @@ public class RoleBean extends BaseBean {
     private String name;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
-    private Long serviceId;
+    private Short roleStatus;
 
     public Long getId() {
         return id;
@@ -53,11 +53,11 @@ public class RoleBean extends BaseBean {
         this.updateTime = updateTime;
     }
 
-    public Long getServiceId() {
-        return serviceId;
+    public Short getRoleStatus() {
+        return roleStatus;
     }
 
-    public void setServiceId(Long serviceId) {
-        this.serviceId = serviceId;
+    public void setRoleStatus(Short roleStatus) {
+        this.roleStatus = roleStatus;
     }
 }

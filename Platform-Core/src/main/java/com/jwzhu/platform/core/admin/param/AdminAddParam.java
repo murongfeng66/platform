@@ -6,7 +6,6 @@ import com.jwzhu.platform.plugs.web.param.BaseParam;
 public class AdminAddParam extends BaseParam<AdminBean> {
 
     private String nickname;
-    private Long serviceId;
     private Short adminType;
 
     public String getNickname() {
@@ -15,14 +14,6 @@ public class AdminAddParam extends BaseParam<AdminBean> {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
-    }
-
-    public Long getServiceId() {
-        return serviceId;
-    }
-
-    public void setServiceId(Long serviceId) {
-        this.serviceId = serviceId;
     }
 
     public Short getAdminType() {

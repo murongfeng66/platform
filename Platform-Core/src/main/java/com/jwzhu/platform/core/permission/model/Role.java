@@ -2,8 +2,10 @@ package com.jwzhu.platform.core.permission.model;
 
 import java.time.LocalDateTime;
 
+import com.jwzhu.platform.common.enums.AvailableStatusEscaper;
 import com.jwzhu.platform.core.service.model.ServiceEscaper;
 import com.jwzhu.platform.plugs.jsonEscape.bind.LongEscape;
+import com.jwzhu.platform.plugs.jsonEscape.bind.ShortEscape;
 
 public class Role {
 
@@ -12,8 +14,8 @@ public class Role {
     private String name;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
-    @LongEscape(value = ServiceEscaper.class, targetNames = {"serviceCode", "serviceName"})
-    private Long serviceId;
+    @ShortEscape(AvailableStatusEscaper.class)
+    private Short roleStatus;
 
     public Long getId() {
         return id;
@@ -55,11 +57,11 @@ public class Role {
         this.updateTime = updateTime;
     }
 
-    public Long getServiceId() {
-        return serviceId;
+    public Short getRoleStatus() {
+        return roleStatus;
     }
 
-    public void setServiceId(Long serviceId) {
-        this.serviceId = serviceId;
+    public void setRoleStatus(Short roleStatus) {
+        this.roleStatus = roleStatus;
     }
 }

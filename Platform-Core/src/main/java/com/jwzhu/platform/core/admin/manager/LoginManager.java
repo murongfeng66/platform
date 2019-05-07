@@ -37,7 +37,6 @@ public class LoginManager {
         }
         TokenSubject subject = new TokenSubject();
         subject.setId(admin.getId());
-        subject.setsId(admin.getServiceId());
         subject.setType(admin.getAdminType());
         return tokenService.createToken(subject);
     }

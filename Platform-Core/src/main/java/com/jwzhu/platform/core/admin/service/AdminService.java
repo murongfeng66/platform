@@ -33,7 +33,6 @@ public class AdminService {
         bean.setCreateTime(bean.getCreateTime() == null ? LocalDateTime.now() : bean.getCreateTime());
         bean.setAdminStatus(bean.getAdminStatus() == null ? AvailableStatus.Enable.getCode() : bean.getAdminStatus());
         bean.setAdminType(bean.getAdminType() == null ? AdminType.Service.getCode() : bean.getAdminType());
-        bean.setServiceId(bean.getServiceId() == null ? RequestBaseParam.getRequestUser().getsId() : bean.getServiceId());
 
         if (AdminType.Super.getCode() == bean.getAdminType()) {
             throw new BusinessException("不允许添加超级管理员");

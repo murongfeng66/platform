@@ -15,8 +15,6 @@ public class Admin {
     private LocalDateTime updateTime;
     @ShortEscape(AvailableStatusEscaper.class)
     private Short adminStatus;
-    @LongEscape(value = ServiceEscaper.class, targetNames = {"serviceCode","serviceName"})
-    private Long serviceId;
     @ShortEscape(AdminTypeEscaper.class)
     private Short adminType;
 
@@ -58,14 +56,6 @@ public class Admin {
 
     public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public Long getServiceId() {
-        return serviceId;
-    }
-
-    public void setServiceId(Long serviceId) {
-        this.serviceId = serviceId;
     }
 
     public Short getAdminType() {

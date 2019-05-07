@@ -5,7 +5,6 @@ public class TokenSubject {
     private Long id;
     private Short type;
     private Long time;
-    private Long sId;
 
     public TokenSubject() {
         this.time = System.currentTimeMillis();
@@ -33,13 +32,5 @@ public class TokenSubject {
 
     public void setType(Short userType) {
         this.type = userType;
-    }
-
-    public Long getsId() {
-        return sId;
-    }
-
-    public void setsId(Long serviceId) {
-        this.sId = serviceId;
     }
 }

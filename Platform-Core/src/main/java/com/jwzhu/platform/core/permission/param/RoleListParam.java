@@ -7,6 +7,7 @@ public class RoleListParam extends PageParam<RoleListBean> {
 
     private Long id;
     private String key;
+    private Short roleStatus;
 
     public Long getId() {
         return id;
@@ -22,6 +23,14 @@ public class RoleListParam extends PageParam<RoleListBean> {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public Short getRoleStatus() {
+        return roleStatus;
+    }
+
+    public void setRoleStatus(Short roleStatus) {
+        this.roleStatus = roleStatus;
     }
 
     @Override

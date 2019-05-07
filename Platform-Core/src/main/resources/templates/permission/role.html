@@ -6,10 +6,11 @@
     <title>系统资源</title>
     <link rel="icon" type="image/x-icon" href="/image/icon.ico">
 
+    <link rel="stylesheet" href="/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/form.css">
     <link rel="stylesheet" href="/css/table.css">
     <link rel="stylesheet" href="/css/dialog.css">
-    <link rel="stylesheet" href="/font-awesome-4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 <form id="form_role_query" class="form margin-top-10">
@@ -17,6 +18,10 @@
         <div class="form-input-group">
             <label class="form-label">编码：</label>
             <input name="key" class="form-input">
+        </div>
+        <div class="form-input-group">
+            <label class="form-label">状态：</label>
+            <select id="form_role_query_roleStatus" name="roleStatus" class="form-input"></select>
         </div>
         <div class="form-input-group">
             <button type="button" class="button" onclick="(()=>tableRole.reload())()">查询</button>
@@ -32,12 +37,6 @@
             <input id="form_role_id" type="hidden" name="id">
             <div class="form-row">
                 <div class="form-input-group flex-1">
-                    <label class="form-label">服务：</label>
-                    <input type="text" name="serviceName" class="form-input" data-readonly="|Edit|">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-input-group flex-1">
                     <label class="form-label">编码：</label>
                     <input type="text" name="code" class="form-input" data-readonly="|Edit|">
                 </div>
@@ -51,6 +50,13 @@
         </form>
     </div>
 </div>
+<div id="dialog_permission" class="dialog">
+    <div class="dialog-body">
+        <div class="dialog-content">
+
+        </div>
+    </div>
+</div>
 </body>
 <script src="/js/common.js"></script>
 <script src="/js/form.js"></script>
@@ -59,11 +65,13 @@
 <script src="/js/dialog.js"></script>
 <script type="text/javascript">
     window.onload = function () {
+        document.getElementById('form_role_query_roleStatus').initSelect('/availableStatus', true);
     };
 
     let dialogRole = Dialog.create({
         dialogId: 'dialog_role',
         bottomButtons: [{
+            id: 'save',
             title: '保存',
             classNames: 'float-right',
             closeAfterClick: true,
@@ -71,6 +79,7 @@
                 updateRole();
             }
         }, {
+            id: 'submit',
             title: '提交',
             classNames: 'float-right',
             closeAfterClick: true,
@@ -80,22 +89,28 @@
         }]
     });
 
+    let dialogPermission = Dialog.create({
+        dialogId: 'dialog_permission',
+        title: '资源权限',
+        bottomButtons: [{
+            id: 'save',
+            title: '保存',
+            classNames: 'float-right',
+            closeAfterClick: true,
+            onclick: function () {
+
+            }
+        }]
+    });
+
     let tableRole = Table.init({
         tableDivId: 'table_role',
         queryFormId: 'form_role_query',
         url: '/role/queryByParam',
         column: [
-            {
-                title: '服务', name: 'serviceName', formatter: function () {
-                    return this.serviceName + ' [' + this.serviceCode + ']'
-                }
-            }, {
-                title: '编码',
-                name: 'code'
-            }, {
-                title: '名称',
-                name: 'name'
-            }],
+            {title: '编码', name: 'code'},
+            {title: '名称', name: 'name'},
+            {title: '状态', name: 'roleStatusText'}],
         bottomButtons: [{
             title: '添加',
             faClass: 'fa-plus',
@@ -109,7 +124,36 @@
                 title: '编辑',
                 classNames: '',
                 onclick: updateRoleView
+            }, {
+                title: '权限',
+                classNames: '',
+                onclick: permissionView
             });
+            if (this.roleStatus === 1) {
+                let id = this.id;
+                operates.push({
+                    title: '禁用',
+                    classNames: '',
+                    onclick: function () {
+                        common.confirmRequest(id, '/role/disable', 'table_role', '是否确认禁用该角色');
+                    }
+                });
+            } else if (this.roleStatus === -1) {
+                let id = this.id;
+                operates.push({
+                    title: '启用',
+                    classNames: '',
+                    onclick: function () {
+                        common.confirmRequest(id, '/role/enable', 'table_role', '是否确认启用该角色');
+                    }
+                }, {
+                    title: '删除',
+                    classNames: '',
+                    onclick: function () {
+                        common.confirmRequest(id, '/role/delete', 'table_role', '是否确认删除该角色');
+                    }
+                });
+            }
             return operates;
         }
     });
@@ -118,7 +162,7 @@
         document.getElementById('form_role').reset();
         let dialogTitle = '添加资源';
 
-        dialogRole.setTitle(dialogTitle).hideBottomButton().showBottomButton(1).open();
+        dialogRole.setTitle(dialogTitle).hideBottomButton().showBottomButton('submit').open();
     };
 
     let updateRoleView = function () {
@@ -126,7 +170,7 @@
             let _formHtml = document.getElementById('form_role');
             _formHtml.addReadOnly('Edit');
             _formHtml.setForm(data);
-            dialogRole.setTitle('编辑资源').hideBottomButton().showBottomButton(0).open();
+            dialogRole.setTitle('编辑资源').hideBottomButton().showBottomButton('save').open();
         });
     };
 
@@ -142,6 +186,10 @@
         Request.post('/role/updateById', formData).then(function () {
             tableRole.reload();
         });
+    };
+
+    let permissionView = function () {
+        dialogPermission.open();
     };
 
 </script>

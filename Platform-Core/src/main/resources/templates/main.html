@@ -199,7 +199,7 @@
     };
 
     let queryMenu = function () {
-        Request.get('/queryMenu').then(function (data) {
+        Request.get('/queryMenu', null, false, false).then(function (data) {
             data.forEach(function (item) {
                 let _firstItemHtml = document.createElement('div');
                 _firstItemHtml.classList.add('navigate-menus-item');

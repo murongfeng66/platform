@@ -2,15 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jwzhu.platform.core.permission.db.RoleDao">
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        insert into Role(`code`, `name`, createTime, serviceId) values(#{code}, #{name}, #{createTime}, #{serviceId})
+        insert into Role (`code`, `name`, createTime, roleStatus) values (#{code}, #{name}, #{createTime}, #{roleStatus})
     </insert>
     <insert id="batchInsertRoleResource">
-        insert into RoleResource(serviceId, roleCode, resourceCode, createTime) values
+        insert into RoleResource(roleCode, resourceCode, createTime) values
         <trim suffixOverrides=",">
             <foreach collection="resourceCodes" item="resourceCode">
-                (#{serviceId}, #{roleCode}, #{resourceCode}, #{createTime})
+                (#{roleCode}, #{resourceCode}, #{createTime})
             </foreach>
         </trim>
+    </insert>
+    <insert id="insertAdminRole" useGeneratedKeys="true" keyProperty="id">
+        insert into AdminRole (adminId, roleCode, createTime) values (#{adminId}, #{roleCode}, #{createTime})
     </insert>
     <update id="updateById">
         update Role
@@ -22,18 +25,26 @@
                 <if test="updateTime != null">
                     updateTime = #{updateTime},
                 </if>
-                <if test="serviceId != null">
-                    serviceId = #{serviceId},
+                <if test="roleStatus != null">
+                    roleStatus = #{roleStatus},
                 </if>
             </trim>
         </set>
         where id = #{id}
     </update>
+    <update id="updateStatus">
+        update Role set roleStatus = #{newStatus}, updateTime = #{updateTime} where id = #{id} and roleStatus = #{oldStatus}
+    </update>
     <delete id="deleteRoleResource">
-        delete from RoleResource where serviceId = #{serviceId} and roleCode = #{roleCode}
+        delete from RoleResource
+        where roleCode = #{roleCode}
+    </delete>
+    <delete id="deleteAdminRole">
+        delete from AdminRole
+        where adminId = #{adminId} and roleCode = #{roleCode}
     </delete>
     <select id="queryByParam" resultType="com.jwzhu.platform.core.permission.model.Role">
-        select id, `code`, `name`, createTime, updateTime, serviceId
+        select id, `code`, `name`, createTime, updateTime, roleStatus
         from Role
         <where>
             <trim suffixOverrides="and">
@@ -43,15 +54,49 @@
                 <if test="key != null">
                     (`code` like concat(#{key}, '%') or `name` like concat(#{key}, '%')) and
                 </if>
-                <if test="serviceId != null">
-                    serviceId = #{serviceId} and
+                <if test="roleStatus != null">
+                    roleStatus = #{roleStatus} and
                 </if>
             </trim>
         </where>
     </select>
     <select id="getById" resultType="com.jwzhu.platform.core.permission.model.Role">
-        select id, `code`, `name`, createTime, updateTime, serviceId
+        select id, `code`, `name`, createTime, updateTime, roleStatus
         from Role
         where id = #{id}
+    </select>
+    <select id="getRoleResource" resultType="com.jwzhu.platform.core.permission.model.Resource">
+        select r.id, r.`code`, r.parentCode, r.`name`, r.url, r.sort, r.type, r.menuShow, r.createTime, r.updateTime, r.availableStatus
+        from Resource r
+        <if test="roleCode != null">
+            left join RoleResource rr on rr.resourceCode = r.code
+        </if>
+        <where>
+            <trim suffixOverrides="and">
+                <if test="roleCode != null">
+                    rr.roleCode = #{roleCode} and
+                </if>
+                <if test="resourceStatus != null and resourceStatus.length > 0">
+                    r.availableStatus in
+                    <foreach collection="resourceStatus" item="item" open="(" separator="," close=")">#{item}</foreach>
+                </if>
+            </trim>
+        </where>
+    </select>
+    <select id="getByCode" resultType="com.jwzhu.platform.core.permission.model.Role">
+        select id, `code`, `name`, createTime, updateTime, roleStatus
+        from Role
+        where `code` = #{roleCode} for update
+    </select>
+    <select id="getHaveRole" resultType="com.jwzhu.platform.core.permission.model.Role">
+        select r.id, r.`code`, r.`name`, r.createTime, r.updateTime, r.roleStatus
+        from Role r
+        right join AdminRole ar on ar.roleCode = r.code
+        where r.roleStatus = #{roleStatus} and ar.adminId = #{adminId}
+    </select>
+    <select id="getHaveResource" resultType="com.jwzhu.platform.core.permission.model.Resource">
+        select r.id, r.`code`, r.parentCode, r.`name`, r.url, r.sort, r.type, r.menuShow, r.createTime, r.updateTime, r.availableStatus
+        from Resource r
+        right join
     </select>
 </mapper>

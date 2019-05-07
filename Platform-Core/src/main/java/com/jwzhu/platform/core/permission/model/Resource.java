@@ -24,8 +24,6 @@ public class Resource {
     private Short availableStatus;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
-    @LongEscape(value = ServiceEscaper.class, targetNames = {"serviceCode","serviceName"})
-    private Long serviceId;
 
     public Long getId() {
         return id;
@@ -113,13 +111,5 @@ public class Resource {
 
     public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public Long getServiceId() {
-        return serviceId;
-    }
-
-    public void setServiceId(Long serviceId) {
-        this.serviceId = serviceId;
     }
 }

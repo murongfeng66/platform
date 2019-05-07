@@ -8,7 +8,6 @@ public class QueryMenuBean extends BaseBean {
     private Short menuShow;
     private Short availableStatus;
     private Short[] types;
-    private Long serviceId;
 
     public String getRoleCodes() {
         return roleCodes;
@@ -40,13 +39,5 @@ public class QueryMenuBean extends BaseBean {
 
     public void setTypes(Short... types) {
         this.types = types;
-    }
-
-    public Long getServiceId() {
-        return serviceId;
-    }
-
-    public void setServiceId(Long serviceId) {
-        this.serviceId = serviceId;
     }
 }

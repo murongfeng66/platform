@@ -63,7 +63,7 @@ const Request = {};
                                 try {
                                     let data = JSON.parse(xhr.responseText);
                                     if (data.code === 1) {
-                                        if(showMessage !== false && data.message && data.showMessage){
+                                        if(showMessage !== false && data.message && '请求成功' !== data.message){
                                             Toast.info(data.message);
                                         }
                                         resolve(returnAll === true ? data : data.data);

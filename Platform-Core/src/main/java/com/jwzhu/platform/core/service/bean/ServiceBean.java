@@ -12,7 +12,7 @@ public class ServiceBean extends BaseBean {
     private Long ownerId;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
-    private Short availableStatus;
+    private Short serviceStatus;
 
     public Long getId() {
         return id;
@@ -62,11 +62,11 @@ public class ServiceBean extends BaseBean {
         this.updateTime = updateTime;
     }
 
-    public Short getAvailableStatus() {
-        return availableStatus;
+    public Short getServiceStatus() {
+        return serviceStatus;
     }
 
-    public void setAvailableStatus(Short availableStatus) {
-        this.availableStatus = availableStatus;
+    public void setServiceStatus(Short serviceStatus) {
+        this.serviceStatus = serviceStatus;
     }
 }

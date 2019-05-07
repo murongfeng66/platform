@@ -8,7 +8,6 @@ public class WebResult<T> {
     private String message;
     private String token;
     private String redirect;
-    private boolean showMessage = false;
 
     public WebResult() {
         this.message = "请求成功";
@@ -17,7 +16,7 @@ public class WebResult<T> {
 
     public WebResult(T data) {
         if (data instanceof String) {
-            setMessage((String) data);
+            this.message = (String) data;
         } else {
             this.data = data;
             this.message = "请求成功";
@@ -55,7 +54,6 @@ public class WebResult<T> {
 
     public void setMessage(String message) {
         this.message = message;
-        this.showMessage = true;
     }
 
     public String getToken() {
@@ -72,13 +70,5 @@ public class WebResult<T> {
 
     public void setRedirect(String redirect) {
         this.redirect = redirect;
-    }
-
-    public boolean getShowMessage() {
-        return showMessage;
-    }
-
-    public void setShowMessage(boolean showMessage) {
-        this.showMessage = showMessage;
     }
 }

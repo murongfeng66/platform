@@ -8,7 +8,6 @@ import com.jwzhu.platform.plugs.jsonEscape.bind.LongEscape;
 public class ServiceMember {
 
     private Long id;
-    private Long serviceId;
     @LongEscape(value = AdminNameEscaper.class, targetNames = "username")
     private Long userId;
     private LocalDateTime createTime;
@@ -19,14 +18,6 @@ public class ServiceMember {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getServiceId() {
-        return serviceId;
-    }
-
-    public void setServiceId(Long serviceId) {
-        this.serviceId = serviceId;
     }
 
     public Long getUserId() {

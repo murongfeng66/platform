@@ -1,5 +1,6 @@
 package com.jwzhu.platform.core.permission.service;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,7 +38,6 @@ public class ResourceService {
         bean.setAvailableStatus(bean.getAvailableStatus() == null ? AvailableStatus.Enable.getCode() : bean.getAvailableStatus());
         bean.setMenuShow(bean.getMenuShow() == null ? YesOrNo.No.getCode() : bean.getMenuShow());
         bean.setSort(bean.getSort() == null ? 10 : bean.getSort());
-        bean.setServiceId(bean.getServiceId() == null ? RequestBaseParam.getRequestUser().getsId() : bean.getServiceId());
         resourceDao.insert(bean);
     }
 
@@ -83,6 +83,10 @@ public class ResourceService {
 
     public Resource getById(long id) {
         return resourceDao.getById(id);
+    }
+
+    public List<Resource> getHaveResource() {
+        return new ArrayList<>();
     }
 
 }

@@ -6,10 +6,11 @@
     <title>管理员</title>
     <link rel="icon" type="image/x-icon" href="/image/icon.ico">
 
+    <link rel="stylesheet" href="/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/form.css">
     <link rel="stylesheet" href="/css/table.css">
     <link rel="stylesheet" href="/css/dialog.css">
-    <link rel="stylesheet" href="/font-awesome-4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 <form id="form_admin_query" class="form margin-top-10">
@@ -29,11 +30,16 @@
 <div id="dialog_admin" class="dialog">
     <div class="dialog-body">
         <form id="form_admin" class="form dialog-content">
-            <input id="form_admin_id" type="hidden" name="id">
+            <input type="hidden" name="id">
             <div class="form-row">
                 <div class="form-input-group flex-1">
+                    <label class="form-label">类型：</label>
+                    <select id="form_admin_adminType" name="adminType" class="form-input" data-readonly></select>
+                </div>
+            </div><div class="form-row">
+                <div class="form-input-group flex-1">
                     <label class="form-label">名称：</label>
-                    <input type="text" name="nickname" class="form-input">
+                    <input type="text" name="nickname" class="form-input" data-readonly>
                 </div>
             </div>
         </form>
@@ -47,6 +53,7 @@
 <script src="/js/dialog.js"></script>
 <script type="text/javascript">
     window.onload = function () {
+        document.getElementById('form_admin_adminType').initSelect('/admin/getAddAdminType');
     };
 
     let dialogAdmin = Dialog.create({
@@ -75,11 +82,6 @@
         queryFormId: 'form_admin_query',
         url: '/admin/queryByParam',
         column: [
-            {
-                title: '服务', name: 'serviceName', formatter: function () {
-                    return this.serviceName + ' [' + this.serviceCode + ']'
-                }
-            },
             {title: '名称', name: 'nickname'},
             {title: '状态', name: 'adminStatusText'},
             {title: '添加时间', name: 'createTime'}],

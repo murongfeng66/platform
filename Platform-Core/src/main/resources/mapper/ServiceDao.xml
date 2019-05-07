@@ -73,7 +73,7 @@
         for update
     </select>
     <select id="existsMember" resultType="java.lang.Boolean">
-        select exists(select serviceId from ServiceMember where serviceId = #{serviceId} and userId = #{userId}
+        select exists(select serviceId from ServiceMember where serviceId = #{serviceId} and userId = #{userId})
     </select>
     <select id="queryMember" resultType="com.jwzhu.platform.core.service.model.ServiceMember">
         select id, serviceId, userId, createTime
@@ -89,5 +89,11 @@
             </trim>
         </where>
         order by id desc
+    </select>
+    <select id="getHaveService" resultType="com.jwzhu.platform.core.service.model.Service">
+        select s.id, s.serviceCode, s.serviceName, s.ownerId, s.createTime, s.updateTime, s.serviceStatus
+        from Service s
+        right join ServiceMember sm on s.id = sm.serviceId
+        where sm.userId = #{adminId}
     </select>
 </mapper>
