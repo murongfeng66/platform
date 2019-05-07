@@ -1,13 +1,14 @@
-package com.jwzhu.platform.core.service.bean;
+package com.jwzhu.platform.core.permission.bean;
 
 import java.time.LocalDateTime;
 
 import com.jwzhu.platform.common.bean.BaseBean;
 
-public class ServiceMemberBean extends BaseBean {
+public class AdminRoleBean extends BaseBean {
 
     private Long id;
-    private Long userId;
+    private Long adminId;
+    private String roleCode;
     private LocalDateTime createTime;
 
     public Long getId() {
@@ -18,12 +19,20 @@ public class ServiceMemberBean extends BaseBean {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getAdminId() {
+        return adminId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setAdminId(Long adminId) {
+        this.adminId = adminId;
+    }
+
+    public String getRoleCode() {
+        return roleCode;
+    }
+
+    public void setRoleCode(String roleCode) {
+        this.roleCode = roleCode;
     }
 
     public LocalDateTime getCreateTime() {
