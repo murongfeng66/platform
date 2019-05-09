@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.jwzhu.platform.core.admin.bean.AdminBean;
 import com.jwzhu.platform.core.admin.bean.AdminListBean;
 import com.jwzhu.platform.core.admin.model.Admin;
+import com.jwzhu.platform.core.permission.bean.AdminRoleBean;
 
 @Repository
 public interface AdminDao {
@@ -18,5 +19,9 @@ public interface AdminDao {
     void insert(AdminBean bean);
 
     int updateById(AdminBean bean);
+
+    void insertAdminRole(AdminRoleBean bean);
+
+    int deleteAdminRole(AdminRoleBean bean);
 
 }

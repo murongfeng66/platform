@@ -1,5 +1,7 @@
 package com.jwzhu.platform.core.permission.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +12,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.jwzhu.platform.core.permission.bean.RoleListBean;
 import com.jwzhu.platform.core.permission.manager.RoleManager;
+import com.jwzhu.platform.core.permission.model.AdminRole;
 import com.jwzhu.platform.core.permission.model.Role;
+import com.jwzhu.platform.core.permission.param.GetMyRoleParam;
+import com.jwzhu.platform.core.permission.param.PermissionSaveParam;
 import com.jwzhu.platform.core.permission.param.RoleAddParam;
 import com.jwzhu.platform.core.permission.param.RoleListParam;
 import com.jwzhu.platform.core.permission.param.RoleUpdateParam;
@@ -85,6 +90,29 @@ public class RoleController {
     public String delete(LongParam param){
         roleManager.delete(param.initBean());
         return "删除角色成功";
+    }
+
+    @PostMapping("addPermission")
+    @ResponseBody
+    @ControllerHandler
+    public String addPermission(PermissionSaveParam param){
+        roleManager.addPermission(param.initBean());
+        return "授权成功";
+    }
+
+    @PostMapping("removePermission")
+    @ResponseBody
+    @ControllerHandler
+    public String removePermission(PermissionSaveParam param){
+        roleManager.removePermission(param.initBean());
+        return "取消授权成功";
+    }
+
+    @GetMapping("getMyRole")
+    @ResponseBody
+    @ControllerHandler
+    public List<AdminRole> getMyRole(GetMyRoleParam param){
+        return roleManager.getMyRole(param.initBean());
     }
 
 }

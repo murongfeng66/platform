@@ -13,6 +13,7 @@ import com.jwzhu.platform.core.admin.bean.AdminListBean;
 import com.jwzhu.platform.core.admin.db.AdminDao;
 import com.jwzhu.platform.core.admin.model.Admin;
 import com.jwzhu.platform.core.admin.model.AdminType;
+import com.jwzhu.platform.core.permission.bean.AdminRoleBean;
 import com.jwzhu.platform.plugs.web.request.RequestBaseParam;
 
 @Service
@@ -48,6 +49,16 @@ public class AdminService {
         if (adminDao.updateById(bean) == 0) {
             throw new BusinessException("更新管理员失败");
         }
+    }
+
+    public void addAdminRole(AdminRoleBean bean) {
+        bean.setCreateTime(bean.getCreateTime() == null ? RequestBaseParam.getRequestTime() : bean.getCreateTime());
+        adminDao.deleteAdminRole(bean);
+        adminDao.insertAdminRole(bean);
+    }
+
+    public void removeAdminRole(AdminRoleBean bean) {
+        adminDao.deleteAdminRole(bean);
     }
 
 }

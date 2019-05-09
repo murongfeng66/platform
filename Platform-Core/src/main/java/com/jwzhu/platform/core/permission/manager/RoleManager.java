@@ -8,14 +8,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.jwzhu.platform.common.bean.LongBean;
 import com.jwzhu.platform.common.exception.BusinessException;
-import com.jwzhu.platform.core.permission.bean.GetRoleResourceBean;
+import com.jwzhu.platform.core.permission.bean.GetMyResourceBean;
+import com.jwzhu.platform.core.permission.bean.GetMyRoleBean;
 import com.jwzhu.platform.core.permission.bean.PermissionSaveBean;
 import com.jwzhu.platform.core.permission.bean.RoleBean;
 import com.jwzhu.platform.core.permission.bean.RoleListBean;
-import com.jwzhu.platform.core.permission.model.Resource;
+import com.jwzhu.platform.core.permission.model.AdminRole;
 import com.jwzhu.platform.core.permission.model.Role;
 import com.jwzhu.platform.core.permission.service.RoleService;
-import com.jwzhu.platform.plugs.web.request.RequestBaseParam;
 
 @Service
 public class RoleManager {
@@ -54,5 +54,18 @@ public class RoleManager {
 
     public void delete(LongBean bean){
         roleService.delete(bean);
+    }
+
+    @Transactional
+    public void addPermission(PermissionSaveBean bean){
+        roleService.addPermission(bean);
+    }
+
+    public void removePermission(PermissionSaveBean bean){
+        roleService.removePermission(bean);
+    }
+
+    public List<AdminRole> getMyRole(GetMyRoleBean bean) {
+        return roleService.getMyRole(bean);
     }
 }

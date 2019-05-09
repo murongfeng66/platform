@@ -15,7 +15,7 @@ import com.jwzhu.platform.common.enums.AvailableStatus;
 import com.jwzhu.platform.common.enums.YesOrNo;
 import com.jwzhu.platform.common.exception.BusinessException;
 import com.jwzhu.platform.core.admin.model.AdminType;
-import com.jwzhu.platform.core.permission.bean.GetRoleResourceBean;
+import com.jwzhu.platform.core.permission.bean.GetMyResourceBean;
 import com.jwzhu.platform.core.permission.bean.PermissionSaveBean;
 import com.jwzhu.platform.core.permission.bean.QueryMenuBean;
 import com.jwzhu.platform.core.permission.bean.ResourceBean;
@@ -53,7 +53,7 @@ public class ResourceService {
     public List<Menu> queryMenu() {
         QueryMenuBean bean = new QueryMenuBean();
         if (RequestBaseParam.getRequestUser().getType() != AdminType.Super.getCode()) {
-            bean.setAdminId(RequestBaseParam.getRequestUser().getId());
+            bean.setSelfId(RequestBaseParam.getRequestUser().getId());
         }
         bean.setMenuShow(YesOrNo.Yes.getCode());
         bean.setAvailableStatus(AvailableStatus.Enable.getCode());
@@ -97,9 +97,9 @@ public class ResourceService {
         return new ArrayList<>();
     }
 
-    public List<ResourcePermission> queryMyResource(GetRoleResourceBean bean) {
+    public List<ResourcePermission> queryMyResource(GetMyResourceBean bean) {
         if (RequestBaseParam.getRequestUser().getType() != AdminType.Super.getCode()) {
-            bean.setAdminId(RequestBaseParam.getRequestUser().getId());
+            bean.setSelfId(RequestBaseParam.getRequestUser().getId());
         }
         bean.setResourceStatus(AvailableStatus.Enable.getCode());
         List<ResourcePermission> list = resourceDao.queryMyResource(bean);
@@ -122,11 +122,5 @@ public class ResourceService {
             }
         }
         return result;
-    }
-
-    public void savePermission(PermissionSaveBean bean) {
-        bean.setCreateTime(bean.getCreateTime() == null ? RequestBaseParam.getRequestTime() : bean.getCreateTime());
-        resourceDao.deleteRoleResource(bean);
-        resourceDao.insertRoleResource(bean);
     }
 }

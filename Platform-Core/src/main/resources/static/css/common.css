@@ -28,7 +28,7 @@ input[type=checkbox].switch:checked {
 
 input[type=checkbox].switch:after {
     background-color: #ffffff;
-    content: "";
+    content: attr(data-content);
     width: 16px;
     height: 16px;
     position: absolute;
@@ -36,6 +36,7 @@ input[type=checkbox].switch:after {
     margin: 2px;
     -webkit-transition: .4s;
     transition: .4s;
+    text-align: center;
 }
 
 input[type=checkbox].switch:checked:after{
@@ -286,25 +287,4 @@ input[type=checkbox].switch:checked:after{
 .button[type=reset] {
     color: #919191;
     border-color: #919191;
-}
-
-.permission {
-    padding: 0.5rem 2rem;
-    border-top: 1px solid #757575;
-    border-bottom: 1px solid #757575;
-    margin-bottom: -1px;
-    display: flex;
-}
-
-.permission-name {
-    pointer-events: none;
-}
-
-.permission-children {
-    display: none;
-    padding-left: 2rem;
-}
-
-.permission-children.active {
-    display: block;
 }

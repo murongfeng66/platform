@@ -11,6 +11,28 @@
     <link rel="stylesheet" href="/css/form.css">
     <link rel="stylesheet" href="/css/table.css">
     <link rel="stylesheet" href="/css/dialog.css">
+    <style>
+        .permission {
+            padding: 0.5rem 2rem;
+            border-top: 1px solid #757575;
+            border-bottom: 1px solid #757575;
+            margin-bottom: -1px;
+            display: flex;
+        }
+
+        .permission-name {
+            pointer-events: none;
+        }
+
+        .permission-children {
+            display: none;
+            padding-left: 2rem;
+        }
+
+        .permission-children.active {
+            display: block;
+        }
+    </style>
 </head>
 <body>
 <form id="form_role_query" class="form margin-top-10">
@@ -68,6 +90,7 @@
     window.onload = function () {
         document.getElementById('form_role_query_roleStatus').initSelect('/availableStatus', true);
     };
+    const permissionType = {1: 'M', 2: 'P', 3: 'F'};
 
     let dialogRole = Dialog.create({
         dialogId: 'dialog_role',
@@ -183,12 +206,17 @@
     let permissionView = function () {
         document.getElementById('dialog_permission_roleCode').setValue(this.code);
         Request.get('/resource/queryMyResource', {roleCode: this.code}).then(function (data) {
-            let $permission = document.getElementById('permission');
             let htmlString = '';
             data.forEach(function (item) {
-                htmlString += '<div><div class="permission" onclick="permissionClick()"><span class="permission-name">' + item.name + '</span><input data-resourceCode="' + item.code + '" type="checkbox" class="switch margin-auto margin-right-no" ' + (item.have ? 'checked' : '') + ' onchange="permissionChange()"></div><div class="permission-children">' + getChildrenHtmlString(item.children) + '</div></div>';
+                htmlString += '<div>';
+                htmlString+='<div class="permission" onclick="permissionClick()">';
+                htmlString+='<span class="permission-name">' + item.name + '</span>';
+                htmlString+='<input data-content="' + common.string.dealEmpty(permissionType[item.type]) + '" data-resourceCode="' + item.code + '" type="checkbox" class="switch margin-auto margin-right-no" ' + (item.have ? 'checked' : '') + ' onchange="permissionChange()">';
+                htmlString+='</div>';
+                htmlString+='<div class="permission-children">' + getChildrenHtmlString(item.children) + '</div>';
+                htmlString+='</div>';
             });
-            $permission.innerHTML = htmlString;
+            document.getElementById('permission').innerHTML = htmlString;
             dialogPermission.open();
         });
     };
@@ -200,7 +228,13 @@
         }
 
         children.forEach(function (item) {
-            htmlString += '<div><div class="permission" onclick="permissionClick()"><span class="permission-name">' + item.name + '</span><input data-resourceCode="' + item.code + '" type="checkbox" class="switch margin-auto margin-right-no" ' + (item.have ? 'checked' : '') + ' onchange="permissionChange()"></div><div class="permission-children">' + getChildrenHtmlString(item.children) + '</div></div>';
+            htmlString += '<div>';
+            htmlString+='<div class="permission" onclick="permissionClick()">';
+            htmlString+='<span class="permission-name">' + item.name + '</span>';
+            htmlString+='<input data-content="' + common.string.dealEmpty(permissionType[item.type]) + '" data-resourceCode="' + item.code + '" type="checkbox" class="switch margin-auto margin-right-no" ' + (item.have ? 'checked' : '') + ' onchange="permissionChange()">';
+            htmlString+='</div>';
+            htmlString+='<div class="permission-children">' + getChildrenHtmlString(item.children) + '</div>';
+            htmlString+='</div>';
         });
         return htmlString;
     };
@@ -223,7 +257,11 @@
         let $target = window.event.target;
         let roleCode = document.getElementById('dialog_permission_roleCode').value;
         let resourceCode = $target.getAttribute('data-resourceCode');
-        Request.post('/resource/savePermission', {roleCode:roleCode,resourceCode:resourceCode})
+        let url = '/role/removePermission';
+        if($target.checked){
+            url = '/role/addPermission';
+        }
+        Request.post(url, {roleCode: roleCode, resourceCode: resourceCode}, false, false);
     };
 
 </script>

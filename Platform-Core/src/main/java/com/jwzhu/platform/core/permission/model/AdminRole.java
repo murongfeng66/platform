@@ -1,43 +1,32 @@
 package com.jwzhu.platform.core.permission.model;
 
-import java.time.LocalDateTime;
-
 public class AdminRole {
 
-    private Long id;
-    private Long adminId;
-    private String roleCode;
-    private LocalDateTime createTime;
+    private String code;
+    private String name;
+    private Boolean have;
 
-    public Long getId() {
-        return id;
+    public String getCode() {
+        return code;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public Long getAdminId() {
-        return adminId;
+    public String getName() {
+        return name;
     }
 
-    public void setAdminId(Long adminId) {
-        this.adminId = adminId;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getRoleCode() {
-        return roleCode;
+    public Boolean getHave() {
+        return have;
     }
 
-    public void setRoleCode(String roleCode) {
-        this.roleCode = roleCode;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
+    public void setHave(Boolean have) {
+        this.have = have;
     }
 }

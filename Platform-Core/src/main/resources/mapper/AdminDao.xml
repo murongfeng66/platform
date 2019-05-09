@@ -5,6 +5,9 @@
         insert into Admin(nickname, createTime, adminStatus, adminType) values
             (#{nickname}, #{createTime}, #{adminStatus}, #{adminType})
     </insert>
+    <insert id="insertAdminRole" useGeneratedKeys="true" keyProperty="id">
+        insert into AdminRole (adminId, roleCode, createTime) values (#{adminId}, #{roleCode}, #{createTime})
+    </insert>
     <update id="updateById">
         update Admin
         <set>
@@ -25,6 +28,10 @@
         </set>
         where id = #{id}
     </update>
+    <delete id="deleteAdminRole">
+        delete from AdminRole
+        where adminId = #{adminId} and roleCode = #{roleCode}
+    </delete>
     <select id="getById" resultType="com.jwzhu.platform.core.admin.model.Admin">
         select id, nickname, createTime, updateTime, adminStatus, adminType
         from Admin

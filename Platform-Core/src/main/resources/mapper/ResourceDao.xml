@@ -4,9 +4,6 @@
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         insert into Resource (`code`, parentCode, `name`, url, sort, type, menuShow, availableStatus, createTime) values (#{code}, #{parentCode}, #{name}, #{url}, #{sort}, #{type}, #{menuShow}, #{availableStatus}, #{createTime})
     </insert>
-    <insert id="insertRoleResource">
-        insert into RoleResource (roleCode, resourceCode, createTime) values (#{roleCode}, #{resourceCode}, #{createTime})
-    </insert>
     <update id="updateById">
         update Resource
         <set>
@@ -36,10 +33,6 @@
         </set>
         where id = #{id}
     </update>
-    <delete id="deleteRoleResource">
-        delete from RoleResource
-        where roleCode = #{roleCode} and resourceCode = #{resourceCode}
-    </delete>
     <select id="queryByParam" resultType="com.jwzhu.platform.core.permission.model.ResourceList">
         select id, `code`, parentCode, `name`, sort, type, menuShow, availableStatus
         from Resource
@@ -71,49 +64,18 @@
     </select>
     <select id="queryMenu" resultType="com.jwzhu.platform.core.permission.model.Menu">
         select r.`code`, r.parentCode, r.`name`, r.url, r.type, r.sort
-        <!--from Resource r-->
-        <!--<if test="roleCodes != null and roleCodes.size() > 0">-->
-        <!--right join RoleResource rr on rr.resourceCode = r.`code`-->
-        <!--</if>-->
-        <!--<where>-->
-        <!--<trim suffixOverrides="and">-->
-        <!--<if test="roleCodes != null and roleCodes.size() > 0">-->
-        <!--rr.roleCode in-->
-        <!--<foreach collection="roleCodes" item="roleCode" open="(" separator="," close=")">-->
-        <!--#{roleCode}-->
-        <!--</foreach>-->
-        <!--</if>-->
-        <!--<if test="types != null and types.length > 0">-->
-        <!--r.type in-->
-        <!--<foreach collection="types" item="item" open="(" separator="," close=")">-->
-        <!--#{item}-->
-        <!--</foreach>-->
-        <!--and-->
-        <!--</if>-->
-        <!--<if test="menuShow != null">-->
-        <!--r.menuShow = #{menuShow} and-->
-        <!--</if>-->
-        <!--<if test="availableStatus != null">-->
-        <!--r.availableStatus = #{availableStatus} and-->
-        <!--</if>-->
-        <!--</trim>-->
-        <!--</where>-->
         from Resource r
-        right join (select distinct rr.resourceCode
-        from RoleResource rr
-        right join AdminRole ar on ar.roleCode = rr.roleCode
-        <where>
-            <trim suffixOverrides="and">
-                <if test="adminId != null">
-                    ar.adminId = #{adminId} and
-                </if>
-            </trim>
-        </where>
-        ) t on t.resourceCode = r.code
+        <if test="selfId != null">
+            right join (select distinct rr.resourceCode
+            from RoleResource rr
+            right join AdminRole ar on ar.roleCode = rr.roleCode
+            where ar.adminId = #{selfId}
+            ) t on t.resourceCode = r.code
+        </if>
         <where>
             <trim suffixOverrides="and">
                 <if test="availableStatus != null">
-                r.availableStatus = #{availableStatus} and
+                    r.availableStatus = #{availableStatus} and
                 </if>
                 <if test="types != null and types.length > 0">
                     r.type in
@@ -123,7 +85,7 @@
                     and
                 </if>
                 <if test="menuShow != null">
-                r.menuShow = #{menuShow} and
+                    r.menuShow = #{menuShow} and
                 </if>
             </trim>
         </where>
@@ -142,17 +104,13 @@
     <select id="queryMyResource" resultType="com.jwzhu.platform.core.permission.model.ResourcePermission">
         select r.id, r.`code`, r.parentCode, r.`name`, r.url, r.sort, r.type, r.menuShow, r.createTime, r.updateTime, r.availableStatus
         from Resource r
-        right join (select distinct rr.resourceCode
-        from RoleResource rr
-        right join AdminRole ar on ar.roleCode = rr.roleCode
-        <where>
-            <trim suffixOverrides="and">
-                <if test="adminId != null">
-                    ar.adminId = #{adminId} and
-                </if>
-            </trim>
-        </where>
-        ) t on t.resourceCode = r.code
+        <if test="selfId != null">
+            right join (select distinct rr.resourceCode
+            from RoleResource rr
+            right join AdminRole ar on ar.roleCode = rr.roleCode
+            where ar.adminId = #{selfId}
+            ) t on t.resourceCode = r.code
+        </if>
         <where>
             <trim suffixOverrides="and">
                 <if test="resourceStatus != null and resourceStatus.length > 0">

@@ -9,12 +9,14 @@ import com.jwzhu.platform.common.bean.LongBean;
 import com.jwzhu.platform.common.bean.UpdateStatusBean;
 import com.jwzhu.platform.common.enums.AvailableStatus;
 import com.jwzhu.platform.common.exception.BusinessException;
-import com.jwzhu.platform.core.permission.bean.GetRoleResourceBean;
+import com.jwzhu.platform.core.admin.model.AdminType;
+import com.jwzhu.platform.core.permission.bean.GetMyResourceBean;
+import com.jwzhu.platform.core.permission.bean.GetMyRoleBean;
 import com.jwzhu.platform.core.permission.bean.PermissionSaveBean;
 import com.jwzhu.platform.core.permission.bean.RoleBean;
 import com.jwzhu.platform.core.permission.bean.RoleListBean;
 import com.jwzhu.platform.core.permission.db.RoleDao;
-import com.jwzhu.platform.core.permission.model.Resource;
+import com.jwzhu.platform.core.permission.model.AdminRole;
 import com.jwzhu.platform.core.permission.model.Role;
 import com.jwzhu.platform.plugs.web.request.RequestBaseParam;
 
@@ -79,5 +81,29 @@ public class RoleService {
         statusBean.setOldStatus(AvailableStatus.Disable.getCode());
         statusBean.setNewStatus(AvailableStatus.Delete.getCode());
         updateStatus(statusBean, "删除角色失败");
+    }
+
+    public void addPermission(PermissionSaveBean bean) {
+        bean.setCreateTime(bean.getCreateTime() == null ? RequestBaseParam.getRequestTime() : bean.getCreateTime());
+        roleDao.deleteRoleResource(bean);
+        roleDao.insertRoleResource(bean);
+    }
+
+    public void removePermission(PermissionSaveBean bean) {
+        roleDao.deleteRoleResource(bean);
+    }
+
+    public List<AdminRole> getMyRole(GetMyRoleBean bean) {
+        if(RequestBaseParam.getRequestUser().getType() != AdminType.Super.getCode()){
+            bean.setSelfId(RequestBaseParam.getRequestUser().getId());
+        }
+
+        bean.setRoleStatus(AvailableStatus.Enable.getCode());
+        List<AdminRole> roles = roleDao.getMyRole(bean);
+        List<String> adminRoleCode = roleDao.getAllRoleByAdminId(bean.getAdminId());
+        for (AdminRole role : roles) {
+            role.setHave(adminRoleCode.contains(role.getCode()));
+        }
+        return roles;
     }
 }

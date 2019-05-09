@@ -18,6 +18,8 @@ import com.jwzhu.platform.core.admin.model.Admin;
 import com.jwzhu.platform.core.admin.model.AdminType;
 import com.jwzhu.platform.core.admin.service.AdminService;
 import com.jwzhu.platform.core.admin.service.LoginService;
+import com.jwzhu.platform.core.permission.bean.AdminRoleBean;
+import com.jwzhu.platform.core.permission.bean.PermissionSaveBean;
 import com.jwzhu.platform.plugs.web.request.RequestBaseParam;
 
 @Service
@@ -59,5 +61,14 @@ public class AdminManager {
             map.put(AdminType.Admin.getCode(), AdminType.Admin.getMessage());
         }
         return map;
+    }
+
+    @Transactional
+    public void addAdminRole(AdminRoleBean bean){
+        adminService.addAdminRole(bean);
+    }
+
+    public void removeAdminRole(AdminRoleBean bean){
+        adminService.removeAdminRole(bean);
     }
 }

@@ -4,8 +4,8 @@
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         insert into Role (`code`, `name`, createTime, roleStatus) values (#{code}, #{name}, #{createTime}, #{roleStatus})
     </insert>
-    <insert id="insertAdminRole" useGeneratedKeys="true" keyProperty="id">
-        insert into AdminRole (adminId, roleCode, createTime) values (#{adminId}, #{roleCode}, #{createTime})
+    <insert id="insertRoleResource">
+        insert into RoleResource (roleCode, resourceCode, createTime) values (#{roleCode}, #{resourceCode}, #{createTime})
     </insert>
     <update id="updateById">
         update Role
@@ -27,9 +27,9 @@
     <update id="updateStatus">
         update Role set roleStatus = #{newStatus}, updateTime = #{updateTime} where id = #{id} and roleStatus = #{oldStatus}
     </update>
-    <delete id="deleteAdminRole">
-        delete from AdminRole
-        where adminId = #{adminId} and roleCode = #{roleCode}
+    <delete id="deleteRoleResource">
+        delete from RoleResource
+        where roleCode = #{roleCode} and resourceCode = #{resourceCode}
     </delete>
     <select id="queryByParam" resultType="com.jwzhu.platform.core.permission.model.Role">
         select id, `code`, `name`, createTime, updateTime, roleStatus
@@ -53,27 +53,33 @@
         from Role
         where id = #{id}
     </select>
-    <select id="getRoleResource" resultType="com.jwzhu.platform.core.permission.model.Resource">
-        select r.id, r.`code`, r.parentCode, r.`name`, r.url, r.sort, r.type, r.menuShow, r.createTime, r.updateTime, r.availableStatus
-        from Resource r
-        <if test="roleCode != null">
-            left join RoleResource rr on rr.resourceCode = r.code
-        </if>
-        <where>
-            <trim suffixOverrides="and">
-                <if test="roleCode != null">
-                    rr.roleCode = #{roleCode} and
-                </if>
-                <if test="resourceStatus != null and resourceStatus.length > 0">
-                    r.availableStatus in
-                    <foreach collection="resourceStatus" item="item" open="(" separator="," close=")">#{item}</foreach>
-                </if>
-            </trim>
-        </where>
-    </select>
     <select id="getByCode" resultType="com.jwzhu.platform.core.permission.model.Role">
         select id, `code`, `name`, createTime, updateTime, roleStatus
         from Role
         where `code` = #{roleCode} for update
+    </select>
+    <select id="getMyRole" resultType="com.jwzhu.platform.core.permission.model.AdminRole">
+        select r.id, r.`code`, r.`name`, r.createTime, r.updateTime, r.roleStatus
+        from Role r
+        <if test="selfId != null">
+            right join AdminRole ar on ar.roleCode = r.code
+        </if>
+        <where>
+            <trim suffixOverrides="and">
+                <if test="roleStatus != null and roleStatus.length > 0">
+                    r.roleStatus in
+                    <foreach collection="roleStatus" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                    and
+                </if>
+                <if test="selfId != null">
+                    ar.adminId = #{selfId} and
+                </if>
+            </trim>
+        </where>
+    </select>
+    <select id="getAllRoleByAdminId" resultType="java.lang.String">
+        select roleCode from AdminRole where adminId = #{adminId}
     </select>
 </mapper>

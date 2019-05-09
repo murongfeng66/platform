@@ -16,14 +16,13 @@ import com.jwzhu.platform.core.permission.manager.ResourceManager;
 import com.jwzhu.platform.core.permission.model.Resource;
 import com.jwzhu.platform.core.permission.model.ResourcePermission;
 import com.jwzhu.platform.core.permission.model.ResourceType;
-import com.jwzhu.platform.core.permission.param.GetRoleResourceParam;
+import com.jwzhu.platform.core.permission.param.GetMyResourceParam;
 import com.jwzhu.platform.core.permission.param.PermissionSaveParam;
 import com.jwzhu.platform.core.permission.param.ResourceAddParam;
 import com.jwzhu.platform.core.permission.param.ResourceListParam;
 import com.jwzhu.platform.core.permission.param.ResourceUpdateParam;
 import com.jwzhu.platform.plugs.web.annotations.ControllerHandler;
 import com.jwzhu.platform.plugs.web.param.LongParam;
-import com.jwzhu.platform.plugs.web.param.StringParam;
 
 @Controller
 @RequestMapping("resource")
@@ -81,16 +80,8 @@ public class ResourceController {
     @GetMapping("queryMyResource")
     @ResponseBody
     @ControllerHandler
-    public List<ResourcePermission> queryMyResource(GetRoleResourceParam param){
+    public List<ResourcePermission> queryMyResource(GetMyResourceParam param){
         return resourceManager.queryMyResource(param.initBean());
-    }
-
-    @PostMapping("savePermission")
-    @ResponseBody
-    @ControllerHandler
-    public String savePermission(PermissionSaveParam param){
-        resourceManager.savePermission(param.initBean());
-        return "授权成功";
     }
 
 }

@@ -11,6 +11,19 @@
     <link rel="stylesheet" href="/css/form.css">
     <link rel="stylesheet" href="/css/table.css">
     <link rel="stylesheet" href="/css/dialog.css">
+    <style>
+        .role {
+            padding: 0.5rem 2rem;
+            border-top: 1px solid #757575;
+            border-bottom: 1px solid #757575;
+            margin-bottom: -1px;
+            display: flex;
+        }
+
+        .role-name {
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body>
 <form id="form_admin_query" class="form margin-top-10">
@@ -58,6 +71,14 @@
         </form>
     </div>
 </div>
+<div id="dialog_role" class="dialog">
+    <input id="dialog_role_adminId" type="hidden">
+    <div class="dialog-body">
+        <div id="role" class="dialog-content">
+
+        </div>
+    </div>
+</div>
 </body>
 <script src="/js/common.js"></script>
 <script src="/js/form.js"></script>
@@ -90,6 +111,11 @@
         }]
     });
 
+    let dialogRole = Dialog.create({
+        dialogId: 'dialog_role',
+        title: '角色'
+    });
+
     let tableAdmin = Table.init({
         tableDivId: 'table_admin',
         queryFormId: 'form_admin_query',
@@ -115,6 +141,14 @@
                 classNames: '',
                 onclick: updateAdminView
             });
+            if(this.adminType !== 1){
+                operates.push({
+                    id: 'role',
+                    title: '角色',
+                    classNames: '',
+                    onclick: roleView
+                });
+            }
             return operates;
         }
     });
@@ -151,6 +185,34 @@
         Request.post('/admin/updateById', formData).then(function () {
             tableAdmin.reload();
         });
+    };
+
+    let roleView = function(){
+        document.getElementById('dialog_role_adminId').setValue(this.id);
+        Request.get('/role/getMyRole',{adminId:this.id}).then(function(data){
+            let htmlString = '';
+            data.forEach(function (item) {
+                htmlString += '<div>';
+                htmlString+='<div class="role">';
+                htmlString+='<span class="role-name">' + item.name + '</span>';
+                htmlString+='<input data-roleCode="' + item.code + '" type="checkbox" class="switch margin-auto margin-right-no" ' + (item.have ? 'checked' : '') + ' onchange="roleChange()">';
+                htmlString+='</div>';
+                htmlString+='</div>';
+            });
+            document.getElementById('role').innerHTML = htmlString;
+            dialogRole.open();
+        });
+    };
+
+    let roleChange = function () {
+        let $target = window.event.target;
+        let adminId = document.getElementById('dialog_role_adminId').value;
+        let roleCode = $target.getAttribute('data-roleCode');
+        let url = '/admin/removeAdminRole';
+        if($target.checked){
+            url = '/admin/addAdminRole';
+        }
+        Request.post(url, {adminId: adminId, roleCode: roleCode}, false, false);
     };
 
 </script>

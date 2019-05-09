@@ -15,7 +15,9 @@ import com.jwzhu.platform.core.admin.manager.AdminManager;
 import com.jwzhu.platform.core.admin.model.Admin;
 import com.jwzhu.platform.core.admin.param.AdminAddParam;
 import com.jwzhu.platform.core.admin.param.AdminListParam;
+import com.jwzhu.platform.core.admin.param.AdminRoleSaveParam;
 import com.jwzhu.platform.core.admin.param.AdminUpdateParam;
+import com.jwzhu.platform.core.permission.param.PermissionSaveParam;
 import com.jwzhu.platform.plugs.web.annotations.ControllerHandler;
 import com.jwzhu.platform.plugs.web.param.LongParam;
 
@@ -70,6 +72,22 @@ public class AdminController {
     @ControllerHandler
     public Map<Short, String> getAddAdminType(){
         return adminManager.getAddAdminType();
+    }
+
+    @PostMapping("addAdminRole")
+    @ResponseBody
+    @ControllerHandler
+    public String addAdminRole(AdminRoleSaveParam param){
+        adminManager.addAdminRole(param.initBean());
+        return "添加角色成功";
+    }
+
+    @PostMapping("removeAdminRole")
+    @ResponseBody
+    @ControllerHandler
+    public String removeAdminRole(AdminRoleSaveParam param){
+        adminManager.removeAdminRole(param.initBean());
+        return "取消角色成功";
     }
 
 }

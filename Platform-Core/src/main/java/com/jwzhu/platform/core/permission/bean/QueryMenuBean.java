@@ -4,17 +4,17 @@ import com.jwzhu.platform.common.bean.BaseBean;
 
 public class QueryMenuBean extends BaseBean {
 
-    private Long adminId;
+    private Long selfId;
     private Short menuShow;
     private Short availableStatus;
     private Short[] types;
 
-    public Long getAdminId() {
-        return adminId;
+    public Long getSelfId() {
+        return selfId;
     }
 
-    public void setAdminId(Long adminId) {
-        this.adminId = adminId;
+    public void setSelfId(Long selfId) {
+        this.selfId = selfId;
     }
 
     public Short getMenuShow() {

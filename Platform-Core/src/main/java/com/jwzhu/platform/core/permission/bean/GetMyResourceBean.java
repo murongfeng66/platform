@@ -2,18 +2,18 @@ package com.jwzhu.platform.core.permission.bean;
 
 import com.jwzhu.platform.common.bean.BaseBean;
 
-public class GetRoleResourceBean extends BaseBean {
+public class GetMyResourceBean extends BaseBean {
 
-    private Long adminId;
+    private Long selfId;
     private String roleCode;
     private Short[] resourceStatus;
 
-    public Long getAdminId() {
-        return adminId;
+    public Long getSelfId() {
+        return selfId;
     }
 
-    public void setAdminId(Long adminId) {
-        this.adminId = adminId;
+    public void setSelfId(Long selfId) {
+        this.selfId = selfId;
     }
 
     public String getRoleCode() {

@@ -6,11 +6,11 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.jwzhu.platform.common.bean.UpdateStatusBean;
-import com.jwzhu.platform.core.permission.bean.AdminRoleBean;
-import com.jwzhu.platform.core.permission.bean.GetRoleResourceBean;
+import com.jwzhu.platform.core.permission.bean.GetMyRoleBean;
+import com.jwzhu.platform.core.permission.bean.PermissionSaveBean;
 import com.jwzhu.platform.core.permission.bean.RoleBean;
 import com.jwzhu.platform.core.permission.bean.RoleListBean;
-import com.jwzhu.platform.core.permission.model.Resource;
+import com.jwzhu.platform.core.permission.model.AdminRole;
 import com.jwzhu.platform.core.permission.model.Role;
 
 @Repository
@@ -31,9 +31,11 @@ public interface RoleDao {
      */
     Role getByCode(@Param("roleCode") String roleCode);
 
-    List<Resource> getRoleResource(GetRoleResourceBean bean);
+    void insertRoleResource(PermissionSaveBean bean);
 
-    void insertAdminRole(AdminRoleBean bean);
+    int deleteRoleResource(PermissionSaveBean bean);
 
-    int deleteAdminRole(AdminRoleBean bean);
+    List<AdminRole> getMyRole(GetMyRoleBean bean);
+
+    List<String> getAllRoleByAdminId(long adminId);
 }
