@@ -46,7 +46,7 @@ public class AdminController {
     @ResponseBody
     @ControllerHandler
     public String add(AdminAddParam param) {
-        adminManager.insert(param.initBean());
+        adminManager.save(param.initBean());
         return "添加管理员成功";
     }
 

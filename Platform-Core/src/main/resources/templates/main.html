@@ -13,7 +13,7 @@
         .light-line-left {
             width: 3px;
             height: 0;
-            background-color: #0e90ce;
+            background-color: #2196F3;
             margin: auto 0;
         }
 
@@ -27,7 +27,7 @@
         .light-line-bottom {
             width: 0;
             height: 100%;
-            background-color: #0e90ce;
+            background-color: #2196F3;
             margin: 0 auto;
         }
 
@@ -259,16 +259,24 @@
             let _iFrameHtml = document.getElementById(iFrameId);
             let _navItemHtml = document.getElementById(navItemId);
 
-            if (_iFrameHtml) {
-                _iFrameHtml.show();
-                _navItemHtml.show();
-                _iFrameHtml.classList.add('active');
-                _navItemHtml.classList.add('active');
-            } else {
-                document.getElementById('content_top_nav').innerHTML += '<li id="' + navItemId + '" class="content-top-nav-item active" onclick="navClick()" data-iFrameId="' + iFrameId + '">' + item.name + '<div class="close fa fa-times" onclick="navClose()"></div></li>';
+            if (!_iFrameHtml) {
+                _navItemHtml = document.createElement('li');
+                _navItemHtml.id = navItemId;
+                _navItemHtml.classList.add('content-top-nav-item');
+                _navItemHtml.onclick = navClick;
+                _navItemHtml.setAttribute('data-iFrameId', iFrameId);
+                _navItemHtml.innerHTML = item.name + '<div class="close fa fa-times" onclick="navClose()"></div>';
+                document.getElementById('content_top_nav').appendChild(_navItemHtml);
 
-                document.getElementById('content').innerHTML += '<iframe id="' + iFrameId + '" class="content-body active" src="' + item.url + '" scrolling="yes"></iframe>';
+                _iFrameHtml = document.createElement('iframe');
+                _iFrameHtml.id = iFrameId;
+                _iFrameHtml.classList.add('content-body');
+                _iFrameHtml.src = item.url;
+                document.getElementById('content').appendChild(_iFrameHtml);
             }
+
+            _iFrameHtml.classList.add('active');
+            _navItemHtml.classList.add('active');
         };
     };
 

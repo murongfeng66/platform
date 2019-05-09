@@ -7,6 +7,6 @@ import com.jwzhu.platform.plugs.jsonEscape.bind.JsonEscaper;
 public class AdminTypeEscaper implements JsonEscapeInterface<Short> {
     @Override
     public Object getMessage(Short id) {
-        return AdminType.get(id);
+        return AdminType.message(id);
     }
 }

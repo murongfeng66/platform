@@ -4,17 +4,17 @@ import com.jwzhu.platform.common.bean.BaseBean;
 
 public class QueryMenuBean extends BaseBean {
 
-    private String roleCodes;
+    private Long adminId;
     private Short menuShow;
     private Short availableStatus;
     private Short[] types;
 
-    public String getRoleCodes() {
-        return roleCodes;
+    public Long getAdminId() {
+        return adminId;
     }
 
-    public void setRoleCodes(String roleCodes) {
-        this.roleCodes = roleCodes;
+    public void setAdminId(Long adminId) {
+        this.adminId = adminId;
     }
 
     public Short getMenuShow() {

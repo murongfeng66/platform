@@ -3,8 +3,6 @@ package com.jwzhu.platform.core.permission.model;
 import java.time.LocalDateTime;
 
 import com.jwzhu.platform.common.enums.AvailableStatusEscaper;
-import com.jwzhu.platform.core.service.model.ServiceEscaper;
-import com.jwzhu.platform.plugs.jsonEscape.bind.LongEscape;
 import com.jwzhu.platform.plugs.jsonEscape.bind.ShortEscape;
 
 public class Role {

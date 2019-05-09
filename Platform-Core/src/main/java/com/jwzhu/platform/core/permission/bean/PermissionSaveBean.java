@@ -1,14 +1,13 @@
 package com.jwzhu.platform.core.permission.bean;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import com.jwzhu.platform.common.bean.BaseBean;
 
 public class PermissionSaveBean extends BaseBean {
 
     private String roleCode;
-    private List<String> resourceCodes;
+    private String resourceCode;
     private LocalDateTime createTime;
 
     public String getRoleCode() {
@@ -19,12 +18,12 @@ public class PermissionSaveBean extends BaseBean {
         this.roleCode = roleCode;
     }
 
-    public List<String> getResourceCodes() {
-        return resourceCodes;
+    public String getResourceCode() {
+        return resourceCode;
     }
 
-    public void setResourceCodes(List<String> resourceCodes) {
-        this.resourceCodes = resourceCodes;
+    public void setResourceCode(String resourceCode) {
+        this.resourceCode = resourceCode;
     }
 
     public LocalDateTime getCreateTime() {

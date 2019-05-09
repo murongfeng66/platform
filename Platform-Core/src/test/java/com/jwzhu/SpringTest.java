@@ -1,7 +1,5 @@
 package com.jwzhu;
 
-import java.util.Random;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +12,6 @@ import com.jwzhu.platform.core.admin.bean.LoginBean;
 import com.jwzhu.platform.core.admin.model.Login;
 import com.jwzhu.platform.core.admin.service.LoginService;
 import com.jwzhu.platform.plugs.web.token.TokenService;
-import com.jwzhu.platform.plugs.web.token.TokenSubject;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest

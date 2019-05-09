@@ -1,10 +1,6 @@
 package com.jwzhu.platform.core.permission.param;
 
-import java.util.Arrays;
-import java.util.List;
-
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 import com.jwzhu.platform.core.permission.bean.PermissionSaveBean;
 import com.jwzhu.platform.plugs.web.param.BaseParam;
@@ -13,7 +9,8 @@ public class PermissionSaveParam extends BaseParam<PermissionSaveBean> {
 
     @NotEmpty(message = "角色编码不能为空")
     private String roleCode;
-    private List<String> resourceCodes;
+    @NotEmpty(message = "资源编码不能为空")
+    private String resourceCode;
 
     public String getRoleCode() {
         return roleCode;
@@ -23,12 +20,12 @@ public class PermissionSaveParam extends BaseParam<PermissionSaveBean> {
         this.roleCode = roleCode;
     }
 
-    public List<String> getResourceCodes() {
-        return resourceCodes;
+    public String getResourceCode() {
+        return resourceCode;
     }
 
-    public void setResourceCodes(String resourceCodes) {
-        this.resourceCodes = Arrays.asList(resourceCodes.split(","));
+    public void setResourceCode(String resourceCode) {
+        this.resourceCode = resourceCode;
     }
 
     @Override

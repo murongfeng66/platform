@@ -11,8 +11,7 @@ import com.jwzhu.platform.common.exception.SystemException;
 public enum AdminType {
 
     Super((short) 1, "超级管理员"),
-    ServiceSuper((short) 2, "服务超级管理员"),
-    Service((short) 3, "服务管理员");
+    Admin((short) 2, "管理员");
 
     /**
      * 编码

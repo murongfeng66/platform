@@ -51,8 +51,9 @@
     </div>
 </div>
 <div id="dialog_permission" class="dialog">
+    <input id="dialog_permission_roleCode" type="hidden">
     <div class="dialog-body">
-        <div class="dialog-content">
+        <div id="permission" class="dialog-content">
 
         </div>
     </div>
@@ -91,16 +92,7 @@
 
     let dialogPermission = Dialog.create({
         dialogId: 'dialog_permission',
-        title: '资源权限',
-        bottomButtons: [{
-            id: 'save',
-            title: '保存',
-            classNames: 'float-right',
-            closeAfterClick: true,
-            onclick: function () {
-
-            }
-        }]
+        title: '资源权限'
     });
 
     let tableRole = Table.init({
@@ -189,7 +181,49 @@
     };
 
     let permissionView = function () {
-        dialogPermission.open();
+        document.getElementById('dialog_permission_roleCode').setValue(this.code);
+        Request.get('/resource/queryMyResource', {roleCode: this.code}).then(function (data) {
+            let $permission = document.getElementById('permission');
+            let htmlString = '';
+            data.forEach(function (item) {
+                htmlString += '<div><div class="permission" onclick="permissionClick()"><span class="permission-name">' + item.name + '</span><input data-resourceCode="' + item.code + '" type="checkbox" class="switch margin-auto margin-right-no" ' + (item.have ? 'checked' : '') + ' onchange="permissionChange()"></div><div class="permission-children">' + getChildrenHtmlString(item.children) + '</div></div>';
+            });
+            $permission.innerHTML = htmlString;
+            dialogPermission.open();
+        });
+    };
+
+    let getChildrenHtmlString = function (children) {
+        let htmlString = '';
+        if (!children) {
+            return htmlString;
+        }
+
+        children.forEach(function (item) {
+            htmlString += '<div><div class="permission" onclick="permissionClick()"><span class="permission-name">' + item.name + '</span><input data-resourceCode="' + item.code + '" type="checkbox" class="switch margin-auto margin-right-no" ' + (item.have ? 'checked' : '') + ' onchange="permissionChange()"></div><div class="permission-children">' + getChildrenHtmlString(item.children) + '</div></div>';
+        });
+        return htmlString;
+    };
+
+    let permissionClick = function () {
+        let $target = window.event.target;
+        let $children = $target.parentNode.querySelector('.permission-children');
+        if (!$children) {
+            return;
+        }
+        window.event.stopPropagation();
+        if ($children.classList.contains('active')) {
+            $children.classList.remove('active');
+        } else {
+            $children.classList.add('active');
+        }
+    };
+
+    let permissionChange = function () {
+        let $target = window.event.target;
+        let roleCode = document.getElementById('dialog_permission_roleCode').value;
+        let resourceCode = $target.getAttribute('data-resourceCode');
+        Request.post('/resource/savePermission', {roleCode:roleCode,resourceCode:resourceCode})
     };
 
 </script>

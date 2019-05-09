@@ -32,12 +32,12 @@ public class AdminService {
     public void insert(AdminBean bean) {
         bean.setCreateTime(bean.getCreateTime() == null ? LocalDateTime.now() : bean.getCreateTime());
         bean.setAdminStatus(bean.getAdminStatus() == null ? AvailableStatus.Enable.getCode() : bean.getAdminStatus());
-        bean.setAdminType(bean.getAdminType() == null ? AdminType.Service.getCode() : bean.getAdminType());
+        bean.setAdminType(bean.getAdminType() == null ? AdminType.Admin.getCode() : bean.getAdminType());
 
         if (AdminType.Super.getCode() == bean.getAdminType()) {
             throw new BusinessException("不允许添加超级管理员");
-        } else if (AdminType.ServiceSuper.getCode() == bean.getAdminType() && AdminType.Super.getCode() == RequestBaseParam.getRequestUser().getType()) {
-            throw new BusinessException("无权限添加服务超级管理员");
+        } else if (AdminType.Admin.getCode() == RequestBaseParam.getRequestUser().getType()) {
+            throw new BusinessException("无权限添加管理员");
         }
 
         adminDao.insert(bean);

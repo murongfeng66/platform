@@ -50,23 +50,6 @@ public class RoleService {
         }
     }
 
-    public void savePermission(PermissionSaveBean bean){
-        bean.setCreateTime(bean.getCreateTime() == null ? RequestBaseParam.getRequestTime() : bean.getCreateTime());
-        roleDao.deleteRoleResource(bean);
-        if(bean.getResourceCodes().size() != 0){
-            roleDao.batchInsertRoleResource(bean);
-        }
-    }
-
-    public List<Resource> getRoleResource(GetRoleResourceBean bean) {
-        bean.setResourceStatus(AvailableStatus.Enable.getCode());
-        return roleDao.getRoleResource(bean);
-    }
-
-    public List<Role> getHaveRole(Long adminId) {
-        return roleDao.getHaveRole(adminId, AvailableStatus.Enable.getCode());
-    }
-
     private void updateStatus(UpdateStatusBean bean, String errorMessage){
         bean.setUpdateTime(bean.getUpdateTime() == null ? RequestBaseParam.getRequestTime() : bean.getUpdateTime());
         if(roleDao.updateStatus(bean) == 0){
@@ -96,9 +79,5 @@ public class RoleService {
         statusBean.setOldStatus(AvailableStatus.Disable.getCode());
         statusBean.setNewStatus(AvailableStatus.Delete.getCode());
         updateStatus(statusBean, "删除角色失败");
-    }
-
-    public List<Resource> getHaveResource(LongBean bean) {
-        return roleDao.getHaveResource(RequestBaseParam.getRequestUser().getId(), AvailableStatus.Enable.getCode());
     }
 }

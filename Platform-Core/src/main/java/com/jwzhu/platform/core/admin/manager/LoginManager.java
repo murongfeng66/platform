@@ -28,7 +28,7 @@ public class LoginManager {
             throw new BusinessException("用户名或密码错误");
         }
         String encryptPassword = loginService.encryptPassword(bean.getPassword(), login.getSalt());
-        if (encryptPassword.equals(login.getPassword())) {
+        if (!encryptPassword.equals(login.getPassword())) {
             throw new BusinessException("用户名或密码错误");
         }
         Admin admin = getById(login.getId());

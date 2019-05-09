@@ -25,8 +25,9 @@ public class LoginService {
         }
         bean.setCreateTime(bean.getCreateTime() == null ? LocalDateTime.now() : bean.getCreateTime());
         bean.setStatus(bean.getStatus() == null ? AvailableStatus.Enable.getCode() : bean.getStatus());
+        bean.setPassword(bean.getPassword() == null ? "123456" : bean.getPassword());
         bean.setSalt(createSalt());
-        bean.setPassword(encryptPassword(bean.getPassword(),bean.getSalt()));
+        bean.setPassword(encryptPassword(bean.getPassword(), bean.getSalt()));
         loginDao.insert(bean);
     }
 
@@ -34,7 +35,7 @@ public class LoginService {
         return loginDao.getByUsername(username);
     }
 
-    public String encryptPassword(String password,String salt) {
+    public String encryptPassword(String password, String salt) {
         return DigestUtils.md5Hex(password.concat(salt));
     }
 

@@ -1,7 +1,7 @@
 package com.jwzhu.platform.core.permission.model;
 
-import com.jwzhu.platform.plugs.jsonEscape.bind.JsonEscaper;
 import com.jwzhu.platform.plugs.jsonEscape.bind.JsonEscapeInterface;
+import com.jwzhu.platform.plugs.jsonEscape.bind.JsonEscaper;
 
 /**
  * 资源类型

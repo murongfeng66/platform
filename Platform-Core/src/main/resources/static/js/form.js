@@ -55,6 +55,21 @@
         })
     };
 
+    HTMLElement.prototype.formHide = function (show) {
+        let selector = show ? '[data-show*="|' + show + '|"]': '[data-show]';
+        this.querySelectorAll(selector).forEach(function (_item) {
+            _item.hide();
+        })
+    };
+
+    HTMLElement.prototype.formShow = function (show) {
+        this.formHide();
+        let selector = show ? '[data-show*="|' + show + '|"]': '[data-show]';
+        this.querySelectorAll(selector).forEach(function (_item) {
+            _item.show();
+        })
+    };
+
     Object.defineProperties(HTMLElement.prototype, {
         testFunction: {
             writable: true,

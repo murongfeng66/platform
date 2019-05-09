@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,9 @@ import org.springframework.util.StringUtils;
 import com.jwzhu.platform.common.enums.AvailableStatus;
 import com.jwzhu.platform.common.enums.YesOrNo;
 import com.jwzhu.platform.common.exception.BusinessException;
+import com.jwzhu.platform.core.admin.model.AdminType;
+import com.jwzhu.platform.core.permission.bean.GetRoleResourceBean;
+import com.jwzhu.platform.core.permission.bean.PermissionSaveBean;
 import com.jwzhu.platform.core.permission.bean.QueryMenuBean;
 import com.jwzhu.platform.core.permission.bean.ResourceBean;
 import com.jwzhu.platform.core.permission.bean.ResourceListBean;
@@ -20,6 +24,7 @@ import com.jwzhu.platform.core.permission.db.ResourceDao;
 import com.jwzhu.platform.core.permission.model.Menu;
 import com.jwzhu.platform.core.permission.model.Resource;
 import com.jwzhu.platform.core.permission.model.ResourceList;
+import com.jwzhu.platform.core.permission.model.ResourcePermission;
 import com.jwzhu.platform.core.permission.model.ResourceType;
 import com.jwzhu.platform.plugs.web.request.RequestBaseParam;
 
@@ -47,6 +52,9 @@ public class ResourceService {
 
     public List<Menu> queryMenu() {
         QueryMenuBean bean = new QueryMenuBean();
+        if (RequestBaseParam.getRequestUser().getType() != AdminType.Super.getCode()) {
+            bean.setAdminId(RequestBaseParam.getRequestUser().getId());
+        }
         bean.setMenuShow(YesOrNo.Yes.getCode());
         bean.setAvailableStatus(AvailableStatus.Enable.getCode());
         bean.setTypes(ResourceType.Menu.getCode(), ResourceType.Page.getCode());
@@ -89,4 +97,36 @@ public class ResourceService {
         return new ArrayList<>();
     }
 
+    public List<ResourcePermission> queryMyResource(GetRoleResourceBean bean) {
+        if (RequestBaseParam.getRequestUser().getType() != AdminType.Super.getCode()) {
+            bean.setAdminId(RequestBaseParam.getRequestUser().getId());
+        }
+        bean.setResourceStatus(AvailableStatus.Enable.getCode());
+        List<ResourcePermission> list = resourceDao.queryMyResource(bean);
+        Map<String, ResourcePermission> map = list.stream().collect(Collectors.toMap(ResourcePermission::getCode, a -> a, (k1, k2) -> k2));
+
+        List<String> roleResource = resourceDao.queryAllResourceByRoleCode(bean.getRoleCode());
+
+        List<ResourcePermission> result = new LinkedList<>();
+        for (ResourcePermission permission : list) {
+            permission.setHave(roleResource.contains(permission.getCode()));
+
+            if (StringUtils.isEmpty(permission.getParentCode())) {
+                result.add(permission);
+            } else if (map.containsKey(permission.getParentCode())) {
+                ResourcePermission parent = map.get(permission.getParentCode());
+                if (parent.getChildren() == null) {
+                    parent.setChildren(new LinkedList<>());
+                }
+                map.get(permission.getParentCode()).getChildren().add(permission);
+            }
+        }
+        return result;
+    }
+
+    public void savePermission(PermissionSaveBean bean) {
+        bean.setCreateTime(bean.getCreateTime() == null ? RequestBaseParam.getRequestTime() : bean.getCreateTime());
+        resourceDao.deleteRoleResource(bean);
+        resourceDao.insertRoleResource(bean);
+    }
 }

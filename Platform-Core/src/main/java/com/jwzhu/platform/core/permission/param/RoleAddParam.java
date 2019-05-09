@@ -1,7 +1,6 @@
 package com.jwzhu.platform.core.permission.param;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 import com.jwzhu.platform.core.permission.bean.RoleBean;
 import com.jwzhu.platform.plugs.web.param.BaseParam;

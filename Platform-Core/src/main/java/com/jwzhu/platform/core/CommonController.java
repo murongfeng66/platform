@@ -13,9 +13,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.jwzhu.platform.common.PlatformConfig;
 import com.jwzhu.platform.common.enums.AvailableStatus;
 import com.jwzhu.platform.common.enums.YesOrNo;
+import com.jwzhu.platform.core.admin.manager.LoginManager;
 import com.jwzhu.platform.core.permission.manager.ResourceManager;
 import com.jwzhu.platform.core.permission.model.Menu;
-import com.jwzhu.platform.core.admin.manager.LoginManager;
 import com.jwzhu.platform.plugs.web.annotations.ControllerHandler;
 import com.jwzhu.platform.plugs.web.request.RequestBaseParam;
 

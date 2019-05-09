@@ -1,7 +1,5 @@
 package com.jwzhu.platform.core.permission.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,13 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.jwzhu.platform.core.permission.bean.GetRoleResourceBean;
 import com.jwzhu.platform.core.permission.bean.RoleListBean;
 import com.jwzhu.platform.core.permission.manager.RoleManager;
-import com.jwzhu.platform.core.permission.model.Resource;
 import com.jwzhu.platform.core.permission.model.Role;
-import com.jwzhu.platform.core.permission.param.GetRoleResourceParam;
-import com.jwzhu.platform.core.permission.param.PermissionSaveParam;
 import com.jwzhu.platform.core.permission.param.RoleAddParam;
 import com.jwzhu.platform.core.permission.param.RoleListParam;
 import com.jwzhu.platform.core.permission.param.RoleUpdateParam;
@@ -67,35 +61,6 @@ public class RoleController {
     public String updateById(RoleUpdateParam param){
         roleManager.updateById(param.initBean());
         return "角色修改成功";
-    }
-
-    @PostMapping("savePermission")
-    @ResponseBody
-    @ControllerHandler
-    public String savePermission(PermissionSaveParam param){
-        roleManager.savePermission(param.initBean());
-        return "授权成功";
-    }
-
-    @GetMapping("getRoleResource")
-    @ResponseBody
-    @ControllerHandler
-    public List<Resource> getRoleResource(GetRoleResourceParam param){
-        return roleManager.getRoleResource(param.initBean());
-    }
-
-    @GetMapping("getHaveResource")
-    @ResponseBody
-    @ControllerHandler
-    public List<Resource> getHaveResource(LongParam param){
-        return roleManager.getHaveResource(param.initBean());
-    }
-
-    @GetMapping("getHaveRole")
-    @ResponseBody
-    @ControllerHandler
-    public List<Role> getHaveRole(){
-        return roleManager.getHaveRole();
     }
 
     @PostMapping("disable")

@@ -4,12 +4,15 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.jwzhu.platform.core.permission.bean.GetRoleResourceBean;
+import com.jwzhu.platform.core.permission.bean.PermissionSaveBean;
 import com.jwzhu.platform.core.permission.bean.QueryMenuBean;
 import com.jwzhu.platform.core.permission.bean.ResourceBean;
 import com.jwzhu.platform.core.permission.bean.ResourceListBean;
 import com.jwzhu.platform.core.permission.model.Menu;
 import com.jwzhu.platform.core.permission.model.Resource;
 import com.jwzhu.platform.core.permission.model.ResourceList;
+import com.jwzhu.platform.core.permission.model.ResourcePermission;
 
 @Repository
 public interface ResourceDao {
@@ -26,4 +29,11 @@ public interface ResourceDao {
 
     Resource getByCode(String code);
 
+    List<ResourcePermission> queryMyResource(GetRoleResourceBean bean);
+
+    List<String> queryAllResourceByRoleCode(String roleCode);
+
+    void insertRoleResource(PermissionSaveBean bean);
+
+    int deleteRoleResource(PermissionSaveBean bean);
 }

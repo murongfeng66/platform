@@ -31,12 +31,25 @@
     <div class="dialog-body">
         <form id="form_admin" class="form dialog-content">
             <input type="hidden" name="id">
-            <div class="form-row">
+            <div class="form-row" data-show="|Add|">
+                <div class="form-input-group flex-1">
+                    <label class="form-label">用户名：</label>
+                    <input type="text" name="username" class="form-input" data-readonly="|Edit|">
+                </div>
+            </div>
+            <div class="form-row" data-show="|Add|">
                 <div class="form-input-group flex-1">
                     <label class="form-label">类型：</label>
                     <select id="form_admin_adminType" name="adminType" class="form-input" data-readonly></select>
                 </div>
-            </div><div class="form-row">
+            </div>
+            <div class="form-row" data-show="|Edit|">
+                <div class="form-input-group flex-1">
+                    <label class="form-label">类型：</label>
+                    <input type="text" name="adminTypeText" class="form-input" data-readonly="|Add|Edit|">
+                </div>
+            </div>
+            <div class="form-row" data-show="|Add|Edit|">
                 <div class="form-input-group flex-1">
                     <label class="form-label">名称：</label>
                     <input type="text" name="nickname" class="form-input" data-readonly>
@@ -83,6 +96,7 @@
         url: '/admin/queryByParam',
         column: [
             {title: '名称', name: 'nickname'},
+            {title: '类型', name: 'adminTypeText'},
             {title: '状态', name: 'adminStatusText'},
             {title: '添加时间', name: 'createTime'}],
         bottomButtons: [{
@@ -106,7 +120,10 @@
     });
 
     let addAdminView = function () {
-        document.getElementById('form_admin').reset();
+        let _formHtml = document.getElementById('form_admin');
+        _formHtml.reset();
+        _formHtml.addReadOnly('Add');
+        _formHtml.formShow('Add');
         let dialogTitle = '添加管理员';
 
         dialogAdmin.setTitle(dialogTitle).hideBottomButton().showBottomButton('submit').open();
@@ -116,6 +133,7 @@
         Request.get('/admin/getById', {id: this.id}).then(function (data) {
             let _formHtml = document.getElementById('form_admin');
             _formHtml.addReadOnly('Edit');
+            _formHtml.formShow('Edit');
             _formHtml.setForm(data);
             dialogAdmin.setTitle('编辑管理员').hideBottomButton().showBottomButton('save').open();
         });

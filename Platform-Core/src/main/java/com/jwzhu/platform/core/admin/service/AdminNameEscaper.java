@@ -5,7 +5,6 @@ import javax.annotation.Resource;
 import com.jwzhu.platform.common.exception.BusinessException;
 import com.jwzhu.platform.core.admin.model.Admin;
 import com.jwzhu.platform.plugs.jsonEscape.base.JsonEscapeCacheInterface;
-import com.jwzhu.platform.plugs.jsonEscape.bind.JsonEscapeInterface;
 import com.jwzhu.platform.plugs.jsonEscape.bind.JsonEscaper;
 
 @JsonEscaper

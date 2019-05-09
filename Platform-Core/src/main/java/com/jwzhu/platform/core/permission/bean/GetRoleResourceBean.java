@@ -4,8 +4,17 @@ import com.jwzhu.platform.common.bean.BaseBean;
 
 public class GetRoleResourceBean extends BaseBean {
 
+    private Long adminId;
     private String roleCode;
     private Short[] resourceStatus;
+
+    public Long getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Long adminId) {
+        this.adminId = adminId;
+    }
 
     public String getRoleCode() {
         return roleCode;
