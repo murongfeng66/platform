@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.jwzhu.platform.common.bean.LongBean;
 import com.jwzhu.platform.common.exception.BusinessException;
-import com.jwzhu.platform.core.permission.bean.GetMyResourceBean;
 import com.jwzhu.platform.core.permission.bean.GetMyRoleBean;
 import com.jwzhu.platform.core.permission.bean.PermissionSaveBean;
 import com.jwzhu.platform.core.permission.bean.RoleBean;
@@ -65,7 +64,7 @@ public class RoleManager {
         roleService.removePermission(bean);
     }
 
-    public List<AdminRole> getMyRole(GetMyRoleBean bean) {
-        return roleService.getMyRole(bean);
+    public List<AdminRole> getAdminRole(GetMyRoleBean bean) {
+        return roleService.getAdminRole(bean);
     }
 }

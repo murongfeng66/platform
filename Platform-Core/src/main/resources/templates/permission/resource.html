@@ -8,15 +8,12 @@
 
     <link rel="stylesheet" href="/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/common.css">
-    <link rel="stylesheet" href="/css/form.css">
-    <link rel="stylesheet" href="/css/table.css">
-    <link rel="stylesheet" href="/css/dialog.css">
 </head>
 <body>
 <form id="form_resource_query" class="form margin-top-10">
     <div class="form-row">
         <div class="form-input-group">
-            <label class="form-label">编码：</label>
+            <label class="form-label">关键字：</label>
             <input name="key" class="form-input">
         </div>
         <div class="form-input-group">
@@ -25,15 +22,15 @@
         </div>
         <div class="form-input-group">
             <label class="form-label">状态：</label>
-            <select id="form_resource_query_availableStatus" name="availableStatus" class="form-input"></select>
+            <select id="form_resource_query_availableStatus" name="resourceStatus" class="form-input"></select>
         </div>
         <div class="form-input-group">
-            <button type="button" class="button" onclick="(function(){tableResource.reload();})()">查询</button>
+            <button type="button" class="button" onclick="(function(){tableResource.reload();})()" data-permission="/resource/queryByParam">查询</button>
             <button type="reset" class="button">重置</button>
         </div>
     </div>
 </form>
-<div id="table_resource">
+<div id="table_resource" data-table>
 </div>
 <div id="dialog_resource" class="dialog">
     <div class="dialog-body">
@@ -86,90 +83,127 @@
 </div>
 </body>
 <script src="/js/common.js"></script>
-<script src="/js/form.js"></script>
-<script src="/js/table.js"></script>
-<script src="/js/request.js"></script>
-<script src="/js/dialog.js"></script>
 <script type="text/javascript">
     window.onload = function () {
         document.getElementById('form_resource_menuShow').initSelect('/yesOrNo');
         document.getElementById('form_resource_type').initSelect('/resource/resourceType');
         document.getElementById('form_resource_query_type').initSelect('/resource/resourceType', true);
         document.getElementById('form_resource_query_availableStatus').initSelect('/availableStatus', true);
+        init();
     };
 
-    let dialogResource = Dialog.create({
-        dialogId: 'dialog_resource',
-        bottomButtons: [{
-            id:'save',
-            title: '保存',
-            classNames: 'float-right',
-            closeAfterClick: true,
-            onclick: function () {
-                updateResource();
-            }
-        }, {
-            id:'submit',
-            title: '提交',
-            classNames: 'float-right',
-            closeAfterClick: true,
-            onclick: function () {
-                addResource();
-            }
-        }]
-    });
+    let dialogResource, tableResource;
 
-    let tableResource = Table.init({
-        tableDivId: 'table_resource',
-        queryFormId: 'form_resource_query',
-        url: '/resource/queryByParam',
-        column: [
-            {title: '父编码', name: 'parentCode'},
-            {title: '编码', name: 'code'},
-            {title: '名称', name: 'name'},
-            {title: '类型', name: 'typeText', width: 80},
-            {title: '状态', name: 'availableStatusText', width: 80}
-        ],
-        bottomButtons: [{
-            id:'add',
-            title: '添加',
-            faClass: 'fa-plus',
-            onclick: function () {
-                addResourceView();
-            }
-        }],
-        rowOperate: function () {
-            let operates = [];
-            operates.push({
-                id:'view',
-                title: '查看',
-                classNames: '',
-                onclick: viewResourceView
-            },{
-                id:'edit',
-                title: '编辑',
-                classNames: '',
-                onclick: updateResourceView
-            });
-            if (this.type === 1) {
+    function init() {
+        dialogResource = Dialog.create({
+            dialogId: 'dialog_resource',
+            bottomButtons: [{
+                id: 'save',
+                title: '保存',
+                permission: '/resource/updateById',
+                classNames: 'float-right',
+                closeAfterClick: true,
+                onclick: function () {
+                    updateResource();
+                }
+            }, {
+                id: 'submit',
+                title: '提交',
+                permission: '/resource/add',
+                classNames: 'float-right',
+                closeAfterClick: true,
+                onclick: function () {
+                    addResource();
+                }
+            }]
+        });
+
+        tableResource = Table.init({
+            tableDivId: 'table_resource',
+            queryFormId: 'form_resource_query',
+            url: '/resource/queryByParam',
+            column: [
+                {title: '父编码', name: 'parentCode'},
+                {title: '编码', name: 'code'},
+                {title: '名称', name: 'name'},
+                {title: '类型', name: 'typeText', width: 80},
+                {title: '状态', name: 'resourceStatusText', width: 80}
+            ],
+            bottomButtons: [{
+                id: 'add',
+                title: '添加',
+                permission: '/resource/add',
+                faClass: 'fa-plus',
+                onclick: function () {
+                    addResourceView();
+                }
+            }],
+            rowOperate: function () {
+                let operates = [];
                 operates.push({
-                    id:'addPage',
-                    title: '添加页面',
-                    classNames: '',
-                    onclick: addResourceView
+                    id: 'view',
+                    title: '查看',
+                    permission: '/resource/getById',
+                    onclick: viewResourceView
+                }, {
+                    id: 'edit',
+                    title: '编辑',
+                    permission: '/resource/updateById',
+                    onclick: updateResourceView
                 });
-            }
-            if (this.type === 2) {
+                if (this.resourceStatus === 1) {
+                    let id = this.id;
+                    operates.push({
+                        id: 'disable',
+                        title: '禁用',
+                        permission: '/resource/disable',
+                        onclick: function () {
+                            common.confirmRequest(id, '/resource/disable', 'table_resource', '是否确认禁用该资源');
+                        }
+                    });
+                } else if (this.resourceStatus === -1) {
+                    let id = this.id;
+                    operates.push({
+                        id: 'enable',
+                        title: '启用',
+                        permission: '/resource/enable',
+                        onclick: function () {
+                            common.confirmRequest(id, '/resource/enable', 'table_resource', '是否确认启用该资源');
+                        }
+                    }, {
+                        id: 'delete',
+                        title: '删除',
+                        permission: '/resource/delete',
+                        onclick: function () {
+                            common.confirmRequest(id, '/resource/delete', 'table_resource', '是否确认删除该资源');
+                        }
+                    });
+                }
+                if (this.type === 1) {
+                    operates.push({
+                        id: 'addPage',
+                        title: '添加页面',
+                        permission: '/resource/add',
+                        onclick: addResourceView
+                    });
+                } else if (this.type === 2) {
+                    operates.push({
+                        id: 'addFunction',
+                        title: '添加功能',
+                        permission: '/resource/add',
+                        onclick: addResourceView
+                    });
+                }
                 operates.push({
-                    id:'addFunction',
-                    title: '添加功能',
-                    classNames: '',
-                    onclick: addResourceView
+                    id: 'copy',
+                    title: '复制',
+                    permission: '/resource/add',
+                    onclick: copyResourceView
                 });
+                return operates;
             }
-            return operates;
-        }
-    });
+        });
+    }
 
     let addResourceView = function () {
         let $formHtml = document.getElementById('form_resource');
@@ -192,6 +226,30 @@
         document.getElementById('form_resource_type').setValue(type);
 
         dialogResource.setTitle(dialogTitle).hideBottomButton().showBottomButton('submit').open();
+    };
+
+    let copyResourceView = function () {
+        Request.get('/resource/getById', {id: this.id}).then(function (data) {
+            let formData = {
+                parentCode: data.parentCode,
+                name: data.name,
+                url: data.url,
+                type: data.type,
+                menuShow: data.menuShow
+            };
+
+            let dialogTitle = '复制功能';
+            if (this.type === 1) {
+                dialogTitle = '添加菜单';
+            } else if (this.type === 2) {
+                dialogTitle = '添加页面';
+            }
+
+            let $formHtml = document.getElementById('form_resource');
+            $formHtml.addReadOnly('Add');
+            $formHtml.setForm(formData);
+            dialogResource.setTitle(dialogTitle).hideBottomButton().showBottomButton('submit').open();
+        });
     };
 
     let updateResourceView = function () {

@@ -40,7 +40,7 @@
                     id = #{id} and
                 </if>
                 <if test="key != null">
-                    (`code` like concat(#{key}, '%') or `name` like concat(#{key}, '%')) and
+                    (`code` like concat('%', #{key}, '%') or `name` like concat('%', #{key}, '%')) and
                 </if>
                 <if test="roleStatus != null">
                     roleStatus = #{roleStatus} and
@@ -58,7 +58,7 @@
         from Role
         where `code` = #{roleCode} for update
     </select>
-    <select id="getMyRole" resultType="com.jwzhu.platform.core.permission.model.AdminRole">
+    <select id="getAdminRole" resultType="com.jwzhu.platform.core.permission.model.AdminRole">
         select r.id, r.`code`, r.`name`, r.createTime, r.updateTime, r.roleStatus
         from Role r
         <if test="selfId != null">

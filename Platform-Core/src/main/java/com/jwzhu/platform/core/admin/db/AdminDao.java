@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.jwzhu.platform.common.bean.UpdateStatusBean;
 import com.jwzhu.platform.core.admin.bean.AdminBean;
 import com.jwzhu.platform.core.admin.bean.AdminListBean;
 import com.jwzhu.platform.core.admin.model.Admin;
@@ -23,5 +24,7 @@ public interface AdminDao {
     void insertAdminRole(AdminRoleBean bean);
 
     int deleteAdminRole(AdminRoleBean bean);
+
+    int updateStatus(UpdateStatusBean bean);
 
 }

@@ -8,9 +8,6 @@
 
     <link rel="stylesheet" href="/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/common.css">
-    <link rel="stylesheet" href="/css/form.css">
-    <link rel="stylesheet" href="/css/table.css">
-    <link rel="stylesheet" href="/css/dialog.css">
     <style>
         .role {
             padding: 0.5rem 2rem;
@@ -29,7 +26,7 @@
 <form id="form_admin_query" class="form margin-top-10">
     <div class="form-row">
         <div class="form-input-group">
-            <label class="form-label">编码：</label>
+            <label class="form-label">关键字：</label>
             <input name="key" class="form-input">
         </div>
         <div class="form-input-group">
@@ -38,7 +35,7 @@
         </div>
     </div>
 </form>
-<div id="table_admin">
+<div id="table_admin" data-table>
 </div>
 <div id="dialog_admin" class="dialog">
     <div class="dialog-body">
@@ -81,77 +78,109 @@
 </div>
 </body>
 <script src="/js/common.js"></script>
-<script src="/js/form.js"></script>
-<script src="/js/table.js"></script>
-<script src="/js/request.js"></script>
-<script src="/js/dialog.js"></script>
 <script type="text/javascript">
     window.onload = function () {
         document.getElementById('form_admin_adminType').initSelect('/admin/getAddAdminType');
+        init();
     };
 
-    let dialogAdmin = Dialog.create({
-        dialogId: 'dialog_admin',
-        bottomButtons: [{
-            id: 'save',
-            title: '保存',
-            classNames: 'float-right',
-            closeAfterClick: true,
-            onclick: function () {
-                updateAdmin();
-            }
-        }, {
-            id: 'submit',
-            title: '提交',
-            classNames: 'float-right',
-            closeAfterClick: true,
-            onclick: function () {
-                addAdmin();
-            }
-        }]
-    });
+    let dialogAdmin, dialogRole, tableAdmin;
 
-    let dialogRole = Dialog.create({
-        dialogId: 'dialog_role',
-        title: '角色'
-    });
+    function init() {
+        dialogAdmin = Dialog.create({
+            dialogId: 'dialog_admin',
+            bottomButtons: [{
+                id: 'save',
+                title: '保存',
+                permission: '/admin/updateById',
+                classNames: 'float-right',
+                closeAfterClick: true,
+                onclick: function () {
+                    updateAdmin();
+                }
+            }, {
+                id: 'submit',
+                title: '提交',
+                permission: '/admin/add',
+                classNames: 'float-right',
+                closeAfterClick: true,
+                onclick: function () {
+                    addAdmin();
+                }
+            }]
+        });
 
-    let tableAdmin = Table.init({
-        tableDivId: 'table_admin',
-        queryFormId: 'form_admin_query',
-        url: '/admin/queryByParam',
-        column: [
-            {title: '名称', name: 'nickname'},
-            {title: '类型', name: 'adminTypeText'},
-            {title: '状态', name: 'adminStatusText'},
-            {title: '添加时间', name: 'createTime'}],
-        bottomButtons: [{
-            id: 'add',
-            title: '添加',
-            faClass: 'fa-plus',
-            onclick: function () {
-                addAdminView();
-            }
-        }],
-        rowOperate: function () {
-            let operates = [];
-            operates.push({
-                id: 'edit',
-                title: '编辑',
-                classNames: '',
-                onclick: updateAdminView
-            });
-            if(this.adminType !== 1){
+        dialogRole = Dialog.create({
+            dialogId: 'dialog_role',
+            title: '角色'
+        });
+
+        tableAdmin = Table.init({
+            tableDivId: 'table_admin',
+            queryFormId: 'form_admin_query',
+            url: '/admin/queryByParam',
+            column: [
+                {title: '名称', name: 'nickname'},
+                {title: '类型', name: 'adminTypeText'},
+                {title: '状态', name: 'adminStatusText'},
+                {title: '添加时间', name: 'createTime'}],
+            bottomButtons: [{
+                id: 'add',
+                title: '添加',
+                permission: '/admin/add',
+                faClass: 'fa-plus',
+                onclick: function () {
+                    addAdminView();
+                }
+            }],
+            rowOperate: function () {
+                let operates = [];
                 operates.push({
-                    id: 'role',
-                    title: '角色',
-                    classNames: '',
-                    onclick: roleView
+                    id: 'edit',
+                    title: '编辑',
+                    permission: '/admin/updateById',
+                    onclick: updateAdminView
                 });
+                if (this.adminStatus === 1) {
+                    let id = this.id;
+                    operates.push({
+                        id: 'disable',
+                        title: '禁用',
+                        permission: '/admin/disable',
+                        onclick: function () {
+                            common.confirmRequest(id, '/admin/disable', 'table_admin', '是否确认禁用该管理员');
+                        }
+                    });
+                } else if (this.adminStatus === -1) {
+                    let id = this.id;
+                    operates.push({
+                        id: 'enable',
+                        title: '启用',
+                        permission: '/admin/enable',
+                        onclick: function () {
+                            common.confirmRequest(id, '/admin/enable', 'table_admin', '是否确认启用该管理员');
+                        }
+                    }, {
+                        id: 'delete',
+                        title: '删除',
+                        permission: '/admin/delete',
+                        onclick: function () {
+                            common.confirmRequest(id, '/admin/delete', 'table_admin', '是否确认删除该管理员');
+                        }
+                    });
+                }
+                if (this.adminType !== 1) {
+                    operates.push({
+                        id: 'role',
+                        title: '角色',
+                        permission: '/role/getAdminRole',
+                        onclick: roleView
+                    });
+                }
+                return operates;
             }
-            return operates;
-        }
-    });
+        });
+    }
 
     let addAdminView = function () {
         let _formHtml = document.getElementById('form_admin');
@@ -187,17 +216,17 @@
         });
     };
 
-    let roleView = function(){
+    let roleView = function () {
         document.getElementById('dialog_role_adminId').setValue(this.id);
-        Request.get('/role/getMyRole',{adminId:this.id}).then(function(data){
+        Request.get('/role/getAdminRole', {adminId: this.id}).then(function (data) {
             let htmlString = '';
             data.forEach(function (item) {
                 htmlString += '<div>';
-                htmlString+='<div class="role">';
-                htmlString+='<span class="role-name">' + item.name + '</span>';
-                htmlString+='<input data-roleCode="' + item.code + '" type="checkbox" class="switch margin-auto margin-right-no" ' + (item.have ? 'checked' : '') + ' onchange="roleChange()">';
-                htmlString+='</div>';
-                htmlString+='</div>';
+                htmlString += '<div class="role">';
+                htmlString += '<span class="role-name">' + item.name + '</span>';
+                htmlString += '<input data-roleCode="' + item.code + '" type="checkbox" class="switch margin-auto margin-right-no" ' + (item.have ? 'checked' : '') + ' onchange="roleChange()">';
+                htmlString += '</div>';
+                htmlString += '</div>';
             });
             document.getElementById('role').innerHTML = htmlString;
             dialogRole.open();
@@ -209,7 +238,7 @@
         let adminId = document.getElementById('dialog_role_adminId').value;
         let roleCode = $target.getAttribute('data-roleCode');
         let url = '/admin/removeAdminRole';
-        if($target.checked){
+        if ($target.checked) {
             url = '/admin/addAdminRole';
         }
         Request.post(url, {adminId: adminId, roleCode: roleCode}, false, false);

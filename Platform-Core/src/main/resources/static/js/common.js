@@ -1,5 +1,88 @@
 const common = {};
 
+loadJs('/js/request.js');
+initHtml();
+function initHtml() {
+    removeFormDefaultEvent();
+    if(document.querySelector('.form')){
+        loadJs('/js/form.js');
+        loadCss('/css/form.css');
+    }
+    if(document.querySelector('.dialog')){
+        loadJs('/js/dialog.js');
+        loadCss('/css/dialog.css');
+    }
+    if(document.querySelector('[data-table]')){
+        loadJs('/js/table.js');
+        loadCss('/css/table.css');
+    }
+    if(document.querySelector('input.date-picker')){
+        loadJs('/js/date-picker.js').then(()=>{
+            DatePicker.init();
+        });
+        loadCss('/css/date-picker.css');
+    }
+    if(document.querySelector('[data-permission]')){
+        loadJs('/js/permission-filter.js').then(()=>{
+            PermissionFilter.filter();
+        });
+    }
+}
+
+function loadJs(url) {
+    return new Promise(resolve => {
+        let $script = document.createElement('script');
+        $script.type = 'text/javascript';
+        if (typeof resolve !== 'undefined') {
+            if ($script.readyState) {
+                $script.onreadystatechange = function () {
+                    if ($script.readyState === "loaded" || $script.readyState === "complete") {
+                        $script.onreadystatechange = null;
+                        resolve();
+                    }
+                }
+            } else {
+                $script.onload = function () {
+                    resolve();
+                }
+            }
+        }
+        $script.src = url;
+        document.body.appendChild($script);
+    });
+}
+
+function loadCss(url) {
+    return new Promise(resolve => {
+        let $link = document.createElement('link');
+        $link.rel = 'stylesheet';
+        if (typeof resolve !== 'undefined') {
+            if ($link.readyState) {
+                $link.onreadystatechange = function () {
+                    if ($link.readyState === "loaded" || $link.readyState === "complete") {
+                        $link.onreadystatechange = null;
+                        resolve();
+                    }
+                }
+            } else {
+                $link.onload = function () {
+                    resolve();
+                }
+            }
+        }
+        $link.href = url;
+        document.head.appendChild($link);
+    });
+}
+
+function removeFormDefaultEvent(){
+    document.querySelectorAll('form').forEach(function ($form) {
+        $form.onsubmit = () => {
+            window.event.preventDefault();
+        };
+    });
+}
+
 const Toast = {};
 Toast.info = function (message) {
     Toast.show(message);
@@ -28,21 +111,6 @@ Toast.show = function (message, type, time) {
 common.string = {};
 common.string.dealEmpty = function (str) {
     return str || '';
-};
-
-/**
- * 初始化页面
- * 1、移除所有form元素的onsubmit事件默认行为
- */
-common.initHtml = function () {
-    document.querySelectorAll('form').forEach(function ($form) {
-        $form.onsubmit = () => {
-            window.event.preventDefault();
-        };
-    });
-    if (DatePicker) {
-        DatePicker.init();
-    }
 };
 
 Object.prototype.fixLength = function (length, char, position) {
@@ -118,9 +186,9 @@ HTMLElement.prototype.initSelect = function (url, addAddOption, map) {
             htmlString += '<option value="">全部</option>';
         }
         data.forEach(function (key, value) {
-            if(map){
+            if (map) {
                 htmlString += '<option value="' + key[map.value] + '">' + key[map.text] + '</option>';
-            }else{
+            } else {
                 htmlString += '<option value="' + key + '">' + value + '</option>';
             }
         });

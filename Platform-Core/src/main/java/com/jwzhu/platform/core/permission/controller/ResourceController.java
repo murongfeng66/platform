@@ -1,6 +1,5 @@
 package com.jwzhu.platform.core.permission.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +13,13 @@ import org.springframework.web.servlet.ModelAndView;
 import com.jwzhu.platform.core.permission.bean.ResourceListBean;
 import com.jwzhu.platform.core.permission.manager.ResourceManager;
 import com.jwzhu.platform.core.permission.model.Resource;
-import com.jwzhu.platform.core.permission.model.ResourcePermission;
 import com.jwzhu.platform.core.permission.model.ResourceType;
-import com.jwzhu.platform.core.permission.param.GetMyResourceParam;
-import com.jwzhu.platform.core.permission.param.PermissionSaveParam;
 import com.jwzhu.platform.core.permission.param.ResourceAddParam;
 import com.jwzhu.platform.core.permission.param.ResourceListParam;
 import com.jwzhu.platform.core.permission.param.ResourceUpdateParam;
 import com.jwzhu.platform.plugs.web.annotations.ControllerHandler;
 import com.jwzhu.platform.plugs.web.param.LongParam;
+import com.jwzhu.platform.plugs.web.permission.PermissionType;
 
 @Controller
 @RequestMapping("resource")
@@ -72,16 +69,33 @@ public class ResourceController {
 
     @GetMapping("resourceType")
     @ResponseBody
-    @ControllerHandler
+    @ControllerHandler(permissionType = PermissionType.Only_Login)
     public Map<Short, String> resourceType(){
         return ResourceType.map;
     }
 
-    @GetMapping("queryMyResource")
+    @PostMapping("disable")
     @ResponseBody
     @ControllerHandler
-    public List<ResourcePermission> queryMyResource(GetMyResourceParam param){
-        return resourceManager.queryMyResource(param.initBean());
+    public String disable(LongParam param){
+        resourceManager.disable(param.initBean());
+        return "禁用资源成功";
+    }
+
+    @PostMapping("enable")
+    @ResponseBody
+    @ControllerHandler
+    public String enable(LongParam param){
+        resourceManager.enable(param.initBean());
+        return "启用资源成功";
+    }
+
+    @PostMapping("delete")
+    @ResponseBody
+    @ControllerHandler
+    public String delete(LongParam param){
+        resourceManager.delete(param.initBean());
+        return "删除资源成功";
     }
 
 }

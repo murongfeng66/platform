@@ -20,6 +20,7 @@ import com.jwzhu.platform.core.admin.param.AdminUpdateParam;
 import com.jwzhu.platform.core.permission.param.PermissionSaveParam;
 import com.jwzhu.platform.plugs.web.annotations.ControllerHandler;
 import com.jwzhu.platform.plugs.web.param.LongParam;
+import com.jwzhu.platform.plugs.web.permission.PermissionType;
 
 @RequestMapping("admin")
 @Controller
@@ -46,7 +47,7 @@ public class AdminController {
 
     @PostMapping("add")
     @ResponseBody
-    @ControllerHandler
+    @ControllerHandler(permissionType = PermissionType.SupperAdmin)
     public String add(AdminAddParam param) {
         adminManager.save(param.initBean());
         return "添加管理员成功";
@@ -69,7 +70,7 @@ public class AdminController {
 
     @GetMapping("getAddAdminType")
     @ResponseBody
-    @ControllerHandler
+    @ControllerHandler(permissionType = PermissionType.Only_Login)
     public Map<Short, String> getAddAdminType(){
         return adminManager.getAddAdminType();
     }
@@ -88,6 +89,30 @@ public class AdminController {
     public String removeAdminRole(AdminRoleSaveParam param){
         adminManager.removeAdminRole(param.initBean());
         return "取消角色成功";
+    }
+
+    @PostMapping("disable")
+    @ResponseBody
+    @ControllerHandler
+    public String disable(LongParam param){
+        adminManager.disable(param.initBean());
+        return "禁用管理员成功";
+    }
+
+    @PostMapping("enable")
+    @ResponseBody
+    @ControllerHandler
+    public String enable(LongParam param){
+        adminManager.enable(param.initBean());
+        return "启用管理员成功";
+    }
+
+    @PostMapping("delete")
+    @ResponseBody
+    @ControllerHandler
+    public String delete(LongParam param){
+        adminManager.delete(param.initBean());
+        return "删除管理员成功";
     }
 
 }

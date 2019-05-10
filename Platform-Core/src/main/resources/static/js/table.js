@@ -225,6 +225,10 @@ const TableCache = {};
         let $bottomButtonsHtml = document.createElement('span');
         $bottomButtonsHtml.classList.add('table-bottom-buttons');
         this.option.bottomButtons.forEach((button) => {
+            if(button.permission && typeof PermissionFilter !== 'undefined' && !PermissionFilter.check(button.permission)){
+                return;
+            }
+
             let $buttonHtml = document.createElement('span');
             $buttonHtml.classList.add('table-bottom-button');
             if (button.classNames) {
@@ -368,9 +372,13 @@ const TableCache = {};
                         if (columnItem.name === 'operate' && typeof this.option.rowOperate === 'function') {
                             let buttons = this.option.rowOperate.call(rowItem);
                             buttons.forEach((button, index) => {
+                                if(button.permission && typeof PermissionFilter !== 'undefined' && !PermissionFilter.check(button.permission)){
+                                    return;
+                                }
+
                                 this.operateButtons[rowIndex][index] = button;
 
-                                htmlString += '<span class="table-row-operate ' + button.classNames + '" data-buttonIndex="' + index + '">';
+                                htmlString += '<span class="table-row-operate ' + common.string.dealEmpty(button.classNames) + '" data-buttonIndex="' + index + '">';
                                 if (button.faClass) {
                                     htmlString += '<i class="fa ' + button.faClass + '"></i>';
                                 }

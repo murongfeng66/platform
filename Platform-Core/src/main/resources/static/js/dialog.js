@@ -37,7 +37,7 @@ const DialogCache = {};
         },
         close: function () {
             document.getElementById(this.dialogId).style.display = '';
-            if(this.option.destroyAfterClose === true){
+            if (this.option.destroyAfterClose === true) {
                 this.destroy();
             }
             return this;
@@ -51,7 +51,10 @@ const DialogCache = {};
         },
         hideTopButton: function (id) {
             if (id) {
-                document.getElementById(this.dialogTopId + '_button_' + id).style.display = 'none';
+                let $button = document.getElementById(this.dialogTopId + '_button_' + id);
+                if ($button) {
+                    $button.style.display = 'none';
+                }
             } else {
                 document.querySelectorAll('#' + this.dialogTopId + ' .button').forEach((_item) => {
                     _item.style.display = 'none';
@@ -60,14 +63,18 @@ const DialogCache = {};
             return this;
         },
         showTopButton: function (id) {
-            if (id) {
-                document.getElementById(this.dialogTopId + '_button_' + id).style.display = '';
+            let $button = document.getElementById(this.dialogTopId + '_button_' + id);
+            if ($button) {
+                $button.style.display = '';
             }
             return this;
         },
         hideBottomButton: function (id) {
             if (id) {
-                document.getElementById(this.dialogBottomId + '_button_' + id).style.display = 'none';
+                let $button = document.getElementById(this.dialogBottomId + '_button_' + id);
+                if ($button) {
+                    $button.style.display = 'none';
+                }
             } else {
                 document.querySelectorAll('#' + this.dialogBottomId + ' .button').forEach((_item) => {
                     _item.style.display = 'none';
@@ -87,9 +94,10 @@ const DialogCache = {};
             return this;
         },
         showBottomButton: function (id) {
-            if (id) {
+            let $button = document.getElementById(this.dialogBottomId + '_button_' + id);
+            if ($button) {
+                $button.style.display = '';
                 document.getElementById(this.dialogBottomId).style.display = 'block';
-                document.getElementById(this.dialogBottomId + '_button_' + id).style.display = '';
             }
             return this;
         },
@@ -182,6 +190,7 @@ const DialogCache = {};
         $dialogBottomHtml.classList.add('dialog-bottom');
         document.getElementById(this.dialogBodyId).appendChild($dialogBottomHtml);
 
+        let showButton = 0;
         this.option.bottomButtons.forEach((button) => {
             let $buttonHtml = document.createElement('button');
             $buttonHtml.id = this.dialogBottomId + '_button_' + button.id;
@@ -189,6 +198,11 @@ const DialogCache = {};
             $buttonHtml.classList.add('button', 'button-s');
             if (button.classNames) {
                 $buttonHtml.classList.add(button.classNames);
+            }
+
+            if (!(button.permission && typeof PermissionFilter !== 'undefined' && !PermissionFilter.check(button.permission))) {
+                showButton++;
+                $dialogBottomHtml.appendChild($buttonHtml);
             }
 
             $buttonHtml.onclick = () => {
@@ -199,9 +213,9 @@ const DialogCache = {};
                     this.close();
                 }
             };
-            $dialogBottomHtml.appendChild($buttonHtml);
         });
-        if (this.option.bottomButtons.length > 0) {
+
+        if (showButton > 0) {
             $dialogBottomHtml.style.display = 'block';
         }
     }

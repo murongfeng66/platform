@@ -8,9 +8,6 @@
 
     <link rel="stylesheet" href="/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/common.css">
-    <link rel="stylesheet" href="/css/form.css">
-    <link rel="stylesheet" href="/css/table.css">
-    <link rel="stylesheet" href="/css/dialog.css">
     <style>
         .permission {
             padding: 0.5rem 2rem;
@@ -38,7 +35,7 @@
 <form id="form_role_query" class="form margin-top-10">
     <div class="form-row">
         <div class="form-input-group">
-            <label class="form-label">编码：</label>
+            <label class="form-label">关键字：</label>
             <input name="key" class="form-input">
         </div>
         <div class="form-input-group">
@@ -51,7 +48,7 @@
         </div>
     </div>
 </form>
-<div id="table_role">
+<div id="table_role" data-table>
 </div>
 <div id="dialog_role" class="dialog">
     <div class="dialog-body">
@@ -82,96 +79,107 @@
 </div>
 </body>
 <script src="/js/common.js"></script>
-<script src="/js/form.js"></script>
-<script src="/js/table.js"></script>
-<script src="/js/request.js"></script>
-<script src="/js/dialog.js"></script>
 <script type="text/javascript">
     window.onload = function () {
         document.getElementById('form_role_query_roleStatus').initSelect('/availableStatus', true);
+        init();
     };
     const permissionType = {1: 'M', 2: 'P', 3: 'F'};
 
-    let dialogRole = Dialog.create({
-        dialogId: 'dialog_role',
-        bottomButtons: [{
-            id: 'save',
-            title: '保存',
-            classNames: 'float-right',
-            closeAfterClick: true,
-            onclick: function () {
-                updateRole();
-            }
-        }, {
-            id: 'submit',
-            title: '提交',
-            classNames: 'float-right',
-            closeAfterClick: true,
-            onclick: function () {
-                addRole();
-            }
-        }]
-    });
+    let dialogRole, dialogPermission, tableRole;
 
-    let dialogPermission = Dialog.create({
-        dialogId: 'dialog_permission',
-        title: '资源权限'
-    });
-
-    let tableRole = Table.init({
-        tableDivId: 'table_role',
-        queryFormId: 'form_role_query',
-        url: '/role/queryByParam',
-        column: [
-            {title: '编码', name: 'code'},
-            {title: '名称', name: 'name'},
-            {title: '状态', name: 'roleStatusText'}],
-        bottomButtons: [{
-            title: '添加',
-            faClass: 'fa-plus',
-            onclick: function () {
-                addRoleView();
-            }
-        }],
-        rowOperate: function () {
-            let operates = [];
-            operates.push({
-                title: '编辑',
-                classNames: '',
-                onclick: updateRoleView
+    function init() {
+        dialogRole = Dialog.create({
+            dialogId: 'dialog_role',
+            bottomButtons: [{
+                id: 'save',
+                title: '保存',
+                permission: '/role/updateById',
+                classNames: 'float-right',
+                closeAfterClick: true,
+                onclick: function () {
+                    updateRole();
+                }
             }, {
-                title: '权限',
-                classNames: '',
-                onclick: permissionView
-            });
-            if (this.roleStatus === 1) {
-                let id = this.id;
+                id: 'submit',
+                title: '提交',
+                permission: '/role/add',
+                classNames: 'float-right',
+                closeAfterClick: true,
+                onclick: function () {
+                    addRole();
+                }
+            }]
+        });
+
+        dialogPermission = Dialog.create({
+            dialogId: 'dialog_permission',
+            title: '资源权限'
+        });
+
+        tableRole = Table.init({
+            tableDivId: 'table_role',
+            queryFormId: 'form_role_query',
+            url: '/role/queryByParam',
+            column: [
+                {title: '编码', name: 'code'},
+                {title: '名称', name: 'name'},
+                {title: '状态', name: 'roleStatusText'},
+                {title: '添加时间', name: 'createTime'}],
+            bottomButtons: [{
+                id: 'add',
+                title: '添加',
+                permission: '/role/add',
+                faClass: 'fa-plus',
+                onclick: function () {
+                    addRoleView();
+                }
+            }],
+            rowOperate: function () {
+                let operates = [];
                 operates.push({
-                    title: '禁用',
-                    classNames: '',
-                    onclick: function () {
-                        common.confirmRequest(id, '/role/disable', 'table_role', '是否确认禁用该角色');
-                    }
-                });
-            } else if (this.roleStatus === -1) {
-                let id = this.id;
-                operates.push({
-                    title: '启用',
-                    classNames: '',
-                    onclick: function () {
-                        common.confirmRequest(id, '/role/enable', 'table_role', '是否确认启用该角色');
-                    }
+                    id: 'edit',
+                    title: '编辑',
+                    permission: '/role/updateById',
+                    onclick: updateRoleView
                 }, {
-                    title: '删除',
-                    classNames: '',
-                    onclick: function () {
-                        common.confirmRequest(id, '/role/delete', 'table_role', '是否确认删除该角色');
-                    }
+                    id: 'permission',
+                    title: '权限',
+                    permission: '/role/queryRoleResource',
+                    onclick: permissionView
                 });
+                if (this.roleStatus === 1) {
+                    let id = this.id;
+                    operates.push({
+                        id: 'disable',
+                        title: '禁用',
+                        permission: '/role/disable',
+                        onclick: function () {
+                            common.confirmRequest(id, '/role/disable', 'table_role', '是否确认禁用该角色');
+                        }
+                    });
+                } else if (this.roleStatus === -1) {
+                    let id = this.id;
+                    operates.push({
+                        id: 'enable',
+                        title: '启用',
+                        permission: '/role/enable',
+                        onclick: function () {
+                            common.confirmRequest(id, '/role/enable', 'table_role', '是否确认启用该角色');
+                        }
+                    }, {
+                        id: 'delete',
+                        title: '删除',
+                        permission: '/role/delete',
+                        onclick: function () {
+                            common.confirmRequest(id, '/role/delete', 'table_role', '是否确认删除该角色');
+                        }
+                    });
+                }
+                return operates;
             }
-            return operates;
-        }
-    });
+        });
+    }
 
     let addRoleView = function () {
         document.getElementById('form_role').reset();
@@ -205,16 +213,16 @@
 
     let permissionView = function () {
         document.getElementById('dialog_permission_roleCode').setValue(this.code);
-        Request.get('/resource/queryMyResource', {roleCode: this.code}).then(function (data) {
+        Request.get('/role/queryRoleResource', {roleCode: this.code}).then(function (data) {
             let htmlString = '';
             data.forEach(function (item) {
                 htmlString += '<div>';
-                htmlString+='<div class="permission" onclick="permissionClick()">';
-                htmlString+='<span class="permission-name">' + item.name + '</span>';
-                htmlString+='<input data-content="' + common.string.dealEmpty(permissionType[item.type]) + '" data-resourceCode="' + item.code + '" type="checkbox" class="switch margin-auto margin-right-no" ' + (item.have ? 'checked' : '') + ' onchange="permissionChange()">';
-                htmlString+='</div>';
-                htmlString+='<div class="permission-children">' + getChildrenHtmlString(item.children) + '</div>';
-                htmlString+='</div>';
+                htmlString += '<div class="permission" onclick="permissionClick()">';
+                htmlString += '<span class="permission-name">' + item.name + '</span>';
+                htmlString += '<input data-content="' + common.string.dealEmpty(permissionType[item.type]) + '" data-resourceCode="' + item.code + '" type="checkbox" class="switch margin-auto margin-right-no" ' + (item.have ? 'checked' : '') + ' onchange="permissionChange()">';
+                htmlString += '</div>';
+                htmlString += '<div class="permission-children">' + getChildrenHtmlString(item.children) + '</div>';
+                htmlString += '</div>';
             });
             document.getElementById('permission').innerHTML = htmlString;
             dialogPermission.open();
@@ -229,12 +237,12 @@
 
         children.forEach(function (item) {
             htmlString += '<div>';
-            htmlString+='<div class="permission" onclick="permissionClick()">';
-            htmlString+='<span class="permission-name">' + item.name + '</span>';
-            htmlString+='<input data-content="' + common.string.dealEmpty(permissionType[item.type]) + '" data-resourceCode="' + item.code + '" type="checkbox" class="switch margin-auto margin-right-no" ' + (item.have ? 'checked' : '') + ' onchange="permissionChange()">';
-            htmlString+='</div>';
-            htmlString+='<div class="permission-children">' + getChildrenHtmlString(item.children) + '</div>';
-            htmlString+='</div>';
+            htmlString += '<div class="permission" onclick="permissionClick()">';
+            htmlString += '<span class="permission-name">' + item.name + '</span>';
+            htmlString += '<input data-content="' + common.string.dealEmpty(permissionType[item.type]) + '" data-resourceCode="' + item.code + '" type="checkbox" class="switch margin-auto margin-right-no" ' + (item.have ? 'checked' : '') + ' onchange="permissionChange()">';
+            htmlString += '</div>';
+            htmlString += '<div class="permission-children">' + getChildrenHtmlString(item.children) + '</div>';
+            htmlString += '</div>';
         });
         return htmlString;
     };
@@ -258,10 +266,14 @@
         let roleCode = document.getElementById('dialog_permission_roleCode').value;
         let resourceCode = $target.getAttribute('data-resourceCode');
         let url = '/role/removePermission';
-        if($target.checked){
+        if ($target.checked) {
             url = '/role/addPermission';
         }
-        Request.post(url, {roleCode: roleCode, resourceCode: resourceCode}, false, false);
+        Request.post(url, {roleCode: roleCode, resourceCode: resourceCode}, true, false).then(data => {
+            if (data.code !== 1) {
+                $target.checked = !$target.checked;
+            }
+        });
     };
 
 </script>

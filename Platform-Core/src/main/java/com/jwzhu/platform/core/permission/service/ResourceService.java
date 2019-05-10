@@ -11,12 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.jwzhu.platform.common.bean.LongBean;
+import com.jwzhu.platform.common.bean.UpdateStatusBean;
 import com.jwzhu.platform.common.enums.AvailableStatus;
 import com.jwzhu.platform.common.enums.YesOrNo;
 import com.jwzhu.platform.common.exception.BusinessException;
-import com.jwzhu.platform.core.admin.model.AdminType;
-import com.jwzhu.platform.core.permission.bean.GetMyResourceBean;
-import com.jwzhu.platform.core.permission.bean.PermissionSaveBean;
+import com.jwzhu.platform.common.enums.AdminType;
+import com.jwzhu.platform.core.permission.bean.GetRoleResourceBean;
 import com.jwzhu.platform.core.permission.bean.QueryMenuBean;
 import com.jwzhu.platform.core.permission.bean.ResourceBean;
 import com.jwzhu.platform.core.permission.bean.ResourceListBean;
@@ -35,12 +36,14 @@ public class ResourceService {
     private ResourceDao resourceDao;
 
     public void insert(ResourceBean bean) {
-        Resource resource = resourceDao.getByCode(bean.getCode());
-        if (resource != null) {
+        if (resourceDao.getByCode(bean.getCode()) != null) {
             throw new BusinessException("存在相同的资源编号");
         }
+        if (!StringUtils.isEmpty(bean.getUrl()) && resourceDao.getByUrl(bean.getUrl()) != null) {
+            throw new BusinessException("存在相同的资源URL");
+        }
         bean.setCreateTime(bean.getCreateTime() == null ? RequestBaseParam.getRequestTime() : bean.getCreateTime());
-        bean.setAvailableStatus(bean.getAvailableStatus() == null ? AvailableStatus.Enable.getCode() : bean.getAvailableStatus());
+        bean.setResourceStatus(bean.getResourceStatus() == null ? AvailableStatus.Enable.getCode() : bean.getResourceStatus());
         bean.setMenuShow(bean.getMenuShow() == null ? YesOrNo.No.getCode() : bean.getMenuShow());
         bean.setSort(bean.getSort() == null ? 10 : bean.getSort());
         resourceDao.insert(bean);
@@ -56,7 +59,7 @@ public class ResourceService {
             bean.setSelfId(RequestBaseParam.getRequestUser().getId());
         }
         bean.setMenuShow(YesOrNo.Yes.getCode());
-        bean.setAvailableStatus(AvailableStatus.Enable.getCode());
+        bean.setResourceStatus(AvailableStatus.Enable.getCode());
         bean.setTypes(ResourceType.Menu.getCode(), ResourceType.Page.getCode());
         List<Menu> resources = resourceDao.queryMenu(bean);
         Map<String, Menu> resourceMap = new LinkedHashMap<>();
@@ -97,12 +100,13 @@ public class ResourceService {
         return new ArrayList<>();
     }
 
-    public List<ResourcePermission> queryMyResource(GetMyResourceBean bean) {
+    public List<ResourcePermission> queryRoleResource(GetRoleResourceBean bean) {
         if (RequestBaseParam.getRequestUser().getType() != AdminType.Super.getCode()) {
             bean.setSelfId(RequestBaseParam.getRequestUser().getId());
         }
-        bean.setResourceStatus(AvailableStatus.Enable.getCode());
-        List<ResourcePermission> list = resourceDao.queryMyResource(bean);
+        bean.setEnableStatusCode(AvailableStatus.Enable.getCode());
+
+        List<ResourcePermission> list = resourceDao.queryRoleResource(bean);
         Map<String, ResourcePermission> map = list.stream().collect(Collectors.toMap(ResourcePermission::getCode, a -> a, (k1, k2) -> k2));
 
         List<String> roleResource = resourceDao.queryAllResourceByRoleCode(bean.getRoleCode());
@@ -122,5 +126,45 @@ public class ResourceService {
             }
         }
         return result;
+    }
+
+    public List<String> queryMyResourceUrl(){
+        GetRoleResourceBean bean = new GetRoleResourceBean();
+        if (RequestBaseParam.getRequestUser().getType() != AdminType.Super.getCode()) {
+            bean.setSelfId(RequestBaseParam.getRequestUser().getId());
+        }
+        bean.setEnableStatusCode(AvailableStatus.Enable.getCode());
+        return resourceDao.queryMyResourceUrl(bean);
+    }
+
+    private void updateStatus(UpdateStatusBean bean, String errorMessage){
+        bean.setUpdateTime(bean.getUpdateTime() == null ? RequestBaseParam.getRequestTime() : bean.getUpdateTime());
+        if(resourceDao.updateStatus(bean) == 0){
+            throw new BusinessException(errorMessage);
+        }
+    }
+
+    public void disable(LongBean bean){
+        UpdateStatusBean statusBean = new UpdateStatusBean();
+        statusBean.setId(bean.getId());
+        statusBean.setOldStatus(AvailableStatus.Enable.getCode());
+        statusBean.setNewStatus(AvailableStatus.Disable.getCode());
+        updateStatus(statusBean, "禁用资源失败");
+    }
+
+    public void enable(LongBean bean){
+        UpdateStatusBean statusBean = new UpdateStatusBean();
+        statusBean.setId(bean.getId());
+        statusBean.setOldStatus(AvailableStatus.Disable.getCode());
+        statusBean.setNewStatus(AvailableStatus.Enable.getCode());
+        updateStatus(statusBean, "启用资源失败");
+    }
+
+    public void delete(LongBean bean){
+        UpdateStatusBean statusBean = new UpdateStatusBean();
+        statusBean.setId(bean.getId());
+        statusBean.setOldStatus(AvailableStatus.Disable.getCode());
+        statusBean.setNewStatus(AvailableStatus.Delete.getCode());
+        updateStatus(statusBean, "删除资源失败");
     }
 }

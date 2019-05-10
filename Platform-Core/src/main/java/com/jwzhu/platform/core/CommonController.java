@@ -17,6 +17,7 @@ import com.jwzhu.platform.core.admin.manager.LoginManager;
 import com.jwzhu.platform.core.permission.manager.ResourceManager;
 import com.jwzhu.platform.core.permission.model.Menu;
 import com.jwzhu.platform.plugs.web.annotations.ControllerHandler;
+import com.jwzhu.platform.plugs.web.permission.PermissionType;
 import com.jwzhu.platform.plugs.web.request.RequestBaseParam;
 
 @Controller
@@ -29,7 +30,7 @@ public class CommonController {
     @Autowired
     private LoginManager userManager;
 
-    @ControllerHandler(needToken = false)
+    @ControllerHandler(needToken = false, permissionType = PermissionType.No)
     @GetMapping({"", "login"})
     public ModelAndView login(ModelAndView view) {
         view.setViewName("login/login");
@@ -37,7 +38,7 @@ public class CommonController {
         return view;
     }
 
-    @ControllerHandler
+    @ControllerHandler(permissionType = PermissionType.Only_Login)
     @RequestMapping("main")
     public ModelAndView main(ModelAndView view) {
         view.setViewName("main");
@@ -48,21 +49,21 @@ public class CommonController {
 
     @GetMapping("queryMenu")
     @ResponseBody
-    @ControllerHandler
+    @ControllerHandler(permissionType = PermissionType.Only_Login)
     public List<Menu> queryMenu(){
         return resourceManager.queryMenu();
     }
 
     @GetMapping("yesOrNo")
     @ResponseBody
-    @ControllerHandler
+    @ControllerHandler(permissionType = PermissionType.Only_Login)
     public Map<Short, String> yesOrNo(){
         return YesOrNo.map;
     }
 
     @GetMapping("availableStatus")
     @ResponseBody
-    @ControllerHandler
+    @ControllerHandler(permissionType = PermissionType.Only_Login)
     public Map<Short, String> availableStatus(){
         return AvailableStatus.map;
     }

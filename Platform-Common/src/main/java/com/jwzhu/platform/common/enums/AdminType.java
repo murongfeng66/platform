@@ -1,4 +1,4 @@
-package com.jwzhu.platform.core.admin.model;
+package com.jwzhu.platform.common.enums;
 
 import java.util.HashMap;
 import java.util.Map;

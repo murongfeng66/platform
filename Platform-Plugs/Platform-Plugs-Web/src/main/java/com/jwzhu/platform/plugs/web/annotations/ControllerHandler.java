@@ -5,6 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.jwzhu.platform.plugs.web.permission.PermissionType;
+
 /**
  * 接口切面<br/>
  * 请求信息打印<br/>
@@ -16,6 +18,7 @@ import java.lang.annotation.Target;
  * 打印响应，默认：false<br/>
  * Token必需，默认：true<br/>
  * Token清除，默认：false<br/>
+ * 权限类型，默认：{@link PermissionType#HavePermission}<br/>
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
@@ -45,5 +48,10 @@ public @interface ControllerHandler {
      * Token清除
      */
     boolean clearToken() default false;
+
+    /**
+     * 权限类型
+     */
+    PermissionType permissionType() default PermissionType.HavePermission;
 
 }

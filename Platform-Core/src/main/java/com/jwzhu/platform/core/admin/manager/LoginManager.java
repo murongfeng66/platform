@@ -10,6 +10,8 @@ import com.jwzhu.platform.core.admin.model.Admin;
 import com.jwzhu.platform.core.admin.model.Login;
 import com.jwzhu.platform.core.admin.service.AdminService;
 import com.jwzhu.platform.core.admin.service.LoginService;
+import com.jwzhu.platform.plugs.cache.base.CacheUtil;
+import com.jwzhu.platform.plugs.web.request.RequestBaseParam;
 import com.jwzhu.platform.plugs.web.token.TokenService;
 import com.jwzhu.platform.plugs.web.token.TokenSubject;
 
@@ -21,8 +23,10 @@ public class LoginManager {
     private AdminService adminService;
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private CacheUtil cacheUtil;
 
-    public String login(LoginBean bean) {
+    public void login(LoginBean bean) {
         Login login = loginService.getByUsername(bean.getUsername());
         if (login == null) {
             throw new BusinessException("用户名或密码错误");
@@ -38,7 +42,13 @@ public class LoginManager {
         TokenSubject subject = new TokenSubject();
         subject.setId(admin.getId());
         subject.setType(admin.getAdminType());
-        return tokenService.createToken(subject);
+        String token = tokenService.createToken(subject);
+
+        RequestBaseParam.setRequestUser(subject);
+        RequestBaseParam.setRefreshToken(token);
+
+        String cacheKey = "AdminPermission:" + admin.getId();
+        cacheUtil.delete(cacheKey);
     }
 
     public Admin getById(long id) {

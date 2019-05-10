@@ -69,7 +69,11 @@ const Request = {};
                                         resolve(returnAll === true ? data : data.data);
                                     } else {
                                         Toast.error(data.message);
+                                        if(returnAll === true){
+                                            resolve(data);
+                                        }
                                     }
+
                                     if (data.redirect) {
                                         window.location.href = data.redirect;
                                     }

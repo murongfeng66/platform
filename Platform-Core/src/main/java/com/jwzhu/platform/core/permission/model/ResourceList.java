@@ -16,7 +16,7 @@ public class ResourceList {
     @ShortEscape(YesOrNoEscaper.class)
     private Short menuShow;
     @ShortEscape(AvailableStatusEscaper.class)
-    private Short availableStatus;
+    private Short resourceStatus;
 
     public Long getId() {
         return id;
@@ -74,11 +74,11 @@ public class ResourceList {
         this.menuShow = menuShow;
     }
 
-    public Short getAvailableStatus() {
-        return availableStatus;
+    public Short getResourceStatus() {
+        return resourceStatus;
     }
 
-    public void setAvailableStatus(Short availableStatus) {
-        this.availableStatus = availableStatus;
+    public void setResourceStatus(Short resourceStatus) {
+        this.resourceStatus = resourceStatus;
     }
 }

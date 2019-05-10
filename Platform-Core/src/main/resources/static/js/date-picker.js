@@ -3,7 +3,6 @@ function DatePicker(){}
 (() => {
     DatePicker.init = function(){
         document.querySelectorAll('input.date-picker').forEach(function ($input) {
-            let dateFormat = $input.getAttribute('data-date-format');
             let id = $input.getAttribute('id');
             id = id || $input.getAttribute('name');
             id += '_date_picker';

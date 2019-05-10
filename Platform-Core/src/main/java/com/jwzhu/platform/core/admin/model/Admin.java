@@ -2,6 +2,7 @@ package com.jwzhu.platform.core.admin.model;
 
 import java.time.LocalDateTime;
 
+import com.jwzhu.platform.common.enums.AdminTypeEscaper;
 import com.jwzhu.platform.common.enums.AvailableStatusEscaper;
 import com.jwzhu.platform.plugs.jsonEscape.bind.ShortEscape;
 

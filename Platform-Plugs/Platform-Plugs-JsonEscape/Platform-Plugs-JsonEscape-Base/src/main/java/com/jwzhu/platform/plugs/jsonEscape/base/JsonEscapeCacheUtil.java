@@ -26,7 +26,7 @@ public class JsonEscapeCacheUtil {
     }
 
     public void delete(Class<? extends JsonEscapeInterface> clazz, Object key){
-        cacheUtil.hDel(getHashName(clazz), key.toString());
+        cacheUtil.hDelete(getHashName(clazz), key.toString());
     }
 
 }

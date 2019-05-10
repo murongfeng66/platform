@@ -24,7 +24,7 @@ public class LoginService {
             throw new BusinessException("账号已存在");
         }
         bean.setCreateTime(bean.getCreateTime() == null ? LocalDateTime.now() : bean.getCreateTime());
-        bean.setStatus(bean.getStatus() == null ? AvailableStatus.Enable.getCode() : bean.getStatus());
+        bean.setLoginStatus(bean.getLoginStatus() == null ? AvailableStatus.Enable.getCode() : bean.getLoginStatus());
         bean.setPassword(bean.getPassword() == null ? "123456" : bean.getPassword());
         bean.setSalt(createSalt());
         bean.setPassword(encryptPassword(bean.getPassword(), bean.getSalt()));

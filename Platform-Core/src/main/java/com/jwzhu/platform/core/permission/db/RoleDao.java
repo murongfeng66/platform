@@ -35,7 +35,7 @@ public interface RoleDao {
 
     int deleteRoleResource(PermissionSaveBean bean);
 
-    List<AdminRole> getMyRole(GetMyRoleBean bean);
+    List<AdminRole> getAdminRole(GetMyRoleBean bean);
 
     List<String> getAllRoleByAdminId(long adminId);
 }

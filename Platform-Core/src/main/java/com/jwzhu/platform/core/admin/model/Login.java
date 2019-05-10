@@ -10,7 +10,7 @@ public class Login {
     private Long userId;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
-    private Short status;
+    private Short loginStatus;
     private String salt;
 
     public String getSalt() {
@@ -21,12 +21,12 @@ public class Login {
         this.salt = salt;
     }
 
-    public Short getStatus() {
-        return status;
+    public Short getLoginStatus() {
+        return loginStatus;
     }
 
-    public void setStatus(Short status) {
-        this.status = status;
+    public void setLoginStatus(Short loginStatus) {
+        this.loginStatus = loginStatus;
     }
 
     public Long getId() {

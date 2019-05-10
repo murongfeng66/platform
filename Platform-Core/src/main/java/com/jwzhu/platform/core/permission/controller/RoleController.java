@@ -11,9 +11,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jwzhu.platform.core.permission.bean.RoleListBean;
+import com.jwzhu.platform.core.permission.manager.ResourceManager;
 import com.jwzhu.platform.core.permission.manager.RoleManager;
 import com.jwzhu.platform.core.permission.model.AdminRole;
+import com.jwzhu.platform.core.permission.model.ResourcePermission;
 import com.jwzhu.platform.core.permission.model.Role;
+import com.jwzhu.platform.core.permission.param.GetRoleResourceParam;
 import com.jwzhu.platform.core.permission.param.GetMyRoleParam;
 import com.jwzhu.platform.core.permission.param.PermissionSaveParam;
 import com.jwzhu.platform.core.permission.param.RoleAddParam;
@@ -28,6 +31,8 @@ public class RoleController {
 
     @Autowired
     private RoleManager roleManager;
+    @Autowired
+    private ResourceManager resourceManager;
 
     @ControllerHandler
     @RequestMapping({"page"})
@@ -108,11 +113,18 @@ public class RoleController {
         return "取消授权成功";
     }
 
-    @GetMapping("getMyRole")
+    @GetMapping("getAdminRole")
     @ResponseBody
     @ControllerHandler
-    public List<AdminRole> getMyRole(GetMyRoleParam param){
-        return roleManager.getMyRole(param.initBean());
+    public List<AdminRole> getAdminRole(GetMyRoleParam param){
+        return roleManager.getAdminRole(param.initBean());
+    }
+
+    @GetMapping("queryRoleResource")
+    @ResponseBody
+    @ControllerHandler
+    public List<ResourcePermission> queryRoleResource(GetRoleResourceParam param){
+        return resourceManager.queryRoleResource(param.initBean());
     }
 
 }

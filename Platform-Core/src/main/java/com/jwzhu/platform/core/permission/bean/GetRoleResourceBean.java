@@ -2,11 +2,11 @@ package com.jwzhu.platform.core.permission.bean;
 
 import com.jwzhu.platform.common.bean.BaseBean;
 
-public class GetMyResourceBean extends BaseBean {
+public class GetRoleResourceBean extends BaseBean {
 
     private Long selfId;
     private String roleCode;
-    private Short[] resourceStatus;
+    private Short enableStatusCode;
 
     public Long getSelfId() {
         return selfId;
@@ -24,11 +24,11 @@ public class GetMyResourceBean extends BaseBean {
         this.roleCode = roleCode;
     }
 
-    public Short[] getResourceStatus() {
-        return resourceStatus;
+    public Short getEnableStatusCode() {
+        return enableStatusCode;
     }
 
-    public void setResourceStatus(Short... resourceStatus) {
-        this.resourceStatus = resourceStatus;
+    public void setEnableStatusCode(Short enableStatusCode) {
+        this.enableStatusCode = enableStatusCode;
     }
 }

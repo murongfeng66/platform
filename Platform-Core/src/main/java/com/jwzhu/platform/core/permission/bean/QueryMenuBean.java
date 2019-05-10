@@ -6,7 +6,7 @@ public class QueryMenuBean extends BaseBean {
 
     private Long selfId;
     private Short menuShow;
-    private Short availableStatus;
+    private Short resourceStatus;
     private Short[] types;
 
     public Long getSelfId() {
@@ -25,12 +25,12 @@ public class QueryMenuBean extends BaseBean {
         this.menuShow = menuShow;
     }
 
-    public Short getAvailableStatus() {
-        return availableStatus;
+    public Short getResourceStatus() {
+        return resourceStatus;
     }
 
-    public void setAvailableStatus(Short availableStatus) {
-        this.availableStatus = availableStatus;
+    public void setResourceStatus(Short resourceStatus) {
+        this.resourceStatus = resourceStatus;
     }
 
     public Short[] getTypes() {

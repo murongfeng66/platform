@@ -14,7 +14,7 @@ public class ResourceBean extends BaseBean {
     private Integer sort;
     private Short type;
     private Short menuShow;
-    private Short availableStatus;
+    private Short resourceStatus;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 
@@ -82,12 +82,12 @@ public class ResourceBean extends BaseBean {
         this.menuShow = menuShow;
     }
 
-    public Short getAvailableStatus() {
-        return availableStatus;
+    public Short getResourceStatus() {
+        return resourceStatus;
     }
 
-    public void setAvailableStatus(Short availableStatus) {
-        this.availableStatus = availableStatus;
+    public void setResourceStatus(Short resourceStatus) {
+        this.resourceStatus = resourceStatus;
     }
 
     public LocalDateTime getCreateTime() {

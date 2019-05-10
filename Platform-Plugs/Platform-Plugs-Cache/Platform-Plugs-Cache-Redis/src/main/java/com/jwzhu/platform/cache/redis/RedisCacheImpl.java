@@ -1,10 +1,10 @@
 package com.jwzhu.platform.cache.redis;
 
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundHashOperations;
-import org.springframework.data.redis.core.BoundValueOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -19,27 +19,23 @@ public class RedisCacheImpl implements CacheUtil {
 
     @Override
     public void set(String key, Object value) {
-        BoundValueOperations<String, String> operations = stringRedisTemplate.boundValueOps(key);
-        operations.set(JSON.toJSONString(value));
+        stringRedisTemplate.boundValueOps(key).set(JSON.toJSONString(value));
     }
 
     @Override
     public void set(String key, Object value, long expiredTimeMill) {
-        BoundValueOperations<String, String> operations = stringRedisTemplate.boundValueOps(key);
-        operations.set(JSON.toJSONString(value), expiredTimeMill, TimeUnit.MILLISECONDS);
+        stringRedisTemplate.boundValueOps(key).set(JSON.toJSONString(value), expiredTimeMill, TimeUnit.MILLISECONDS);
     }
 
     @Override
     public <T> T get(String key, Class<T> clazz) {
-        BoundValueOperations<String, String> operations = stringRedisTemplate.boundValueOps(key);
-        String value = operations.get();
+        String value = stringRedisTemplate.boundValueOps(key).get();
         return getClassObject(value, clazz);
     }
 
     @Override
     public String get(String key) {
-        BoundValueOperations<String, String> operations = stringRedisTemplate.boundValueOps(key);
-        return operations.get();
+        return stringRedisTemplate.boundValueOps(key).get();
     }
 
     @Override
@@ -48,9 +44,18 @@ public class RedisCacheImpl implements CacheUtil {
     }
 
     @Override
+    public void expired(String key, long expiredTimeMill) {
+        stringRedisTemplate.expire(key, expiredTimeMill, TimeUnit.MILLISECONDS);
+    }
+
+    @Override
+    public boolean exist(String key) {
+        return returnBoolean(stringRedisTemplate.hasKey(key));
+    }
+
+    @Override
     public void hSet(String hashName, String hashKey, Object value) {
-        BoundHashOperations<String, String, String> operations = stringRedisTemplate.boundHashOps(hashName);
-        operations.put(hashKey, JSON.toJSONString(value));
+        stringRedisTemplate.boundHashOps(hashName).put(hashKey, JSON.toJSONString(value));
     }
 
     @Override
@@ -61,8 +66,27 @@ public class RedisCacheImpl implements CacheUtil {
     }
 
     @Override
-    public void hDel(String hashName, String hashKey) {
-        BoundHashOperations<String, String, String> operations = stringRedisTemplate.boundHashOps(hashName);
-        operations.delete(hashKey);
+    public void hDelete(String hashName, String hashKey) {
+        stringRedisTemplate.boundHashOps(hashName).delete(hashKey);
+    }
+
+    @Override
+    public void sAdd(String key, String... value) {
+        stringRedisTemplate.boundSetOps(key).add(value);
+    }
+
+    @Override
+    public void sRemove(String key, Object... value) {
+        stringRedisTemplate.boundSetOps(key).remove(value);
+    }
+
+    @Override
+    public boolean sExists(String key, Object value) {
+        return returnBoolean(stringRedisTemplate.boundSetOps(key).isMember(value));
+    }
+
+    @Override
+    public Set<String> sMembers(String key) {
+        return stringRedisTemplate.boundSetOps(key).members();
     }
 }

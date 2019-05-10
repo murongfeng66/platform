@@ -28,6 +28,9 @@
         </set>
         where id = #{id}
     </update>
+    <update id="updateStatus">
+        update Admin set adminStatus = #{newStatus}, updateTime = #{updateTime} where id = #{id} and adminStatus = #{oldStatus}
+    </update>
     <delete id="deleteAdminRole">
         delete from AdminRole
         where adminId = #{adminId} and roleCode = #{roleCode}
@@ -43,7 +46,7 @@
         <where>
             <trim suffixOverrides="and">
                 <if test="key != null">
-                    nickname like concat(#{key}, '%') and
+                    nickname like concat('%', #{key}, '%') and
                 </if>
                 <if test="adminStatus != null">
                     adminStatus = #{adminStatus} and

@@ -9,8 +9,8 @@ import com.jwzhu.platform.common.bean.LongBean;
 import com.jwzhu.platform.common.bean.UpdateStatusBean;
 import com.jwzhu.platform.common.enums.AvailableStatus;
 import com.jwzhu.platform.common.exception.BusinessException;
-import com.jwzhu.platform.core.admin.model.AdminType;
-import com.jwzhu.platform.core.permission.bean.GetMyResourceBean;
+import com.jwzhu.platform.common.enums.AdminType;
+import com.jwzhu.platform.common.exception.NoPermissionException;
 import com.jwzhu.platform.core.permission.bean.GetMyRoleBean;
 import com.jwzhu.platform.core.permission.bean.PermissionSaveBean;
 import com.jwzhu.platform.core.permission.bean.RoleBean;
@@ -84,22 +84,28 @@ public class RoleService {
     }
 
     public void addPermission(PermissionSaveBean bean) {
-        bean.setCreateTime(bean.getCreateTime() == null ? RequestBaseParam.getRequestTime() : bean.getCreateTime());
         roleDao.deleteRoleResource(bean);
+        bean.setCreateTime(bean.getCreateTime() == null ? RequestBaseParam.getRequestTime() : bean.getCreateTime());
         roleDao.insertRoleResource(bean);
     }
 
     public void removePermission(PermissionSaveBean bean) {
+        if(RequestBaseParam.getRequestUser().getType() != AdminType.Super.getCode()){
+            List<String> adminRoleCode = roleDao.getAllRoleByAdminId(RequestBaseParam.getRequestUser().getId());
+            if(adminRoleCode.contains(bean.getRoleCode())){
+                throw new NoPermissionException("不允许修改自己角色的权限");
+            }
+        }
         roleDao.deleteRoleResource(bean);
     }
 
-    public List<AdminRole> getMyRole(GetMyRoleBean bean) {
+    public List<AdminRole> getAdminRole(GetMyRoleBean bean) {
         if(RequestBaseParam.getRequestUser().getType() != AdminType.Super.getCode()){
             bean.setSelfId(RequestBaseParam.getRequestUser().getId());
         }
 
         bean.setRoleStatus(AvailableStatus.Enable.getCode());
-        List<AdminRole> roles = roleDao.getMyRole(bean);
+        List<AdminRole> roles = roleDao.getAdminRole(bean);
         List<String> adminRoleCode = roleDao.getAllRoleByAdminId(bean.getAdminId());
         for (AdminRole role : roles) {
             role.setHave(adminRoleCode.contains(role.getCode()));

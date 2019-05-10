@@ -1,9 +1,6 @@
 package com.jwzhu.platform.plugs.web.aspect;
 
-import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -21,12 +18,12 @@ import org.springframework.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jwzhu.platform.common.exception.SystemException;
 import com.jwzhu.platform.plugs.web.annotations.ControllerHandler;
 import com.jwzhu.platform.plugs.web.exception.JsonException;
 import com.jwzhu.platform.plugs.web.exception.PageException;
 import com.jwzhu.platform.plugs.web.exception.token.TokenEmptyException;
 import com.jwzhu.platform.plugs.web.param.BaseParam;
+import com.jwzhu.platform.plugs.web.permission.PermissionService;
 import com.jwzhu.platform.plugs.web.request.RequestBaseParam;
 import com.jwzhu.platform.plugs.web.request.RequestType;
 import com.jwzhu.platform.plugs.web.request.RequestUtil;
@@ -43,6 +40,8 @@ public class ControllerAspect {
     private ObjectMapper objectMapper;
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private PermissionService permissionService;
 
     @Pointcut(value = "@annotation(controllerHandler)")
     public void pointCut(ControllerHandler controllerHandler) {
@@ -57,6 +56,17 @@ public class ControllerAspect {
         }
         logger.info("请求接口：{}.{}", joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName());
 
+        if (controllerHandler.needToken()) {
+            String token = getToken(controllerHandler);
+            if (StringUtils.isEmpty(token)) {
+                throw new TokenEmptyException();
+            }
+            logger.debug("取出Token：{}", token);
+            analyzeToken(token);
+        }
+
+        controllerHandler.permissionType().check();
+
         RequestBaseParam.initRequestId();
         RequestBaseParam.initRequestTime();
 
@@ -68,15 +78,6 @@ public class ControllerAspect {
                     param.valid(controllerHandler.validGroups());
                 }
             }
-        }
-
-        if (controllerHandler.needToken()) {
-            String token = getToken(controllerHandler);
-            if (StringUtils.isEmpty(token)) {
-                throw new TokenEmptyException();
-            }
-            logger.debug("取出Token：{}", token);
-            analyzeToken(token);
         }
     }
 

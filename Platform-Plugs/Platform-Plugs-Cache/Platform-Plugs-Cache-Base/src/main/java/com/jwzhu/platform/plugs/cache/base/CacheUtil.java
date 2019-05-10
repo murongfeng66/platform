@@ -1,5 +1,7 @@
 package com.jwzhu.platform.plugs.cache.base;
 
+import java.util.Set;
+
 import com.alibaba.fastjson.JSON;
 
 public interface CacheUtil {
@@ -14,6 +16,10 @@ public interface CacheUtil {
 
     void delete(String key);
 
+    void expired(String key, long expiredTimeMill);
+
+    boolean exist(String key);
+
     void hSet(String hashName, String hashKey, Object value);
 
     <T> T hGet(String hashName, String hashKey, Class<T> clazz);
@@ -25,10 +31,17 @@ public interface CacheUtil {
         return JSON.parseObject(value, clazz);
     }
 
-    void hDel(String hashName, String hashKey);
+    void hDelete(String hashName, String hashKey);
 
-    default String getJsonEscapeCacheHashName(Class<?> clazz) {
-        return "JsonEscapeCache:" + clazz.getSimpleName();
+    void sAdd(String key, String... value);
+
+    void sRemove(String key, Object... value);
+
+    boolean sExists(String key, Object value);
+
+    Set<String> sMembers(String key);
+
+    default boolean returnBoolean(Boolean result){
+        return result == null ? false : result;
     }
-
 }
