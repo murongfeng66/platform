@@ -1,0 +1,108 @@
+.dialog{
+    display: none;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background-color: #000000ad;
+    top: 0;
+}
+
+.dialog-body{
+    min-width: 25%;
+    margin: 0 auto;
+}
+
+.dialog-top{
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 0.5rem 1rem;
+    height: 1.5rem;
+    text-align: left;
+    display: flex;
+    position: relative;
+    border-bottom: 1px solid #bbbbbb;
+}
+
+.dialog-top-title{
+    margin: auto 0;
+}
+
+.dialog-top-buttons{
+    width: 100%;
+    position: absolute;
+    left: 0;
+    pointer-events: none;
+    height: 1.5rem;
+    color: #2196F3;
+    text-align: center;
+    line-height: 1.25rem;
+}
+
+.dialog-top-buttons-item{
+    pointer-events: all;
+    padding: 0.125rem 0.5rem;
+    font-size: 0.5rem;
+    background: none;
+    border: 1px solid #bbbbbb;
+    border-radius: 0.25rem;
+    margin: auto 0;
+    cursor: pointer;
+}
+
+.dialog-top .close {
+    color: #7c7c7c;
+    font-size: 1.5rem;
+    margin: auto 0 auto auto;
+    cursor: pointer;
+}
+
+.dialog-top .close:hover {
+    color: #c60000;
+}
+
+.dialog-content{
+    background-color: #ffffff;
+    margin: 0 auto;
+    padding: 0.5rem 1rem;
+}
+
+.dialog-content *{
+    min-width: auto;
+}
+
+.dialog-bottom{
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 0.5rem 1rem;
+    display: none;
+    text-align: center;
+    height: 2rem;
+    border-top: 1px solid #bbbbbb;
+}
+
+.dialog-bottom-button{
+    padding: 0.25rem 0.5rem;
+    font-size: 1rem;
+    background: none;
+    border: 1px solid #bbbbbb;
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+.dialog-confirm-cancel{
+    width: 50%;
+    height: 100%;
+    border: none;
+    border-right: 1px solid #757575;
+    border-radius: 0;
+}
+
+.dialog-confirm-ok{
+    width: 50%;
+    border: none;
+    border-radius: 0;
+}
+
+.dialog-confirm{
+    color: #f5dc00;
+}

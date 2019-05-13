@@ -1,0 +1,41 @@
+.form {
+    margin: 0.5rem;
+    color: #252a2f;
+}
+
+.form-row {
+    padding: 0.25rem 0;
+    display: flex;
+}
+
+.form-input-group {
+    display: flex;
+    width: 25%;
+    height: 2rem;
+}
+
+.form-input-group.input-x{
+    height: 2.5rem;
+}
+
+.form-input-group .button{
+    margin: 0 0 0 auto;
+}
+
+.form-label {
+    text-align: right;
+    padding: 0.25rem 0 0.25rem 0.5rem;
+    flex: 1;
+    margin: auto;
+}
+
+.form-input {
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #757575;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+    flex: 2;
+    color: #252a2f;
+    appearance: none;
+    -webkit-appearance: none;
+}

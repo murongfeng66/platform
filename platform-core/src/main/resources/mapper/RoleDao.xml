@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jwzhu.platform.core.permission.db.RoleDao">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into Role (`code`, `name`, createTime, roleStatus) values (#{code}, #{name}, #{createTime}, #{roleStatus})
+    </insert>
+    <insert id="insertRoleResource">
+        insert into RoleResource (roleCode, resourceCode, createTime) values (#{roleCode}, #{resourceCode}, #{createTime})
+    </insert>
+    <update id="updateById">
+        update Role
+        <set>
+            <trim suffixOverrides=",">
+                <if test="name != null">
+                    `name` = #{name},
+                </if>
+                <if test="updateTime != null">
+                    updateTime = #{updateTime},
+                </if>
+                <if test="roleStatus != null">
+                    roleStatus = #{roleStatus},
+                </if>
+            </trim>
+        </set>
+        where id = #{id}
+    </update>
+    <update id="updateStatus">
+        update Role set roleStatus = #{newStatus}, updateTime = #{updateTime} where id = #{id} and roleStatus = #{oldStatus}
+    </update>
+    <delete id="deleteRoleResource">
+        delete from RoleResource
+        where roleCode = #{roleCode} and resourceCode = #{resourceCode}
+    </delete>
+    <select id="queryByParam" resultType="com.jwzhu.platform.core.permission.model.Role">
+        select id, `code`, `name`, createTime, updateTime, roleStatus
+        from Role
+        <where>
+            <trim suffixOverrides="and">
+                <if test="id != null">
+                    id = #{id} and
+                </if>
+                <if test="key != null">
+                    (`code` like concat('%', #{key}, '%') or `name` like concat('%', #{key}, '%')) and
+                </if>
+                <if test="roleStatus != null">
+                    roleStatus = #{roleStatus} and
+                </if>
+            </trim>
+        </where>
+    </select>
+    <select id="getById" resultType="com.jwzhu.platform.core.permission.model.Role">
+        select id, `code`, `name`, createTime, updateTime, roleStatus
+        from Role
+        where id = #{id}
+    </select>
+    <select id="getByCode" resultType="com.jwzhu.platform.core.permission.model.Role">
+        select id, `code`, `name`, createTime, updateTime, roleStatus
+        from Role
+        where `code` = #{roleCode} for update
+    </select>
+    <select id="getAdminRole" resultType="com.jwzhu.platform.core.permission.model.AdminRole">
+        select r.id, r.`code`, r.`name`, r.createTime, r.updateTime, r.roleStatus
+        from Role r
+        <if test="selfId != null">
+            right join AdminRole ar on ar.roleCode = r.code
+        </if>
+        <where>
+            <trim suffixOverrides="and">
+                <if test="roleStatus != null and roleStatus.length > 0">
+                    r.roleStatus in
+                    <foreach collection="roleStatus" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                    and
+                </if>
+                <if test="selfId != null">
+                    ar.adminId = #{selfId} and
+                </if>
+            </trim>
+        </where>
+    </select>
+    <select id="getAllRoleByAdminId" resultType="java.lang.String">
+        select roleCode from AdminRole where adminId = #{adminId}
+    </select>
+</mapper>

@@ -1,0 +1,142 @@
+.table{
+    width: 100%;
+    min-width: 600px;
+    border: none;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin: .5rem 0 1.5rem;
+}
+
+.table-head{
+    background-color: #757575;
+    color: #ffffff;
+}
+
+.table-head th{
+    text-align: left;
+    padding: 5px 10px;
+    border: 1px solid #e8e8e8;
+    height: 1.5rem;
+}
+
+.table-body td{
+    padding: 4px 8px;
+}
+
+.table-interval tr:nth-child(odd){
+    background-color: #ffffff;
+}
+
+.table-interval tr:nth-child(even){
+    background-color: #e8e8e8;
+}
+
+.table-body tr:hover{
+    background-color: #999999;
+    color: #ffffff;
+}
+
+.table-body tr[selected]{
+    background-color: #999999;
+    color: #ffffff;
+}
+
+.table-empty{
+    color: #757575;
+}
+
+.table-row-operate{
+    color: #2196F3;
+    cursor: pointer;
+    border: 1px solid #c4c4c4;
+    padding: 2px 4px;
+    height: 1.2rem;
+    font-size: 0.8rem;
+    border-radius: 0.5rem;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.table-row-operate i{
+    pointer-events: none;
+}
+
+.table-row-operate:hover{
+    background-color: #ffffff;
+}
+
+.table-bottom{
+    padding: 0.5rem 0;
+    border-top: 1px solid #e8e8e8;
+    border-bottom: 1px solid #e8e8e8;
+    display: flex;
+    height: 1.5rem;
+    min-width: 600px;
+}
+
+.table-bottom-buttons{
+    margin: auto 0 auto 2rem;
+    color: #2196F3;
+}
+
+.table-bottom-button{
+    cursor: pointer;
+    margin-right: 10px
+}
+
+.table-bottom-page{
+    display: inline-flex;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    pointer-events: none;
+    height: 1.5rem;
+    color: #2196F3;
+}
+
+.table-bottom-info{
+    margin: auto 2rem auto auto;
+}
+
+.page-item{
+    height: calc(1.5rem - 2px);
+    width: calc(1.5rem - 2px);
+    line-height: 1.3rem;
+    border: 1px solid #e8e8e8;
+    text-align: center;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 1.25rem;
+    margin: auto 0.5rem;
+    pointer-events: all;
+}
+
+.page-input{
+    width: 2.5rem;
+    border-radius: 0;
+    cursor: text;
+    -webkit-appearance: none;
+    background: none;
+}
+
+.page-size{
+    width: 3rem;
+    height: 100%;
+    background: none;
+}
+
+.page-input:hover{
+    -webkit-appearance: none;
+}
+
+.page-item:disabled{
+    color: #4e555b;
+}
+
+.page-item:first-child{
+    margin-left: auto;
+}
+
+.page-item:last-child{
+    margin-right: auto;
+}

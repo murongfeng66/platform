@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jwzhu.platform.core.admin.db.AdminDao">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into Admin(nickname, createTime, adminStatus, adminType) values
+            (#{nickname}, #{createTime}, #{adminStatus}, #{adminType})
+    </insert>
+    <insert id="insertAdminRole" useGeneratedKeys="true" keyProperty="id">
+        insert into AdminRole (adminId, roleCode, createTime) values (#{adminId}, #{roleCode}, #{createTime})
+    </insert>
+    <update id="updateById">
+        update Admin
+        <set>
+            <trim suffixOverrides=",">
+                <if test="nickname != null">
+                    nickname = #{nickname},
+                </if>
+                <if test="adminStatus != null">
+                    adminStatus = #{adminStatus},
+                </if>
+                <if test="adminType != null">
+                    adminType = #{adminType},
+                </if>
+                <if test="updateTime != null">
+                    updateTime = #{updateTime},
+                </if>
+            </trim>
+        </set>
+        where id = #{id}
+    </update>
+    <update id="updateStatus">
+        update Admin set adminStatus = #{newStatus}, updateTime = #{updateTime} where id = #{id} and adminStatus = #{oldStatus}
+    </update>
+    <delete id="deleteAdminRole">
+        delete from AdminRole
+        where adminId = #{adminId} and roleCode = #{roleCode}
+    </delete>
+    <select id="getById" resultType="com.jwzhu.platform.core.admin.model.Admin">
+        select id, nickname, createTime, updateTime, adminStatus, adminType
+        from Admin
+        where id = #{id}
+    </select>
+    <select id="queryByParam" resultType="com.jwzhu.platform.core.admin.model.Admin">
+        select id, nickname, createTime, updateTime, adminStatus, adminType
+        from Admin
+        <where>
+            <trim suffixOverrides="and">
+                <if test="key != null">
+                    nickname like concat('%', #{key}, '%') and
+                </if>
+                <if test="adminStatus != null">
+                    adminStatus = #{adminStatus} and
+                </if>
+                <if test="adminType != null">
+                    adminType = #{adminType} and
+                </if>
+            </trim>
+        </where>
+        order by
+        <trim suffixOverrides=",">
+            <if test="sorts != null and sorts.size() > 0">
+                <foreach collection="sorts" item="item">
+                    ${item.columnName} ${item.sortType},
+                </foreach>
+            </if>
+            id desc,
+        </trim>
+    </select>
+</mapper>
