@@ -34,7 +34,9 @@
         where id = #{id}
     </update>
     <update id="updateStatus">
-        update Resource set resourceStatus = #{newStatus}, updateTime = #{updateTime} where id = #{id} and resourceStatus = #{oldStatus}
+        update Resource
+        set resourceStatus = #{newStatus}, updateTime = #{updateTime}
+        where id = #{id} and resourceStatus = #{oldStatus}
     </update>
     <select id="queryByParam" resultType="com.jwzhu.platform.core.permission.model.ResourceList">
         select id, `code`, parentCode, `name`, sort, type, menuShow, resourceStatus
@@ -72,14 +74,13 @@
             right join (select distinct rr.resourceCode
             from RoleResource rr
             right join AdminRole ar on ar.roleCode = rr.roleCode
-            where ar.adminId = #{selfId}
+            right join Role on Role.code = ar.roleCode
+            where ar.adminId = #{selfId} and Role.roleStatus = #{enableStatusCode}
             ) t on t.resourceCode = r.code
         </if>
         <where>
             <trim suffixOverrides="and">
-                <if test="resourceStatus != null">
-                    r.resourceStatus = #{resourceStatus} and
-                </if>
+                r.resourceStatus = #{enableStatusCode} and
                 <if test="types != null and types.length > 0">
                     r.type in
                     <foreach collection="types" item="item" open="(" separator="," close=")">

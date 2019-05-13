@@ -241,7 +241,11 @@
         if ($target.checked) {
             url = '/admin/addAdminRole';
         }
-        Request.post(url, {adminId: adminId, roleCode: roleCode}, false, false);
+        Request.post(url, {adminId: adminId, roleCode: roleCode}, true, false).then(data => {
+            if (data.code !== 1) {
+                $target.checked = !$target.checked;
+            }
+        });
     };
 
 </script>

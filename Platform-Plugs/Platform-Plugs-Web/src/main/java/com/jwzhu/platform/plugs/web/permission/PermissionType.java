@@ -38,9 +38,9 @@ public enum PermissionType {
         public void check() {
             PermissionType.Only_Login.check();
 
-            if(AdminType.Super.getCode() == RequestBaseParam.getRequestUser().getType()){
-                return;
-            }
+//            if(AdminType.Super.getCode() == RequestBaseParam.getRequestUser().getType()){
+//                return;
+//            }
 
             HttpServletRequest request = RequestUtil.getRequest();
             if(request == null){

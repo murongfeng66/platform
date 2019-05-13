@@ -59,7 +59,7 @@ public class ResourceService {
             bean.setSelfId(RequestBaseParam.getRequestUser().getId());
         }
         bean.setMenuShow(YesOrNo.Yes.getCode());
-        bean.setResourceStatus(AvailableStatus.Enable.getCode());
+        bean.setEnableStatusCode(AvailableStatus.Enable.getCode());
         bean.setTypes(ResourceType.Menu.getCode(), ResourceType.Page.getCode());
         List<Menu> resources = resourceDao.queryMenu(bean);
         Map<String, Menu> resourceMap = new LinkedHashMap<>();

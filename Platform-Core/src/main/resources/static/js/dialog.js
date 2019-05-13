@@ -32,11 +32,15 @@ const DialogCache = {};
 
     Dialog.prototype = {
         open: function () {
-            document.getElementById(this.dialogId).style.display = 'block';
+            let $dialog = document.getElementById(this.dialogId);
+            $dialog.style.display = 'block';
+            $dialog.style.zIndex = [...document.all].reduce((r, e) => Math.max(r, +window.getComputedStyle(e).zIndex || 0), 0) + 1;
             return this;
         },
         close: function () {
-            document.getElementById(this.dialogId).style.display = '';
+            let $dialog = document.getElementById(this.dialogId);
+            $dialog.style.display = '';
+            $dialog.style.zIndex = '';
             if (this.option.destroyAfterClose === true) {
                 this.destroy();
             }
