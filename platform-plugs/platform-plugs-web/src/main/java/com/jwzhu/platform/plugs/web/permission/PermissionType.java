@@ -20,7 +20,7 @@ public enum PermissionType {
         }
     },
     /**
-     * 近登录即可
+     * 仅登录即可
      */
     Only_Login{
         @Override
@@ -37,10 +37,6 @@ public enum PermissionType {
         @Override
         public void check() {
             PermissionType.Only_Login.check();
-
-//            if(AdminType.Super.getCode() == RequestBaseParam.getRequestUser().getType()){
-//                return;
-//            }
 
             HttpServletRequest request = RequestUtil.getRequest();
             if(request == null){

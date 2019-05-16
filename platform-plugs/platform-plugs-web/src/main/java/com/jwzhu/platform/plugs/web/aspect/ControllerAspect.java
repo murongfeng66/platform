@@ -40,8 +40,6 @@ public class ControllerAspect {
     private ObjectMapper objectMapper;
     @Autowired
     private TokenService tokenService;
-    @Autowired
-    private PermissionService permissionService;
 
     @Pointcut(value = "@annotation(controllerHandler)")
     public void pointCut(ControllerHandler controllerHandler) {

@@ -10,10 +10,11 @@ select.form-input {
 }
 
 input[type=checkbox].switch {
-    height: 20px;
+    height: 1.2rem;
     -webkit-appearance: none;
-    width: 40px;
-    border-radius: 10px;
+    width: 2.4rem;
+    min-width: 2.4rem;
+    border-radius: 0.6rem;
     background-color: #cccccc;
     outline: none;
     -webkit-transition: .4s;
@@ -29,8 +30,8 @@ input[type=checkbox].switch:checked {
 input[type=checkbox].switch:after {
     background-color: #ffffff;
     content: attr(data-content);
-    width: 16px;
-    height: 16px;
+    width: calc(1.2rem - 4px);
+    height: calc(1.2rem - 4px);
     position: absolute;
     border-radius: 50%;
     margin: 2px;
@@ -40,7 +41,7 @@ input[type=checkbox].switch:after {
 }
 
 input[type=checkbox].switch:checked:after{
-    margin-left: 22px;
+    margin-left: calc(1.2rem + 2px);
     -webkit-transition: .4s;
     transition: .4s;
 }

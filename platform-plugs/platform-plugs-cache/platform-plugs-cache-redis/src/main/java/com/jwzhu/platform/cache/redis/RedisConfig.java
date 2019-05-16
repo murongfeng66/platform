@@ -10,10 +10,10 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Configuration
+//@Configuration
 public class RedisConfig {
 
-    @Bean
+//    @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory, ObjectMapper objectMapper) {
 
         RedisTemplate<String, Object> template = new RedisTemplate<>();
@@ -37,7 +37,7 @@ public class RedisConfig {
         return template;
     }
 
-    @Bean
+//    @Bean
     public StringRedisTemplate stringRedisTemplate(RedisConnectionFactory factory) {
 
         StringRedisTemplate template = new StringRedisTemplate();

@@ -26,7 +26,6 @@ public class JsonEscaperRegister implements ImportBeanDefinitionRegistrar, Resou
 
     private Environment environment;
     private ResourceLoader resourceLoader;
-    private ApplicationContext applicationContext;
 
     @Override
     public void registerBeanDefinitions(AnnotationMetadata annotationMetadata, BeanDefinitionRegistry beanDefinitionRegistry) {
