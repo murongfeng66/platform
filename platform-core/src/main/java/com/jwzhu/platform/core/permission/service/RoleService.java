@@ -18,7 +18,7 @@ import com.jwzhu.platform.core.permission.bean.RoleListBean;
 import com.jwzhu.platform.core.permission.db.RoleDao;
 import com.jwzhu.platform.core.permission.model.AdminRole;
 import com.jwzhu.platform.core.permission.model.Role;
-import com.jwzhu.platform.plugs.web.request.RequestBaseParam;
+import com.jwzhu.platform.common.web.RequestBaseParam;
 
 @Service
 public class RoleService {

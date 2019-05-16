@@ -14,7 +14,7 @@ import com.jwzhu.platform.common.exception.SystemException;
 import com.jwzhu.platform.plugs.web.exception.token.TokenErrorException;
 import com.jwzhu.platform.plugs.web.exception.token.TokenTimeOutException;
 import com.jwzhu.platform.plugs.web.token.TokenConfig;
-import com.jwzhu.platform.plugs.web.token.TokenSubject;
+import com.jwzhu.platform.common.web.TokenSubject;
 import com.jwzhu.platform.plugs.web.token.TokenUtil;
 
 public class TokenUtiAES implements TokenUtil {

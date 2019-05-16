@@ -20,6 +20,10 @@
             <groupId>com.jwzhu</groupId>
             <artifactId>platform-plugs-cache-redis</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.jwzhu</groupId>
+            <artifactId>platform-permission</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

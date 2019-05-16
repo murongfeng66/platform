@@ -1,4 +1,4 @@
-package com.jwzhu.platform.plugs.web.request;
+package com.jwzhu.platform.common.web;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -6,10 +6,9 @@ import java.util.UUID;
 
 import org.springframework.util.StringUtils;
 
-import com.jwzhu.platform.common.exception.BusinessException;
-import com.jwzhu.platform.common.exception.NoPermissionException;
 import com.jwzhu.platform.common.exception.SystemException;
-import com.jwzhu.platform.plugs.web.token.TokenSubject;
+import com.jwzhu.platform.common.web.RequestType;
+import com.jwzhu.platform.common.web.TokenSubject;
 
 public class RequestBaseParam {
     /**
@@ -40,6 +39,10 @@ public class RequestBaseParam {
      * 刷新Token
      */
     private static ThreadLocal<String> REFRESH_TOKEN = new ThreadLocal<>();
+    /**
+     * 请求Token
+     */
+    private static ThreadLocal<String> REQUEST_TOKEN = new ThreadLocal<>();
 
     /**
      * 初始化请求ID
@@ -150,5 +153,13 @@ public class RequestBaseParam {
 
     public static String getRefreshToken(){
         return REFRESH_TOKEN.get();
+    }
+
+    public static  void setRequestToken(String token){
+        REQUEST_TOKEN.set(token);
+    }
+
+    public static String getRequestToken(){
+        return REQUEST_TOKEN.get();
     }
 }

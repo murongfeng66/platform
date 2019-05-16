@@ -16,7 +16,7 @@ import com.jwzhu.platform.common.exception.SystemException;
 import com.jwzhu.platform.plugs.web.exception.token.TokenEmptyException;
 import com.jwzhu.platform.plugs.web.exception.token.TokenErrorException;
 import com.jwzhu.platform.plugs.web.exception.token.TokenTimeOutException;
-import com.jwzhu.platform.plugs.web.request.RequestBaseParam;
+import com.jwzhu.platform.common.web.RequestBaseParam;
 import com.jwzhu.platform.plugs.web.response.ResponseCode;
 import com.jwzhu.platform.plugs.web.response.WebResult;
 

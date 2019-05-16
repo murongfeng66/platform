@@ -27,7 +27,7 @@ import com.jwzhu.platform.core.permission.model.Resource;
 import com.jwzhu.platform.core.permission.model.ResourceList;
 import com.jwzhu.platform.core.permission.model.ResourcePermission;
 import com.jwzhu.platform.core.permission.model.ResourceType;
-import com.jwzhu.platform.plugs.web.request.RequestBaseParam;
+import com.jwzhu.platform.common.web.RequestBaseParam;
 
 @Service
 public class ResourceService {

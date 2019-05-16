@@ -5,8 +5,9 @@ import javax.servlet.http.HttpServletRequest;
 import com.jwzhu.platform.common.enums.AdminType;
 import com.jwzhu.platform.common.exception.NoPermissionException;
 import com.jwzhu.platform.common.exception.SystemException;
+import com.jwzhu.platform.permission.PermissionService;
 import com.jwzhu.platform.plugs.web.ApplicationContextUtil;
-import com.jwzhu.platform.plugs.web.request.RequestBaseParam;
+import com.jwzhu.platform.common.web.RequestBaseParam;
 import com.jwzhu.platform.plugs.web.request.RequestUtil;
 
 public enum PermissionType {

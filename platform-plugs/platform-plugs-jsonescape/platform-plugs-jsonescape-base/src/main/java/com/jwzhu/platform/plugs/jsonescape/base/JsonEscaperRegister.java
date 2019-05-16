@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -24,6 +26,7 @@ import org.springframework.util.StringUtils;
  */
 public class JsonEscaperRegister implements ImportBeanDefinitionRegistrar, ResourceLoaderAware, EnvironmentAware, ApplicationContextAware {
 
+    private static Logger logger = LoggerFactory.getLogger(JsonEscaperRegister.class);
     private Environment environment;
     private ResourceLoader resourceLoader;
 
@@ -48,6 +51,7 @@ public class JsonEscaperRegister implements ImportBeanDefinitionRegistrar, Resou
         JsonEscaperScanner scanner = new JsonEscaperScanner(beanDefinitionRegistry, true, environment, resourceLoader);
         Set<BeanDefinitionHolder> beanDefinitionHolders = scanner.doScan(StringUtils.toStringArray(basePackages));
         for (BeanDefinitionHolder beanDefinitionHolder : beanDefinitionHolders) {
+            logger.info("JSON转义序列化器：{}",beanDefinitionHolder.getBeanDefinition().getBeanClassName());
             beanDefinitionRegistry.registerBeanDefinition(beanDefinitionHolder.getBeanName(), beanDefinitionHolder.getBeanDefinition());
         }
     }

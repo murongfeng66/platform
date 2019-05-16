@@ -1,4 +1,4 @@
-package com.jwzhu.platform.plugs.web.request;
+package com.jwzhu.platform.common.web;
 
 import java.util.ArrayList;
 import java.util.HashMap;

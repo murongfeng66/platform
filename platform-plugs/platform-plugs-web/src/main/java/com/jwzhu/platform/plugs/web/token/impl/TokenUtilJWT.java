@@ -20,7 +20,7 @@ import org.springframework.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.jwzhu.platform.plugs.web.exception.token.TokenTimeOutException;
 import com.jwzhu.platform.plugs.web.token.TokenConfig;
-import com.jwzhu.platform.plugs.web.token.TokenSubject;
+import com.jwzhu.platform.common.web.TokenSubject;
 import com.jwzhu.platform.plugs.web.token.TokenUtil;
 
 public class TokenUtilJWT implements TokenUtil {

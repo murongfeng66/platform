@@ -1,5 +1,6 @@
 package com.jwzhu.platform.core.permission.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,6 +97,13 @@ public class ResourceController {
     public String delete(LongParam param){
         resourceManager.delete(param.initBean());
         return "删除资源成功";
+    }
+
+    @GetMapping("queryMyResourceUrl")
+    @ResponseBody
+    @ControllerHandler(permissionType = PermissionType.No)
+    public List<String> queryMyResourceUrl(){
+        return resourceManager.queryMyResourceUrl();
     }
 
 }

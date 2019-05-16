@@ -8,6 +8,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.alibaba.fastjson.JSON;
+import com.jwzhu.platform.common.util.HttpUtil;
 import com.jwzhu.platform.core.admin.bean.LoginBean;
 import com.jwzhu.platform.core.admin.model.Login;
 import com.jwzhu.platform.core.admin.service.LoginService;
@@ -47,11 +48,13 @@ public class SpringTest {
     }
 
     public static void main(String[] args){
-//        Random random = new Random();
-//        for (int i=0;i<100;i++){
-//            System.out.println((Math.random() * 9 + 1) * 1000);
-//        }
-        System.out.println(" "+'b'+1);
+        HttpUtil.RequestBean bean = new HttpUtil.RequestBean();
+        bean.setUrl("http://192.168.2.166/shop/merchant/comment/queryByParam");
+        bean.addParam("actionType","1");
+        bean.addParam("authkey","BAA53B00F7B3A4324BA830833E923AC7");
+        bean.addParam("merchantId","31");
+//        bean.addParam("content","评论3");
+        System.out.println(HttpUtil.doGet(bean));
     }
 
 }

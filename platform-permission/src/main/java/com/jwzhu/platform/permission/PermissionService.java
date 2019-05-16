@@ -1,4 +1,4 @@
-package com.jwzhu.platform.plugs.web.permission;
+package com.jwzhu.platform.permission;
 
 public interface PermissionService {
 

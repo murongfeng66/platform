@@ -11,5 +11,23 @@
 
     <artifactId>platform-permission</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jwzhu</groupId>
+            <artifactId>platform-plugs-cache-base</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jwzhu</groupId>
+            <artifactId>platform-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

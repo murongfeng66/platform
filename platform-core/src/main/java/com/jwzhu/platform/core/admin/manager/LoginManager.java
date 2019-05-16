@@ -10,10 +10,11 @@ import com.jwzhu.platform.core.admin.model.Admin;
 import com.jwzhu.platform.core.admin.model.Login;
 import com.jwzhu.platform.core.admin.service.AdminService;
 import com.jwzhu.platform.core.admin.service.LoginService;
+import com.jwzhu.platform.permission.PermissionService;
 import com.jwzhu.platform.plugs.cache.base.CacheUtil;
-import com.jwzhu.platform.plugs.web.request.RequestBaseParam;
+import com.jwzhu.platform.common.web.RequestBaseParam;
 import com.jwzhu.platform.plugs.web.token.TokenService;
-import com.jwzhu.platform.plugs.web.token.TokenSubject;
+import com.jwzhu.platform.common.web.TokenSubject;
 
 @Service
 public class LoginManager {
@@ -47,13 +48,13 @@ public class LoginManager {
         RequestBaseParam.setRequestUser(subject);
         RequestBaseParam.setRefreshToken(token);
 
-        String cacheKey = "AdminPermission:" + admin.getId();
+        String cacheKey = PermissionService.class.getSimpleName() + ":" + admin.getId();
         cacheUtil.delete(cacheKey);
     }
 
     public Admin getById(long id) {
         Admin admin = adminService.getById(id);
-        if(admin == null){
+        if (admin == null) {
             throw new BusinessException("管理员不存在");
         }
         return admin;

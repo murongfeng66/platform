@@ -16,12 +16,12 @@ import com.jwzhu.platform.core.permission.model.Menu;
 import com.jwzhu.platform.core.permission.model.Resource;
 import com.jwzhu.platform.core.permission.model.ResourcePermission;
 import com.jwzhu.platform.core.permission.service.ResourceService;
+import com.jwzhu.platform.permission.PermissionService;
 import com.jwzhu.platform.plugs.cache.base.CacheUtil;
-import com.jwzhu.platform.plugs.web.permission.PermissionService;
-import com.jwzhu.platform.plugs.web.request.RequestBaseParam;
+import com.jwzhu.platform.common.web.RequestBaseParam;
 
 @Service
-public class ResourceManager implements PermissionService {
+public class ResourceManager implements PermissionService{
 
     @Autowired
     private ResourceService resourceService;
@@ -65,15 +65,15 @@ public class ResourceManager implements PermissionService {
 
     @Override
     public boolean checkPermission(String url) {
-        String cacheKey = "AdminPermission:" + RequestBaseParam.getRequestUser().getId();
+        String cacheKey = PermissionService.class.getSimpleName()+ ":" + RequestBaseParam.getRequestUser().getId();
         if (cacheUtil.exist(cacheKey)) {
             return cacheUtil.sExists(cacheKey, url);
         }else{
             List<String> urls = resourceService.queryMyResourceUrl();
             cacheUtil.sAdd(cacheKey, urls.toArray(new String[]{}));
             cacheUtil.expired(cacheKey, platformConfig.getResourceTime());
+            return urls.contains(url);
         }
-        return true;
     }
 
     public void disable(LongBean bean){

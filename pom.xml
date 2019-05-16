@@ -37,6 +37,7 @@
         <platform-plugs-jsonescape-jackson.version>1.0-SNAPSHOT</platform-plugs-jsonescape-jackson.version>
         <platform-plugs-cache-base.version>1.0-SNAPSHOT</platform-plugs-cache-base.version>
         <platform-plugs-cache-redis.version>1.0-SNAPSHOT</platform-plugs-cache-redis.version>
+        <platform-permission.version>1.0-SNAPSHOT</platform-permission.version>
 
         <mybatis-spring-boot-starter.version>1.3.1</mybatis-spring-boot-starter.version>
         <servlet-api.version>2.5</servlet-api.version>
@@ -45,6 +46,7 @@
         <commons-codec.version>1.11</commons-codec.version>
         <jjwt.version>0.9.1</jjwt.version>
         <urlrewritefilter.version>4.0.4</urlrewritefilter.version>
+        <httpclient.version>4.5.6</httpclient.version>
     </properties>
 
     <parent>
@@ -96,6 +98,11 @@
                 <artifactId>platform-plugs-cache-redis</artifactId>
                 <version>${platform-plugs-cache-redis.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.jwzhu</groupId>
+                <artifactId>platform-permission</artifactId>
+                <version>${platform-permission.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>javax.servlet</groupId>
@@ -127,6 +134,11 @@
                 <groupId>org.tuckey</groupId>
                 <artifactId>urlrewritefilter</artifactId>
                 <version>${urlrewritefilter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclient.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

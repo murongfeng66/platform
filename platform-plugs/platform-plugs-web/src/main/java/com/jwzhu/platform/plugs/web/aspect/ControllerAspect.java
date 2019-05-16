@@ -18,17 +18,16 @@ import org.springframework.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jwzhu.platform.common.web.RequestBaseParam;
+import com.jwzhu.platform.common.web.RequestType;
+import com.jwzhu.platform.common.web.TokenSubject;
 import com.jwzhu.platform.plugs.web.annotations.ControllerHandler;
 import com.jwzhu.platform.plugs.web.exception.JsonException;
 import com.jwzhu.platform.plugs.web.exception.PageException;
 import com.jwzhu.platform.plugs.web.exception.token.TokenEmptyException;
 import com.jwzhu.platform.plugs.web.param.BaseParam;
-import com.jwzhu.platform.plugs.web.permission.PermissionService;
-import com.jwzhu.platform.plugs.web.request.RequestBaseParam;
-import com.jwzhu.platform.plugs.web.request.RequestType;
 import com.jwzhu.platform.plugs.web.request.RequestUtil;
 import com.jwzhu.platform.plugs.web.token.TokenService;
-import com.jwzhu.platform.plugs.web.token.TokenSubject;
 
 @Aspect
 @Component
@@ -60,6 +59,7 @@ public class ControllerAspect {
                 throw new TokenEmptyException();
             }
             logger.debug("取出Token：{}", token);
+            RequestBaseParam.setRequestToken(token);
             analyzeToken(token);
         }
 

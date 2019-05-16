@@ -20,7 +20,7 @@ import com.jwzhu.platform.common.enums.AdminType;
 import com.jwzhu.platform.core.admin.service.AdminService;
 import com.jwzhu.platform.core.admin.service.LoginService;
 import com.jwzhu.platform.core.permission.bean.AdminRoleBean;
-import com.jwzhu.platform.plugs.web.request.RequestBaseParam;
+import com.jwzhu.platform.common.web.RequestBaseParam;
 
 @Service
 public class AdminManager {

@@ -18,19 +18,13 @@ import com.jwzhu.platform.plugs.jsonescape.bind.JsonEscaper;
  */
 public class JsonEscaperScanner extends ClassPathBeanDefinitionScanner {
 
-    private static Logger logger = LoggerFactory.getLogger(JsonEscaperScanner.class);
-
     JsonEscaperScanner(BeanDefinitionRegistry registry, boolean useDefaultFilters, Environment environment, ResourceLoader resourceLoader) {
         super(registry, useDefaultFilters, environment, resourceLoader);
     }
 
     @Override
     public Set<BeanDefinitionHolder> doScan(String... basePackages) {
-        Set<BeanDefinitionHolder> beanDefinitionHolders = super.doScan(basePackages);
-        for (BeanDefinitionHolder beanDefinitionHolder : beanDefinitionHolders) {
-            logger.info("JSON转义序列化器：{}",beanDefinitionHolder.getBeanDefinition().getBeanClassName());
-        }
-        return beanDefinitionHolders;
+        return super.doScan(basePackages);
     }
 
     @Override

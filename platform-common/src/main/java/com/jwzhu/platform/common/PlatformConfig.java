@@ -10,6 +10,7 @@ public class PlatformConfig {
     private String name = "统一管理平台";
     private String loginUrl = "/";
     private long resourceTime = 1800000;
+    private String queryMyResourceUrl;
 
     public String getName() {
         return name;
@@ -33,5 +34,13 @@ public class PlatformConfig {
 
     public void setResourceTime(long resourceTime) {
         this.resourceTime = resourceTime;
+    }
+
+    public String getQueryMyResourceUrl() {
+        return queryMyResourceUrl;
+    }
+
+    public void setQueryMyResourceUrl(String queryMyResourceUrl) {
+        this.queryMyResourceUrl = queryMyResourceUrl;
     }
 }

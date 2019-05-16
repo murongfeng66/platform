@@ -1,4 +1,4 @@
-package com.jwzhu.platform.plugs.web.token;
+package com.jwzhu.platform.common.web;
 
 public class TokenSubject {
 
