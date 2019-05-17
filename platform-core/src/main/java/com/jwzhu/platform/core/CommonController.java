@@ -30,7 +30,7 @@ public class CommonController {
     @Autowired
     private LoginManager userManager;
 
-    @ControllerHandler(needToken = false, permissionType = PermissionType.No)
+    @ControllerHandler(permissionType = PermissionType.No)
     @GetMapping({"", "login"})
     public ModelAndView login(ModelAndView view) {
         view.setViewName("login/login");

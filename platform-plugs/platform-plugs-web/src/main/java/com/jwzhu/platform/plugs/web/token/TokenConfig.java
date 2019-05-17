@@ -17,7 +17,7 @@ public class TokenConfig {
      * Token过期时长（ms），0为不过期
      */
     @DurationUnit(ChronoUnit.MILLIS)
-    private Duration expiredTime;
+    private Duration expiredTime = Duration.ofMinutes(30);
     /**
      * Token生成密钥
      */
@@ -38,48 +38,39 @@ public class TokenConfig {
      * 当Token存在过期时长时，刷新Token的时长（ms），为0时不刷新
      */
     @DurationUnit(ChronoUnit.MILLIS)
-    private Duration tokenUpdateTime;
+    private Duration tokenUpdateTime = Duration.ofMinutes(25);
 
-    public long getTokenUpdateTime() {
-        if(tokenUpdateTime != null){
-            return tokenUpdateTime.toMillis();
-        }
-        return 0;
+    public Duration getExpiredTime() {
+        return expiredTime;
     }
 
-    public void setTokenUpdateTime(Duration tokenUpdateTime) {
-        this.tokenUpdateTime = tokenUpdateTime;
+    public void setExpiredTime(Duration expiredTime) {
+        this.expiredTime = expiredTime;
     }
 
-    public String getParamName() {
-        return paramName;
-    }
-
-    public void setParamName(String paramName) {
-        this.paramName = paramName;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
-
-    public enum Type{
-        AES{
+    public enum Type {
+        AES {
             @Override
             public TokenUtil getInstance(TokenConfig tokenConfig) {
                 return new TokenUtiAES(tokenConfig);
             }
-        },JWT{
+        },
+        JWT {
             @Override
             public TokenUtil getInstance(TokenConfig tokenConfig) {
                 return new TokenUtilJWT(tokenConfig);
             }
         };
+
         public abstract TokenUtil getInstance(TokenConfig tokenConfig);
+    }
+
+    public String getSecretKey() {
+        return secretKey;
+    }
+
+    public void setSecretKey(String secretKey) {
+        this.secretKey = secretKey;
     }
 
     public String getAesIv() {
@@ -90,22 +81,27 @@ public class TokenConfig {
         this.aesIv = aesIv;
     }
 
-    public long getExpiredTime() {
-        if(expiredTime != null){
-            return expiredTime.toMillis();
-        }
-        return 0;
+    public Type getType() {
+        return type;
     }
 
-    public void setExpiredTime(Duration expiredTime) {
-        this.expiredTime = expiredTime;
+    public void setType(Type type) {
+        this.type = type;
     }
 
-    public String getSecretKey() {
-        return secretKey;
+    public String getParamName() {
+        return paramName;
     }
 
-    public void setSecretKey(String secretKey) {
-        this.secretKey = secretKey;
+    public void setParamName(String paramName) {
+        this.paramName = paramName;
+    }
+
+    public Duration getTokenUpdateTime() {
+        return tokenUpdateTime;
+    }
+
+    public void setTokenUpdateTime(Duration tokenUpdateTime) {
+        this.tokenUpdateTime = tokenUpdateTime;
     }
 }

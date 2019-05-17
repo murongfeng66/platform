@@ -26,6 +26,7 @@ import com.jwzhu.platform.plugs.web.exception.JsonException;
 import com.jwzhu.platform.plugs.web.exception.PageException;
 import com.jwzhu.platform.plugs.web.exception.token.TokenEmptyException;
 import com.jwzhu.platform.plugs.web.param.BaseParam;
+import com.jwzhu.platform.plugs.web.permission.PermissionType;
 import com.jwzhu.platform.plugs.web.request.RequestUtil;
 import com.jwzhu.platform.plugs.web.token.TokenService;
 
@@ -53,7 +54,7 @@ public class ControllerAspect {
         }
         logger.info("请求接口：{}.{}", joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName());
 
-        if (controllerHandler.needToken()) {
+        if (PermissionType.No != controllerHandler.permissionType()) {
             String token = getToken(controllerHandler);
             if (StringUtils.isEmpty(token)) {
                 throw new TokenEmptyException();

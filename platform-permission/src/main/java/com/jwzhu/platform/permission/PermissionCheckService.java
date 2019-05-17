@@ -4,13 +4,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSON;
@@ -34,25 +27,28 @@ public class PermissionCheckService implements PermissionService {
 
     @Override
     public boolean checkPermission(String url) {
-        String cacheKey = PermissionService.class.getSimpleName() + ":" + RequestBaseParam.getRequestUser().getId();
+        String cacheKey = getCacheKey(RequestBaseParam.getRequestUser().getId());
         if (cacheUtil.exist(cacheKey)) {
             return cacheUtil.sExists(cacheKey, url);
         } else {
-            if (StringUtils.isEmpty(platformConfig.getQueryMyResourceUrl())) {
+            if (StringUtils.isEmpty(platformConfig.getQueryAdminResourceUrl())) {
                 throw new SystemException("未设置资源获取接口地址");
             }
             HttpUtil.RequestBean bean = new HttpUtil.RequestBean();
-            bean.setUrl(platformConfig.getQueryMyResourceUrl());
-            bean.addHeader("token", RequestBaseParam.getRequestToken());
+            bean.setUrl(platformConfig.getQueryAdminResourceUrl() + "/" + RequestBaseParam.getRequestUser().getId());
+            //TODO 设置子系统调用凭证
+            bean.addHeader("serviceToken", null);
             String result = HttpUtil.doGet(bean);
+
             JSONObject jsonObject = JSON.parseObject(result);
             if (!jsonObject.containsKey("code") || jsonObject.getInteger("code") != 1) {
                 logger.error("请求结果：{}", result);
                 throw new SystemException("请求验证资源失败");
             }
             List<String> urls = JSON.parseArray(jsonObject.getString("data"), String.class);
+
             cacheUtil.sAdd(cacheKey, urls.toArray(new String[]{}));
-            cacheUtil.expired(cacheKey, platformConfig.getResourceTime());
+            cacheUtil.expired(cacheKey, platformConfig.getResourceTimeout().toMillis());
             return urls.contains(url);
         }
     }

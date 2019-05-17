@@ -128,10 +128,10 @@ public class ResourceService {
         return result;
     }
 
-    public List<String> queryMyResourceUrl(){
+    public List<String> queryAdminResourceUrl(long adminId, short userType){
         GetRoleResourceBean bean = new GetRoleResourceBean();
-        if (RequestBaseParam.getRequestUser().getType() != AdminType.Super.getCode()) {
-            bean.setSelfId(RequestBaseParam.getRequestUser().getId());
+        if (userType != AdminType.Super.getCode()) {
+            bean.setSelfId(adminId);
         }
         bean.setEnableStatusCode(AvailableStatus.Enable.getCode());
         return resourceDao.queryMyResourceUrl(bean);

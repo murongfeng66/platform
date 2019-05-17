@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.jwzhu.platform.common.web.RequestBaseParam;
 import com.jwzhu.platform.core.admin.manager.LoginManager;
 import com.jwzhu.platform.core.admin.param.LoginParam;
 import com.jwzhu.platform.core.permission.manager.ResourceManager;
@@ -27,11 +28,11 @@ public class LoginController {
 
     @PostMapping("login")
     @ResponseBody
-    @ControllerHandler(needToken = false, permissionType = PermissionType.No)
+    @ControllerHandler(permissionType = PermissionType.No)
     public WebResult<List<String>> login(LoginParam param) {
         loginManager.login(param.initBean());
         WebResult<List<String>> result = new WebResult<>();
-        result.setData(resourceManager.queryMyResourceUrl());
+        result.setData(resourceManager.queryAdminResourceUrl(RequestBaseParam.getRequestUser().getId()));
         result.setRedirect("/main");
         return result;
     }

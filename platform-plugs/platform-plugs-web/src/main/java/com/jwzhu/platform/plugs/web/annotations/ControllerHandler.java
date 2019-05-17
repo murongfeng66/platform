@@ -16,7 +16,6 @@ import com.jwzhu.platform.plugs.web.permission.PermissionType;
  * 参数验证，默认：true<br/>
  * 参数验证组，默认：空<br/>
  * 打印响应，默认：false<br/>
- * Token必需，默认：true<br/>
  * Token清除，默认：false<br/>
  * 权限类型，默认：{@link PermissionType#HavePermission}<br/>
  */
@@ -38,11 +37,6 @@ public @interface ControllerHandler {
      * 打印响应
      */
     boolean printResponse() default false;
-
-    /**
-     * Token必需
-     */
-    boolean needToken() default true;
 
     /**
      * Token清除

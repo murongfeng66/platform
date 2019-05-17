@@ -55,8 +55,8 @@ public class TokenUtiAES implements TokenUtil {
         if (subject.getTime() == null) {
             throw new TokenErrorException("Token错误");
         }
-        if (this.tokenConfig.getExpiredTime() > 0) {
-            if (System.currentTimeMillis() - subject.getTime() > this.tokenConfig.getExpiredTime()) {
+        if (this.tokenConfig.getExpiredTime().toMillis() > 0) {
+            if (System.currentTimeMillis() - subject.getTime() > this.tokenConfig.getExpiredTime().toMillis()) {
                 throw new TokenTimeOutException();
             }
         }

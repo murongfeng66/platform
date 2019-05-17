@@ -30,8 +30,8 @@ public class TokenService {
     public String createToken(TokenSubject subject) {
         String token = tokenUtil.createToken(subject);
         String cacheKey = getCacheKey(token);
-        if (tokenConfig.getExpiredTime() > 0) {
-            cacheUtil.set(cacheKey, subject, tokenConfig.getExpiredTime());
+        if (tokenConfig.getExpiredTime().toMillis() > 0) {
+            cacheUtil.set(cacheKey, subject, tokenConfig.getExpiredTime().toMillis());
         } else {
             cacheUtil.set(cacheKey, subject);
         }
@@ -60,7 +60,7 @@ public class TokenService {
     }
 
     public String updateToken(TokenSubject subject) {
-        if (subject.getTime() != null && tokenConfig.getExpiredTime() > 0 && tokenConfig.getTokenUpdateTime() > 0 && System.currentTimeMillis() - subject.getTime() > tokenConfig.getTokenUpdateTime()) {
+        if (subject.getTime() != null && tokenConfig.getExpiredTime().toMillis() > 0 && tokenConfig.getTokenUpdateTime().toMillis() > 0 && System.currentTimeMillis() - subject.getTime() > tokenConfig.getTokenUpdateTime().toMillis()) {
             TokenSubject newSubject = new TokenSubject();
             newSubject.setId(subject.getId());
             newSubject.setType(subject.getType());
