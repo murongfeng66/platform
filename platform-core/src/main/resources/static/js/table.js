@@ -3,7 +3,7 @@ function Table() {
 
 const TableCache = {};
 (() => {
-    Table.init = function(o)  {
+    Table.init = function (o) {
         let option = {
             tableDivId: o.tableDivId,
             queryFormId: o.queryFormId,
@@ -38,7 +38,7 @@ const TableCache = {};
         return tableCache;
     };
 
-    Table.reload = function(tableId){
+    Table.reload = function (tableId) {
         let tableCache = TableCache[tableId];
         if (tableCache) {
             tableCache.reload();
@@ -111,7 +111,7 @@ const TableCache = {};
             table.option.bottomButtons.unshift({
                 title: '刷新',
                 faClass: 'fa-refresh',
-                classNames:'',
+                classNames: '',
                 onclick: requestData
             });
         }
@@ -225,7 +225,7 @@ const TableCache = {};
         let $bottomButtonsHtml = document.createElement('span');
         $bottomButtonsHtml.classList.add('table-bottom-buttons');
         this.option.bottomButtons.forEach((button) => {
-            if(button.permission && typeof PermissionFilter !== 'undefined' && !PermissionFilter.check(button.permission)){
+            if (button.permission && typeof PermissionFilter !== 'undefined' && !PermissionFilter.check(button.permission)) {
                 return;
             }
 
@@ -356,55 +356,61 @@ const TableCache = {};
 
         this.option.queryParam.pageSize = this.option.queryParam.pageSize ? this.option.queryParam.pageSize : document.getElementById(this.tableBottomPageSizeId).value;
 
-        Request.get(this.option.url, this.option.queryParam, true, false).then((data) => {
-            let htmlString = '';
-            if (data.totalCount === 0) {
-                htmlString += '<tr id="' + this.tableBodyId + 'row_empty" class="opacity-0-1"><td class="text-center table-empty" colspan="' + this.option.column.length + '">暂无数据</td></tr>';
-            } else {
-                data.data.forEach((rowItem, rowIndex) => {
-                    this.data.list[rowIndex] = rowItem;
-                    this.operateButtons[rowIndex] = [];
+        Request.get({
+            url: this.option.url,
+            params: this.option.queryParam,
+            returnAll: true,
+            showMessage: false,
+            success: data => {
+                let htmlString = '';
+                if (data.code !== 1 || data.totalCount === 0) {
+                    htmlString += '<tr id="' + this.tableBodyId + 'row_empty" class="opacity-0-1"><td class="text-center table-empty" colspan="' + this.option.column.length + '">暂无数据</td></tr>';
+                } else {
+                    data.data.forEach((rowItem, rowIndex) => {
+                        this.data.list[rowIndex] = rowItem;
+                        this.operateButtons[rowIndex] = [];
 
-                    htmlString += '<tr id="' + this.tableBodyId + '_row_' + rowIndex + '" class="opacity-0-1" data-rowIndex="' + rowIndex + '">';
+                        htmlString += '<tr id="' + this.tableBodyId + '_row_' + rowIndex + '" class="opacity-0-1" data-rowIndex="' + rowIndex + '">';
 
-                    this.option.column.forEach((columnItem, columnIndex) => {
-                        htmlString += '<td data-rowIndex="' + rowIndex + '" data-columnIndex="' + columnIndex + '">';
-                        if (columnItem.name === 'operate' && typeof this.option.rowOperate === 'function') {
-                            let buttons = this.option.rowOperate.call(rowItem);
-                            buttons.forEach((button, index) => {
-                                if(button.permission && typeof PermissionFilter !== 'undefined' && !PermissionFilter.check(button.permission)){
-                                    return;
-                                }
+                        this.option.column.forEach((columnItem, columnIndex) => {
+                            htmlString += '<td data-rowIndex="' + rowIndex + '" data-columnIndex="' + columnIndex + '">';
+                            if (columnItem.name === 'operate' && typeof this.option.rowOperate === 'function') {
+                                let buttons = this.option.rowOperate.call(rowItem);
+                                buttons.forEach((button, index) => {
+                                    if (button.permission && typeof PermissionFilter !== 'undefined' && !PermissionFilter.check(button.permission)) {
+                                        return;
+                                    }
 
-                                this.operateButtons[rowIndex][index] = button;
+                                    this.operateButtons[rowIndex][index] = button;
 
-                                htmlString += '<span class="table-row-operate ' + common.string.dealEmpty(button.classNames) + '" data-buttonIndex="' + index + '">';
-                                if (button.faClass) {
-                                    htmlString += '<i class="fa ' + button.faClass + '"></i>';
-                                }
-                                htmlString += button.title + '</span>';
-                            });
-                        } else {
-                            if (columnItem.formatter && typeof columnItem.formatter === 'function') {
-                                htmlString += common.string.dealEmpty(columnItem.formatter.call(rowItem, rowItem[columnItem.name]));
+                                    htmlString += '<span class="table-row-operate ' + common.string.dealEmpty(button.classNames) + '" data-buttonIndex="' + index + '">';
+                                    if (button.faClass) {
+                                        htmlString += '<i class="fa ' + button.faClass + '"></i>';
+                                    }
+                                    htmlString += button.title + '</span>';
+                                });
                             } else {
-                                htmlString += common.string.dealEmpty(rowItem[columnItem.name]);
+                                if (columnItem.formatter && typeof columnItem.formatter === 'function') {
+                                    htmlString += common.string.dealEmpty(columnItem.formatter.call(rowItem, rowItem[columnItem.name]));
+                                } else {
+                                    htmlString += common.string.dealEmpty(rowItem[columnItem.name]);
+                                }
                             }
-                        }
-                        htmlString += '</td>';
+                            htmlString += '</td>';
+                        });
+
+                        htmlString += '</tr>';
                     });
+                }
+                document.getElementById(this.tableBodyId).innerHTML = htmlString;
 
-                    htmlString += '</tr>';
-                });
+                this.data.currentPage = data.currentPage;
+                this.data.totalPage = data.totalPage;
+                this.data.totalCount = data.totalCount;
+                this.data.pageSize = data.pageSize;
+                updatePage.call(this);
             }
-            document.getElementById(this.tableBodyId).innerHTML = htmlString;
-
-            this.data.currentPage = data.currentPage;
-            this.data.totalPage = data.totalPage;
-            this.data.totalCount = data.totalCount;
-            this.data.pageSize = data.pageSize;
-            updatePage.call(this);
-        }, true);
+        });
     }
 
     function updatePage() {

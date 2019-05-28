@@ -1,98 +1,144 @@
 const Request = {};
 (function () {
-    Request.get = function (url, params, returnAll, showMessage) {
-        return request(url, 'GET', params, returnAll, showMessage);
+    Request.get = function (o) {
+        let option = {
+            url: o.url,
+            type: 'GET',
+            params: o.params,
+            returnAll: o.returnAll,
+            showMessage: o.showMessage,
+            async: o.async,
+            success: o.success,
+            fail: o.fail
+        };
+        return request(option);
     };
 
-    Request.post = function (url, params, returnAll, showMessage) {
-        return request(url, 'POST', params, returnAll, showMessage);
+    Request.post = function (o) {
+        let option = {
+            url: o.url,
+            type: 'POST',
+            params: o.params,
+            returnAll: o.returnAll,
+            showMessage: o.showMessage,
+            async: o.async,
+            success: o.success,
+            fail: o.fail
+        };
+        return request(option);
     };
 
     /**
      * @return {string}
      */
     Request.JsonToUrlParam = function (json) {
-        if(!json){
+        if (!json) {
             return '';
         }
-        let urlParam = '';
-        json.forEach(function(key, value){
-            urlParam += key + '=' + value + '&';
+        let urlSearchParams = new URLSearchParams();
+        json.forEach(function (key, value) {
+            if (!key) {
+                return;
+            }
+            urlSearchParams.set(key, value);
         });
-        return urlParam.endsWith('&') ? urlParam.substr(0, urlParam.length - 1) : urlParam;
+        return urlSearchParams.toString();
     };
 
     Request.addParamToUrl = function (url, name, value) {
-        if (url.indexOf('?') > 0) {
-            url += '&';
-        } else {
-            url += '?';
+        if (!name) {
+            return url;
         }
-        if (name) {
-            url += name + '=';
-        }
-        url += value;
-        return url;
+        let urls = url.split('?');
+        let urlSearchParams = new URLSearchParams(urls[1]);
+        urlSearchParams.set(name, value);
+        return urls[0] + '?' + urlSearchParams.toString();
     };
 
-    function request(url, type, params, returnAll, showMessage) {
-        return new Promise(function (resolve) {
-            let xhr = new XMLHttpRequest();
-            let paramStr = Request.JsonToUrlParam(params);
-            if ('GET' === type) {
-                url = Request.addParamToUrl(url, null, paramStr);
-            }
-            xhr.open(type, url, true);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-            xhr.setRequestHeader("x-requested-with", "XMLHttpRequest");
+    function response(xhr, o) {
+        let data;
+        try {
+            data = JSON.parse(xhr.responseText);
+        } catch (e) {
+            Toast.error('请求失败');
+            console.error('响应内容错误：' + o.url);
+            console.error(e);
+        }
 
-            if ('POST' === type) {
-                xhr.send(paramStr);
+        let showMessage = o.showMessage !== false && data.message && '请求成功' !== data.message;
+
+        if (data.code === 1) {
+            if (showMessage) {
+                Toast.info(data.message);
+            }
+            if (typeof o.success === 'function') {
+                o.success(o.returnAll === true ? data : data.data);
+            }
+        } else {
+            if (showMessage) {
+                Toast.error(data.message);
+            }
+            if (typeof o.fail === 'function') {
+                o.fail(o.returnAll === true ? data : data.data);
+            }
+        }
+
+        if (data.redirect) {
+            window.location.href = Request.addParamToUrl(data.redirect, 'originUrl', window.location.href);
+        }
+    }
+
+    function requestSuccess(xhr, o) {
+        if (!xhr.responseText && typeof o.success === 'function') {
+            o.success();
+        } else {
+            let responseContentTypes = xhr.getResponseHeader('Content-Type').split(';');
+            if (responseContentTypes.indexOf('application/json') !== -1) {
+                response(xhr, o);
             } else {
-                xhr.send();
+                Toast.error('请求失败');
+                console.error('响应类型[' + responseContentTypes + ']不支持：' + o.url);
             }
+        }
+    }
 
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        if (!xhr.responseText) {
-                            resolve();
-                        } else {
-                            let responseContentTypes = xhr.getResponseHeader('Content-Type').split(';');
-                            if (responseContentTypes.indexOf('application/json') !== -1) {
-                                try {
-                                    let data = JSON.parse(xhr.responseText);
-                                    if (data.code === 1) {
-                                        if(showMessage !== false && data.message && '请求成功' !== data.message){
-                                            Toast.info(data.message);
-                                        }
-                                        resolve(returnAll === true ? data : data.data);
-                                    } else {
-                                        Toast.error(data.message);
-                                        if(returnAll === true){
-                                            resolve(data);
-                                        }
-                                    }
-
-                                    if (data.redirect) {
-                                        window.location.href = data.redirect;
-                                    }
-                                } catch (e) {
-                                    Toast.error('请求失败');
-                                    console.error('响应内容错误：' + url);
-                                    console.error(e);
-                                }
-                            } else {
-                                Toast.error('请求失败');
-                                console.error('响应类型[' + responseContentTypes + ']不支持：' + url);
-                            }
-                        }
-                    } else {
-                        Toast.error('请求失败');
-                        console.error('请求失败：' + url);
-                    }
+    function finish(xhr, o) {
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    requestSuccess(xhr, o);
+                } else {
+                    Toast.error('请求失败');
+                    console.error('请求失败：' + o.url);
                 }
             }
-        })
+        };
+    }
+
+    function request(o) {
+        let xhr = new XMLHttpRequest();
+        if ('GET' === o.type && o.params) {
+            let urls = o.url.split('?');
+            let urlSearchParams = new URLSearchParams(urls[1]);
+            o.params.forEach(function (key, value) {
+                if (!key) {
+                    return;
+                }
+                urlSearchParams.set(key, value);
+            });
+            o.url = urls[0] + '?' + urlSearchParams.toString();
+        }
+        xhr.open(o.type, o.url, o.async);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+        xhr.setRequestHeader("x-requested-with", "XMLHttpRequest");
+
+        finish(xhr, o);
+
+        if ('POST' === o.type) {
+            let paramStr = Request.JsonToUrlParam(o.params);
+            xhr.send(paramStr);
+        } else {
+            xhr.send();
+        }
     }
 })();

@@ -1,6 +1,8 @@
 package com.jwzhu.platform.plugs.web.aspect;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -54,14 +56,27 @@ public class ControllerAspect {
         }
         logger.info("请求接口：{}.{}", joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName());
 
-        if (PermissionType.No != controllerHandler.permissionType()) {
-            String token = getToken(controllerHandler);
-            if (StringUtils.isEmpty(token)) {
+        String token = getToken(controllerHandler);
+
+        if (controllerHandler.clearToken()) {
+            clearToken();
+        }
+
+        if (StringUtils.isEmpty(token)) {
+            if (PermissionType.No != controllerHandler.permissionType()) {
                 throw new TokenEmptyException();
             }
+            RequestBaseParam.setRequestToken(null);
+            RequestBaseParam.setRequestUser(null);
+        } else {
             logger.debug("取出Token：{}", token);
+            try {
+                analyzeToken(token);
+            } catch (Exception e) {
+                clearToken();
+                throw e;
+            }
             RequestBaseParam.setRequestToken(token);
-            analyzeToken(token);
         }
 
         controllerHandler.permissionType().check();
@@ -77,6 +92,19 @@ public class ControllerAspect {
                     param.valid(controllerHandler.validGroups());
                 }
             }
+        }
+    }
+
+    private void clearToken() {
+        HttpServletResponse response = RequestUtil.getResponse();
+        if(response != null){
+            Cookie cookie = new Cookie(tokenService.getTokenConfig().getParamName(), null);
+            cookie.setPath("/");
+            response.addCookie(cookie);
+        }
+        HttpServletRequest request = RequestUtil.getRequest();
+        if(request != null){
+            request.getSession().removeAttribute(tokenService.getTokenConfig().getParamName());
         }
     }
 
@@ -98,21 +126,40 @@ public class ControllerAspect {
         String token = request.getParameter(tokenService.getTokenConfig().getParamName());
         if (StringUtils.isEmpty(token)) {
             token = request.getHeader(tokenService.getTokenConfig().getParamName());
+
+            if (!StringUtils.isEmpty(token)) {
+                logger.info("Token来源：请求头");
+            }
         } else {
             logger.info("Token来源：请求参数");
         }
+
         if (StringUtils.isEmpty(token)) {
             Object temp = request.getSession().getAttribute(tokenService.getTokenConfig().getParamName());
             if (!StringUtils.isEmpty(temp)) {
                 token = temp.toString();
-                if (controllerHandler.clearToken()) {
-                    request.getSession().removeAttribute(tokenService.getTokenConfig().getParamName());
-                }
+            }
+
+            if (!StringUtils.isEmpty(token)) {
                 logger.info("Token来源：session");
             }
-        } else {
-            logger.info("Token来源：请求头");
         }
+
+        if (StringUtils.isEmpty(token)) {
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : request.getCookies()) {
+                    if (cookie.getName().equals(tokenService.getTokenConfig().getParamName()) && !StringUtils.isEmpty(cookie.getValue())) {
+                        token = cookie.getValue();
+                    }
+                }
+            }
+
+            if (!StringUtils.isEmpty(token)) {
+                logger.info("Token来源：cookie");
+            }
+        }
+
         return token;
     }
 

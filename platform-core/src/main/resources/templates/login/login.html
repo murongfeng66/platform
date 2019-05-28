@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title th:text="${platformName}">登录</title>
-    <link rel="icon" type="image/x-icon" href="/image/icon.ico">
+    <link rel="icon" type="image/x-icon" href="http://static.platform.jwzhu.com/image/icon.ico">
 
-    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="http://static.platform.jwzhu.com/css/common.css">
     <style type="text/css">
-        .login-content{
+        .login-content {
             background-color: #1b1b1b;
             position: fixed;
             left: 0;
@@ -18,29 +18,29 @@
             display: flex;
         }
 
-        .login-box{
+        .login-box {
             margin: auto;
             width: 20rem;
         }
 
-        .login-box-top{
+        .login-box-top {
             color: #ffffff;
             text-align: center;
         }
 
-        .login-box-body{
+        .login-box-body {
             margin-top: 1rem;
             padding: 0 1.5rem;
         }
 
-        .login-box-bottom{
+        .login-box-bottom {
             margin-top: 1.5rem;
             text-align: right;
             padding: 0 2rem;
         }
     </style>
 </head>
-<body>
+<body data-plugs="form">
 <div class="login-content">
     <div class="login-box">
         <div class="login-box-top">
@@ -66,18 +66,25 @@
     </div>
 </div>
 </body>
-<script src="/js/common.js"></script>
+<script src="http://static.platform.jwzhu.com/js/common.js"></script>
 <script type="text/javascript">
-    window.onload = function(){
+    window.onload = function () {
         document.getElementById('form_login_password').keyDownEnter(login);
     };
 
-    let login = function(){
+    let login = function () {
         let data = document.getElementById('form_login').getForm();
 
-        Request.post('/login/login', data, false, false).then(function(data){
-            sessionStorage.setItem('resourceUrls', data);
+        Request.post({
+            url: '/login/login',
+            params: data,
+            showMessage: false,
+            success: data => {
+                console.info('callback');
+                sessionStorage.setItem('resourceUrls', data);
+            }
         });
+        console.info('finish');
     };
 </script>
 </html>

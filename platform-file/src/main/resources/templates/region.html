@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>文件域</title>
+    <link rel="icon" type="image/x-icon" href="http://static.platform.jwzhu.com/image/icon.ico">
+
+    <link rel="stylesheet" href="http://static.platform.jwzhu.com/css/common.css">
+    <style>
+        .role {
+            padding: 0.5rem 2rem;
+            border-top: 1px solid #757575;
+            border-bottom: 1px solid #757575;
+            margin-bottom: -1px;
+            display: flex;
+        }
+
+        .role-name {
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body data-plugs="form,table,dialog,permission">
+<form id="form_region_query" class="form margin-top-10">
+    <div class="form-row">
+        <div class="form-input-group">
+            <label class="form-label">关键字：</label>
+            <input name="key" class="form-input">
+        </div>
+        <div class="form-input-group">
+            <label class="form-label">状态：</label>
+            <select id="" name="regionStatus" class="form-input"></select>
+        </div>
+        <div class="form-input-group">
+            <button type="button" class="button" onclick="(()=>tableRegion.reload())()">查询</button>
+            <button type="reset" class="button">重置</button>
+        </div>
+    </div>
+</form>
+<div id="table_region">
+</div>
+<div id="dialog_region" class="dialog">
+    <div class="dialog-body">
+        <form id="form_region" class="form dialog-content">
+            <input type="hidden" name="id">
+            <div class="form-row">
+                <div class="form-input-group flex-1">
+                    <label class="form-label">编码：</label>
+                    <input type="text" name="regionCode" class="form-input" data-readonly="|Edit|">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-input-group flex-1">
+                    <label class="form-label">名称：</label>
+                    <input type="text" name="regionName" class="form-input">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-input-group flex-1">
+                    <label class="form-label">路径：</label>
+                    <input type="text" name="path" class="form-input">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="dialog_role" class="dialog">
+    <input id="dialog_role_regionId" type="hidden">
+    <div class="dialog-body">
+        <div id="role" class="dialog-content">
+
+        </div>
+    </div>
+</div>
+</body>
+<script src="http://static.platform.jwzhu.com/js/common.js"></script>
+<script type="text/javascript">
+    window.onload = function () {
+        init();
+    };
+
+    let dialogRegion, dialogRole, tableRegion;
+
+    function init() {
+        dialogRegion = Dialog.create({
+            dialogId: 'dialog_region',
+            bottomButtons: [{
+                id: 'save',
+                title: '保存',
+                permission: 'file.region.updateById',
+                classNames: 'float-right',
+                closeAfterClick: true,
+                onclick: function () {
+                    updateRegion();
+                }
+            }, {
+                id: 'submit',
+                title: '提交',
+                permission: 'file.region.add',
+                classNames: 'float-right',
+                closeAfterClick: true,
+                onclick: function () {
+                    addRegion();
+                }
+            }]
+        });
+
+        dialogRole = Dialog.create({
+            dialogId: 'dialog_role',
+            title: '角色'
+        });
+
+        tableRegion = Table.init({
+            tableDivId: 'table_region',
+            queryFormId: 'form_region_query',
+            url: '/region/queryByParam',
+            column: [
+                {title: '编码', name: 'regionCode'},
+                {title: '名称', name: 'regionName'},
+                {title: '状态', name: 'regionStatusText'},
+                {title: '添加时间', name: 'createTime'}],
+            bottomButtons: [{
+                id: 'add',
+                title: '添加',
+                permission: 'file.region.add',
+                faClass: 'fa-plus',
+                onclick: function () {
+                    addRegionView();
+                }
+            }],
+            rowOperate: function () {
+                let operates = [];
+                operates.push({
+                    id: 'edit',
+                    title: '编辑',
+                    permission: 'file.region.updateById',
+                    onclick: updateRegionView
+                });
+                if (this.regionStatus === 1) {
+                    let id = this.id;
+                    operates.push({
+                        id: 'disable',
+                        title: '禁用',
+                        permission: 'file.region.disable',
+                        onclick: function () {
+                            common.confirmRequest(id, '/region/disable', 'table_region', '是否确认禁用该文件域');
+                        }
+                    });
+                } else if (this.regionStatus === -1) {
+                    let id = this.id;
+                    operates.push({
+                        id: 'enable',
+                        title: '启用',
+                        permission: 'file.region.enable',
+                        onclick: function () {
+                            common.confirmRequest(id, '/region/enable', 'table_region', '是否确认启用该文件域');
+                        }
+                    }, {
+                        id: 'delete',
+                        title: '删除',
+                        permission: 'file.region.delete',
+                        onclick: function () {
+                            common.confirmRequest(id, '/region/delete', 'table_region', '是否确认删除该文件域');
+                        }
+                    });
+                }
+                if (this.regionType !== 1) {
+                    operates.push({
+                        id: 'role',
+                        title: '角色',
+                        permission: 'file.region.getRegionRole',
+                        onclick: roleView
+                    });
+                }
+                return operates;
+            }
+        });
+    }
+
+    let addRegionView = function () {
+        let _formHtml = document.getElementById('form_region');
+        _formHtml.reset();
+        _formHtml.addReadOnly('Add');
+        _formHtml.formShow('Add');
+        let dialogTitle = '添加文件域';
+
+        dialogRegion.setTitle(dialogTitle).hideBottomButton().showBottomButton('submit').open();
+    };
+
+    let updateRegionView = function () {
+        Request.get({
+            url: '/region/getById',
+            params: {id: this.id},
+            success: data => {
+                let _formHtml = document.getElementById('form_region');
+                _formHtml.addReadOnly('Edit');
+                _formHtml.formShow('Edit');
+                _formHtml.setForm(data);
+                dialogRegion.setTitle('编辑文件域').hideBottomButton().showBottomButton('save').open();
+            }
+        });
+    };
+
+    let addRegion = function () {
+        let formData = document.getElementById('form_region').getForm();
+        Request.post({
+            url: '/region/add',
+            params: formData,
+            success: tableRegion.reload
+        });
+    };
+
+    let updateRegion = function () {
+        let formData = document.getElementById('form_region').getForm();
+        Request.post({
+            url: '/region/updateById',
+            params: formData,
+            success: tableRegion.reload
+        });
+    };
+
+    let roleView = function () {
+        document.getElementById('dialog_role_regionId').setValue(this.id);
+        Request.get({
+            url: '/role/getRegionRole',
+            params: {regionId: this.id},
+            success: data => {
+                let htmlString = '';
+                data.forEach(function (item) {
+                    htmlString += '<div>';
+                    htmlString += '<div class="role">';
+                    htmlString += '<span class="role-name">' + item.name + '</span>';
+                    htmlString += '<input data-roleCode="' + item.code + '" type="checkbox" class="switch margin-auto margin-right-no" ' + (item.have ? 'checked' : '') + ' onchange="roleChange()">';
+                    htmlString += '</div>';
+                    htmlString += '</div>';
+                });
+                document.getElementById('role').innerHTML = htmlString;
+                dialogRole.open();
+            }
+        });
+    };
+
+    let roleChange = function () {
+        let $target = window.event.target;
+        let regionId = document.getElementById('dialog_role_regionId').value;
+        let roleCode = $target.getAttribute('data-roleCode');
+        let url = '/region/removeRegionRole';
+        if ($target.checked) {
+            url = '/region/addRegionRole';
+        }
+        Request.post({
+            url: url,
+            params: {regionId: regionId, roleCode: roleCode},
+            returnAll: true,
+            showMessage: false,
+            success: data => {
+                if (data.code !== 1) {
+                    $target.checked = !$target.checked;
+                }
+            }
+        });
+    };
+
+</script>
+</html>

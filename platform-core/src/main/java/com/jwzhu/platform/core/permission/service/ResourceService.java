@@ -96,10 +96,6 @@ public class ResourceService {
         return resourceDao.getById(id);
     }
 
-    public List<Resource> getHaveResource() {
-        return new ArrayList<>();
-    }
-
     public List<ResourcePermission> queryRoleResource(GetRoleResourceBean bean) {
         if (RequestBaseParam.getRequestUser().getType() != AdminType.Super.getCode()) {
             bean.setSelfId(RequestBaseParam.getRequestUser().getId());
@@ -135,6 +131,15 @@ public class ResourceService {
         }
         bean.setEnableStatusCode(AvailableStatus.Enable.getCode());
         return resourceDao.queryMyResourceUrl(bean);
+    }
+
+    public List<String> queryAdminResourceCode(long adminId, short userType){
+        GetRoleResourceBean bean = new GetRoleResourceBean();
+        if (userType != AdminType.Super.getCode()) {
+            bean.setSelfId(adminId);
+        }
+        bean.setEnableStatusCode(AvailableStatus.Enable.getCode());
+        return resourceDao.queryRoleResource(bean).stream().map(ResourcePermission::getCode).collect(Collectors.toList());
     }
 
     private void updateStatus(UpdateStatusBean bean, String errorMessage){

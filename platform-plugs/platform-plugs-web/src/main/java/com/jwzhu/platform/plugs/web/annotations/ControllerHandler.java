@@ -14,7 +14,6 @@ import com.jwzhu.platform.plugs.web.permission.PermissionType;
  * Token解析及验证（Token不为空时）<br/>
  * 异常包装<br/>
  * 参数验证，默认：true<br/>
- * 参数验证组，默认：空<br/>
  * 打印响应，默认：false<br/>
  * Token清除，默认：false<br/>
  * 权限类型，默认：{@link PermissionType#HavePermission}<br/>

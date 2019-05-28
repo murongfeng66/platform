@@ -14,6 +14,7 @@
         <module>platform-permission</module>
         <module>platform-plugs</module>
         <module>platform-common</module>
+        <module>platform-file</module>
     </modules>
 
     <repositories>

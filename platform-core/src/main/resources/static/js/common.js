@@ -1,81 +1,78 @@
 const common = {};
 
-loadJs('/js/request.js');
+common.config = {
+    plugsConfig: {
+        request: {js: 'http://static.platform.jwzhu.com/js/request.js'},
+        form: {js: 'http://static.platform.jwzhu.com/js/form.js', css: 'http://static.platform.jwzhu.com/css/form.css'},
+        dialog: {js: 'http://static.platform.jwzhu.com/js/dialog.js', css: 'http://static.platform.jwzhu.com/css/dialog.css'},
+        table: {js: 'http://static.platform.jwzhu.com/js/table.js', css: 'http://static.platform.jwzhu.com/css/table.css', loadCss: null},
+        datePicker: {js: 'http://static.platform.jwzhu.com/js/date-picker.js', css: 'http://static.platform.jwzhu.com/css/date-picker.css', loadJs: () => DatePicker.init},
+        permission: {js: 'http://static.platform.jwzhu.com/js/permission-filter.js', loadJs: () => PermissionFilter.filter},
+        fontIcon: {css: 'http://static.platform.jwzhu.com/font-awesome-4.7.0/css/font-awesome.min.css'}
+    }
+};
 initHtml();
+
 function initHtml() {
     removeFormDefaultEvent();
-    if(document.querySelector('.form')){
-        loadJs('/js/form.js');
-        loadCss('/css/form.css');
-    }
-    if(document.querySelector('.dialog')){
-        loadJs('/js/dialog.js');
-        loadCss('/css/dialog.css');
-    }
-    if(document.querySelector('[data-table]')){
-        loadJs('/js/table.js');
-        loadCss('/css/table.css');
-    }
-    if(document.querySelector('input.date-picker')){
-        loadJs('/js/date-picker.js').then(()=>{
-            DatePicker.init();
-        });
-        loadCss('/css/date-picker.css');
-    }
-    if(document.querySelector('[data-permission]')){
-        loadJs('/js/permission-filter.js').then(()=>{
-            PermissionFilter.filter();
+    loadJs(common.config.plugsConfig.request.js);
+    loadCss(common.config.plugsConfig.fontIcon.css);
+    let plugs = document.body.getAttribute('data-plugs');
+    if (plugs) {
+        plugs = plugs.split(',');
+        plugs.forEach(function (item) {
+            let config = common.config.plugsConfig[item];
+            loadJs(config.js).then(config.loadJs);
+            loadCss(config.css).then(config.loadCss);
         });
     }
 }
 
 function loadJs(url) {
     return new Promise(resolve => {
+        if (!url) {
+            return;
+        }
         let $script = document.createElement('script');
         $script.type = 'text/javascript';
-        if (typeof resolve !== 'undefined') {
-            if ($script.readyState) {
-                $script.onreadystatechange = function () {
-                    if ($script.readyState === "loaded" || $script.readyState === "complete") {
-                        $script.onreadystatechange = null;
-                        resolve();
-                    }
-                }
-            } else {
-                $script.onload = function () {
-                    resolve();
-                }
-            }
-        }
         $script.src = url;
         document.body.appendChild($script);
+        loadFinish($script, resolve);
     });
 }
 
 function loadCss(url) {
     return new Promise(resolve => {
+        if (!url) {
+            return;
+        }
         let $link = document.createElement('link');
         $link.rel = 'stylesheet';
-        if (typeof resolve !== 'undefined') {
-            if ($link.readyState) {
-                $link.onreadystatechange = function () {
-                    if ($link.readyState === "loaded" || $link.readyState === "complete") {
-                        $link.onreadystatechange = null;
-                        resolve();
-                    }
-                }
-            } else {
-                $link.onload = function () {
-                    resolve();
-                }
-            }
-        }
         $link.href = url;
         document.head.appendChild($link);
+        loadFinish($link, resolve);
     });
 }
 
-function removeFormDefaultEvent(){
+function loadFinish($element, resolve) {
+    if (!resolve || typeof resolve === 'undefined') {
+        return;
+    }
+    if ($element.readyState) {
+        $element.onreadystatechange = function () {
+            if ($element.readyState === "loaded" || $link.readyState === "complete") {
+                $element.onreadystatechange = null;
+                resolve();
+            }
+        }
+    } else {
+        $element.onload = function () {
+            resolve();
+        }
+    }
+}
+
+function removeFormDefaultEvent() {
     document.querySelectorAll('form').forEach(function ($form) {
         $form.onsubmit = () => {
             window.event.preventDefault();
@@ -173,6 +170,7 @@ Object.prototype.dealEmpty = function () {
  * 初始化select元素
  * @param url 地址
  * @param addAddOption 是否添加【全部】选项
+ * @param map key和value的字段名称
  */
 HTMLElement.prototype.initSelect = function (url, addAddOption, map) {
     if (this.localName !== 'select') {
@@ -180,20 +178,24 @@ HTMLElement.prototype.initSelect = function (url, addAddOption, map) {
     }
 
     let _this = this;
-    Request.get(url, null, false, false).then((data) => {
-        let htmlString = '';
-        if (addAddOption) {
-            htmlString += '<option value="">全部</option>';
-        }
-        data.forEach(function (key, value) {
-            if (map) {
-                htmlString += '<option value="' + key[map.value] + '">' + key[map.text] + '</option>';
-            } else {
-                htmlString += '<option value="' + key + '">' + value + '</option>';
+    Request.get({
+        url: url,
+        showMessage: false,
+        success: (data) => {
+            let htmlString = '';
+            if (addAddOption) {
+                htmlString += '<option value="">全部</option>';
             }
-        });
-        _this.innerHTML = htmlString;
-    })
+            data.forEach(function (key, value) {
+                if (map) {
+                    htmlString += '<option value="' + key[map.value] + '">' + key[map.text] + '</option>';
+                } else {
+                    htmlString += '<option value="' + key + '">' + value + '</option>';
+                }
+            });
+            _this.innerHTML = htmlString;
+        }
+    });
 };
 
 /**
@@ -317,8 +319,12 @@ common.confirmRequest = function (id, url, tableId, info) {
             classNames: 'dialog-confirm-ok',
             closeAfterClick: true,
             onclick: function () {
-                Request.post(url, {id: id}).then(function () {
-                    Table.reload(tableId);
+                Request.post({
+                    url: url,
+                    params: {id: id},
+                    success: () => {
+                        Table.reload(tableId);
+                    }
                 });
             }
         }]

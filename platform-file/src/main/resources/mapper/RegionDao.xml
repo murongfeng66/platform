@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jwzhu.platform.file.db.RegionDao">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into Region(regionName, regionCode, regionStatus, path, createTime) values(#{regionName}, #{regionCode}, #{regionStatus}, #{path}, #{createTime})
+    </insert>
+    <update id="updateById">
+        update Region
+        <set>
+            <trim suffixOverrides=",">
+                <if test="regionName != null">
+                    regionName = #{regionName},
+                </if>
+                <if test="regionStatus != null">
+                    regionStatus = #{regionStatus},
+                </if>
+                <if test="path != null">
+                    path = #{path},
+                </if>
+                <if test="updateTime != null">
+                    updateTime = #{updateTime},
+                </if>
+            </trim>
+        </set>
+        where id = #{id}
+    </update>
+    <select id="queryByParam" resultType="com.jwzhu.platform.file.model.Region">
+        select id, regionName, regionCode, regionStatus, path, createTime, updateTime
+        from Region
+        <where>
+            <trim suffixOverrides="and">
+                <if test="key != null">
+                    (regionName like concat('%', #{regionName}, '%') or regionCode like concat('%', #{regionName}, '%')) and
+                </if>
+                <if test="regionStatus != null">
+                    regionStatus = #{regionStatus} and
+                </if>
+            </trim>
+        </where>
+        <if test="sorts != null and sorts.size() > 0">
+            order by
+            <foreach collection="sorts" item="item" separator=",">
+                #{item.columnName} #{item.sortType}
+            </foreach>
+        </if>
+    </select>
+</mapper>

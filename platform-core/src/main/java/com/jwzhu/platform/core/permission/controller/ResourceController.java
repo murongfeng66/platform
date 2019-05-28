@@ -1,15 +1,12 @@
 package com.jwzhu.platform.core.permission.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -99,14 +96,6 @@ public class ResourceController {
     public String delete(LongParam param){
         resourceManager.delete(param.initBean());
         return "删除资源成功";
-    }
-
-    //TODO 接口添加子系统调用凭证
-    @GetMapping("queryAdminResourceUrl/{adminId}")
-    @ResponseBody
-    @ControllerHandler(permissionType = PermissionType.No)
-    public List<String> queryAdminResourceUrl(@PathVariable("adminId") long adminId){
-        return resourceManager.queryAdminResourceUrl(adminId);
     }
 
 }

@@ -34,6 +34,9 @@ public class PageBean<T> extends BaseBean{
      * 结果总数
      */
     private Integer totalCount;
+    /**
+     * 排序字段
+     */
     private List<SortItem> sorts = new LinkedList<>();
 
     /**

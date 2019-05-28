@@ -1,17 +1,17 @@
 package com.jwzhu.platform.core.permission.manager;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.jwzhu.platform.common.PlatformConfig;
+import com.jwzhu.platform.common.SystemConfig;
 import com.jwzhu.platform.common.bean.LongBean;
 import com.jwzhu.platform.common.exception.BusinessException;
 import com.jwzhu.platform.common.web.RequestBaseParam;
-import com.jwzhu.platform.core.admin.model.Admin;
-import com.jwzhu.platform.core.admin.service.AdminService;
+import com.jwzhu.platform.common.web.TokenSubject;
 import com.jwzhu.platform.core.permission.bean.GetRoleResourceBean;
 import com.jwzhu.platform.core.permission.bean.ResourceBean;
 import com.jwzhu.platform.core.permission.bean.ResourceListBean;
@@ -23,16 +23,14 @@ import com.jwzhu.platform.permission.PermissionService;
 import com.jwzhu.platform.plugs.cache.base.CacheUtil;
 
 @Service
-public class ResourceManager implements PermissionService{
+public class ResourceManager implements PermissionService {
 
     @Autowired
     private ResourceService resourceService;
     @Autowired
     private CacheUtil cacheUtil;
     @Autowired
-    private PlatformConfig platformConfig;
-    @Autowired
-    private AdminService adminService;
+    private SystemConfig systemConfig;
 
     @Transactional
     public void insert(ResourceBean bean) {
@@ -63,22 +61,31 @@ public class ResourceManager implements PermissionService{
         return resourceService.queryRoleResource(bean);
     }
 
-    public List<String> queryAdminResourceUrl(long adminId) {
-        Admin admin = adminService.getById(adminId);
-        return resourceService.queryAdminResourceUrl(adminId, admin.getAdminType());
+    @Override
+    public boolean checkNoPermission(String url) {
+        String cacheKey = getCacheKey(RequestBaseParam.getRequestUser().getId(), PermissionCacheType.Url);
+        if (cacheUtil.exist(cacheKey)) {
+            return !cacheUtil.sExists(cacheKey, url);
+        }
+
+        List<String> urls = resourceService.queryAdminResourceUrl(RequestBaseParam.getRequestUser().getId(), RequestBaseParam.getRequestUser().getType());
+        cacheUtil.sAdd(cacheKey, urls.toArray(new String[]{}));
+        cacheUtil.expired(cacheKey, systemConfig.getResourceTimeout().toMillis());
+        return !urls.contains(url);
     }
 
     @Override
-    public boolean checkPermission(String url) {
-        String cacheKey = getCacheKey(RequestBaseParam.getRequestUser().getId());
+    public Collection<String> getPermissions(PermissionCacheType type) {
+        type = type == null ? PermissionCacheType.Url : type;
+        TokenSubject subject = RequestBaseParam.getRequestUser();
+        String cacheKey = getCacheKey(subject.getId(), type);
         if (cacheUtil.exist(cacheKey)) {
-            return cacheUtil.sExists(cacheKey, url);
-        } else {
-            List<String> urls = resourceService.queryAdminResourceUrl(RequestBaseParam.getRequestUser().getId(), RequestBaseParam.getRequestUser().getType());
-            cacheUtil.sAdd(cacheKey, urls.toArray(new String[]{}));
-            cacheUtil.expired(cacheKey, platformConfig.getResourceTimeout().toMillis());
-            return urls.contains(url);
+            return cacheUtil.sMembers(cacheKey);
         }
+        Collection<String> permissions = type == PermissionCacheType.Code ? resourceService.queryAdminResourceCode(subject.getId(), subject.getType()) : resourceService.queryAdminResourceUrl(subject.getId(), subject.getType());
+        cacheUtil.sAdd(cacheKey, permissions.toArray(new String[]{}));
+        cacheUtil.expired(cacheKey, systemConfig.getResourceTimeout().toMillis());
+        return permissions;
     }
 
     public void disable(LongBean bean) {

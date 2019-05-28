@@ -12,14 +12,15 @@ import com.jwzhu.platform.plugs.web.exception.token.TokenTimeOutException;
 @Service
 public class TokenService {
 
+    //TODO Token时效校验
     private static Logger logger = LoggerFactory.getLogger(TokenService.class);
     private TokenUtil tokenUtil;
     private TokenConfig tokenConfig;
     @Autowired
     private CacheUtil cacheUtil;
 
-    private String getCacheKey(String token){
-        return tokenConfig.getParamName() + ":"+token;
+    public String getCacheKey(String token) {
+        return tokenConfig.getParamName() + ":" + token;
     }
 
     public TokenService(TokenConfig tokenConfig) {
@@ -47,7 +48,7 @@ public class TokenService {
         return subject;
     }
 
-    public void inValidToken(String token){
+    public void inValidToken(String token) {
         cacheUtil.delete(getCacheKey(token));
     }
 

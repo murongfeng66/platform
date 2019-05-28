@@ -1,6 +1,11 @@
 package com.jwzhu.platform.core.admin.controller;
 
+import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,9 +18,11 @@ import com.jwzhu.platform.common.web.RequestBaseParam;
 import com.jwzhu.platform.core.admin.manager.LoginManager;
 import com.jwzhu.platform.core.admin.param.LoginParam;
 import com.jwzhu.platform.core.permission.manager.ResourceManager;
+import com.jwzhu.platform.permission.PermissionService;
 import com.jwzhu.platform.plugs.web.annotations.ControllerHandler;
 import com.jwzhu.platform.plugs.web.permission.PermissionType;
 import com.jwzhu.platform.plugs.web.response.WebResult;
+import com.jwzhu.platform.plugs.web.token.TokenService;
 
 @RequestMapping("login")
 @Controller
@@ -29,22 +36,22 @@ public class LoginController {
     @PostMapping("login")
     @ResponseBody
     @ControllerHandler(permissionType = PermissionType.No)
-    public WebResult<List<String>> login(LoginParam param) {
+    public WebResult<Collection<String>> login(LoginParam param) {
         loginManager.login(param.initBean());
-        WebResult<List<String>> result = new WebResult<>();
-        result.setData(resourceManager.queryAdminResourceUrl(RequestBaseParam.getRequestUser().getId()));
+        WebResult<Collection<String>> result = new WebResult<>();
+        result.setData(resourceManager.getPermissions(PermissionService.PermissionCacheType.Code));
         result.setRedirect("/main");
         return result;
     }
 
     @GetMapping("logout")
     @ResponseBody
-    @ControllerHandler(clearToken = true, permissionType = PermissionType.Only_Login)
-    public WebResult<String> logout(String token) {
-        loginManager.logout(token);
-        WebResult<String> result = new WebResult<>("退出成功");
-        result.setRedirect("/login");
-        return result;
+    @ControllerHandler(clearToken = true, permissionType = PermissionType.No)
+    public void logout(HttpServletResponse response) throws IOException {
+        if (RequestBaseParam.getRequestToken() != null) {
+            loginManager.logout(RequestBaseParam.getRequestToken());
+        }
+        response.sendRedirect("/");
     }
 
 }

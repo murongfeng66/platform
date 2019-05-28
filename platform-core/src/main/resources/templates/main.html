@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title th:text="${platformName}">管理平台</title>
-    <link rel="icon" type="image/x-icon" href="/image/icon.ico">
+    <link rel="icon" type="image/x-icon" href="http://static.platform.jwzhu.com/image/icon.ico">
 
-    <link rel="stylesheet" href="/font-awesome-4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="http://static.platform.jwzhu.com/css/common.css">
     <style type="text/css">
 
         .light-line-left {
@@ -150,7 +149,7 @@
         }
 
         .content-top-nav-item .close {
-            float: right;
+            float: left;
             line-height: 2rem;
             margin-right: 10px;
             color: #e8e8e8;
@@ -180,7 +179,7 @@
     <div class="navigate">
         <div class="navigate-user">
             <img id="navigate_user_header" class="navigate-user-header" src="http://img.jwzhu.com/web_25/building/000017的副本.jpg">
-            <div id="navigate_user_name" class="navigate-user-name"><span th:text="${admin.nickname}"></span><span onclick="Request.get('/login/logout');" class="margin-left-10" style="cursor: pointer"><i class="fa fa-sign-out"></i></span></div>
+            <div id="navigate_user_name" class="navigate-user-name"><span th:text="${admin.nickname}"></span><a href="/login/logout" class="margin-left-10" style="color: #ffffff;"><i class="fa fa-sign-out"></i></a></div>
         </div>
         <div id="navigate-menus" class="navigate-menus"></div>
     </div>
@@ -191,25 +190,29 @@
     </div>
 </div>
 </body>
-<script src="/js/common.js"></script>
+<script src="http://static.platform.jwzhu.com/js/common.js"></script>
 <script type="text/javascript">
     window.onload = function () {
         queryMenu();
     };
 
     let queryMenu = function () {
-        Request.get('/queryMenu', null, false, false).then(function (data) {
-            data.forEach(function (item) {
-                let _firstItemHtml = document.createElement('div');
-                _firstItemHtml.classList.add('navigate-menus-item');
-                _firstItemHtml.innerHTML = '<div class="menu-item"><div class="light-line-left"></div><div class="margin-auto margin-left-10">' + item.name + '</div></div>';
-                document.getElementById('navigate-menus').appendChild(_firstItemHtml);
-                if (item.children) {
-                    addChildren(_firstItemHtml, item.children);
-                }
+        Request.get({
+            url: '/queryMenu',
+            showMessage: false,
+            success: data => {
+                data.forEach(function (item) {
+                    let _firstItemHtml = document.createElement('div');
+                    _firstItemHtml.classList.add('navigate-menus-item');
+                    _firstItemHtml.innerHTML = '<div class="menu-item"><div class="light-line-left"></div><div class="margin-auto margin-left-10">' + item.name + '</div></div>';
+                    document.getElementById('navigate-menus').appendChild(_firstItemHtml);
+                    if (item.children) {
+                        addChildren(_firstItemHtml, item.children);
+                    }
 
-                bindMenuClick(_firstItemHtml, item);
-            });
+                    bindMenuClick(_firstItemHtml, item);
+                });
+            }
         });
     };
 

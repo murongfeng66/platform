@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>系统资源</title>
-    <link rel="icon" type="image/x-icon" href="/image/icon.ico">
+    <link rel="icon" type="image/x-icon" href="http://static.platform.jwzhu.com/image/icon.ico">
 
-    <link rel="stylesheet" href="/font-awesome-4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="http://static.platform.jwzhu.com/css/common.css">
     <style>
         .permission {
             padding: 0.5rem 2rem;
@@ -31,7 +30,7 @@
         }
     </style>
 </head>
-<body>
+<body data-plugs="form,table,dialog,permission">
 <form id="form_role_query" class="form margin-top-10">
     <div class="form-row">
         <div class="form-input-group">
@@ -48,7 +47,7 @@
         </div>
     </div>
 </form>
-<div id="table_role" data-table>
+<div id="table_role">
 </div>
 <div id="dialog_role" class="dialog">
     <div class="dialog-body">
@@ -78,7 +77,7 @@
     </div>
 </div>
 </body>
-<script src="/js/common.js"></script>
+<script src="http://static.platform.jwzhu.com/js/common.js"></script>
 <script type="text/javascript">
     window.onload = function () {
         document.getElementById('form_role_query_roleStatus').initSelect('/availableStatus', true);
@@ -94,7 +93,7 @@
             bottomButtons: [{
                 id: 'save',
                 title: '保存',
-                permission: '/role/updateById',
+                permission: 'permission.role.updateById',
                 classNames: 'float-right',
                 closeAfterClick: true,
                 onclick: function () {
@@ -103,7 +102,7 @@
             }, {
                 id: 'submit',
                 title: '提交',
-                permission: '/role/add',
+                permission: 'permission.role.add',
                 classNames: 'float-right',
                 closeAfterClick: true,
                 onclick: function () {
@@ -129,7 +128,7 @@
             bottomButtons: [{
                 id: 'add',
                 title: '添加',
-                permission: '/role/add',
+                permission: 'permission.role.add',
                 faClass: 'fa-plus',
                 onclick: function () {
                     addRoleView();
@@ -140,12 +139,12 @@
                 operates.push({
                     id: 'edit',
                     title: '编辑',
-                    permission: '/role/updateById',
+                    permission: 'permission.role.updateById',
                     onclick: updateRoleView
                 }, {
                     id: 'permission',
                     title: '权限',
-                    permission: '/role/queryRoleResource',
+                    permission: 'permission.role.queryRoleResource',
                     onclick: permissionView
                 });
                 if (this.roleStatus === 1) {
@@ -153,7 +152,7 @@
                     operates.push({
                         id: 'disable',
                         title: '禁用',
-                        permission: '/role/disable',
+                        permission: 'permission.role.disable',
                         onclick: function () {
                             common.confirmRequest(id, '/role/disable', 'table_role', '是否确认禁用该角色');
                         }
@@ -163,14 +162,14 @@
                     operates.push({
                         id: 'enable',
                         title: '启用',
-                        permission: '/role/enable',
+                        permission: 'permission.role.enable',
                         onclick: function () {
                             common.confirmRequest(id, '/role/enable', 'table_role', '是否确认启用该角色');
                         }
                     }, {
                         id: 'delete',
                         title: '删除',
-                        permission: '/role/delete',
+                        permission: 'permission.role.delete',
                         onclick: function () {
                             common.confirmRequest(id, '/role/delete', 'table_role', '是否确认删除该角色');
                         }
@@ -189,43 +188,55 @@
     };
 
     let updateRoleView = function () {
-        Request.get('/role/getById', {id: this.id}).then(function (data) {
-            let _formHtml = document.getElementById('form_role');
-            _formHtml.addReadOnly('Edit');
-            _formHtml.setForm(data);
-            dialogRole.setTitle('编辑资源').hideBottomButton().showBottomButton('save').open();
+        Request.get({
+            url: '/role/getById',
+            params: {id: this.id},
+            success: data => {
+                let _formHtml = document.getElementById('form_role');
+                _formHtml.addReadOnly('Edit');
+                _formHtml.setForm(data);
+                dialogRole.setTitle('编辑资源').hideBottomButton().showBottomButton('save').open();
+            }
         });
     };
 
     let addRole = function () {
         let formData = document.getElementById('form_role').getForm();
-        Request.post('/role/add', formData).then(function () {
-            tableRole.reload();
+        Request.post({
+            url: '/role/add',
+            params: formData,
+            success: tableRole.reload
         });
     };
 
     let updateRole = function () {
         let formData = document.getElementById('form_role').getForm();
-        Request.post('/role/updateById', formData).then(function () {
-            tableRole.reload();
+        Request.post({
+            url: '/role/updateById',
+            params: formData,
+            success: tableRole.reload
         });
     };
 
     let permissionView = function () {
         document.getElementById('dialog_permission_roleCode').setValue(this.code);
-        Request.get('/role/queryRoleResource', {roleCode: this.code}).then(function (data) {
-            let htmlString = '';
-            data.forEach(function (item) {
-                htmlString += '<div>';
-                htmlString += '<div class="permission" onclick="permissionClick()">';
-                htmlString += '<span class="permission-name">' + item.name + '</span>';
-                htmlString += '<input data-content="' + common.string.dealEmpty(permissionType[item.type]) + '" data-resourceCode="' + item.code + '" type="checkbox" class="switch margin-auto margin-right-no" ' + (item.have ? 'checked' : '') + ' onchange="permissionChange()">';
-                htmlString += '</div>';
-                htmlString += '<div class="permission-children">' + getChildrenHtmlString(item.children) + '</div>';
-                htmlString += '</div>';
-            });
-            document.getElementById('permission').innerHTML = htmlString;
-            dialogPermission.open();
+        Request.get({
+            url: '/role/queryRoleResource',
+            params: {roleCode: this.code},
+            success: data => {
+                let htmlString = '';
+                data.forEach(function (item) {
+                    htmlString += '<div>';
+                    htmlString += '<div class="permission" onclick="permissionClick()">';
+                    htmlString += '<span class="permission-name">' + item.name + '</span>';
+                    htmlString += '<input data-content="' + common.string.dealEmpty(permissionType[item.type]) + '" data-resourceCode="' + item.code + '" type="checkbox" class="switch margin-auto margin-right-no" ' + (item.have ? 'checked' : '') + ' onchange="permissionChange()">';
+                    htmlString += '</div>';
+                    htmlString += '<div class="permission-children">' + getChildrenHtmlString(item.children) + '</div>';
+                    htmlString += '</div>';
+                });
+                document.getElementById('permission').innerHTML = htmlString;
+                dialogPermission.open();
+            }
         });
     };
 
@@ -269,9 +280,15 @@
         if ($target.checked) {
             url = '/role/addPermission';
         }
-        Request.post(url, {roleCode: roleCode, resourceCode: resourceCode}, true, false).then(data => {
-            if (data.code !== 1) {
-                $target.checked = !$target.checked;
+        Request.post({
+            url: url,
+            params: {roleCode: roleCode, resourceCode: resourceCode},
+            returnAll: true,
+            showMessage: false,
+            success: data => {
+                if (data.code !== 1) {
+                    $target.checked = !$target.checked;
+                }
             }
         });
     };

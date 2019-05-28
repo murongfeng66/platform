@@ -1,10 +1,18 @@
 package com.jwzhu.platform.core.admin.manager;
 
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.jwzhu.platform.common.enums.AvailableStatus;
 import com.jwzhu.platform.common.exception.BusinessException;
+import com.jwzhu.platform.common.exception.SystemException;
+import com.jwzhu.platform.common.util.HttpUtil;
 import com.jwzhu.platform.core.admin.bean.LoginBean;
 import com.jwzhu.platform.core.admin.model.Admin;
 import com.jwzhu.platform.core.admin.model.Login;
@@ -13,11 +21,14 @@ import com.jwzhu.platform.core.admin.service.LoginService;
 import com.jwzhu.platform.permission.PermissionService;
 import com.jwzhu.platform.plugs.cache.base.CacheUtil;
 import com.jwzhu.platform.common.web.RequestBaseParam;
+import com.jwzhu.platform.plugs.web.response.ResponseCode;
+import com.jwzhu.platform.plugs.web.response.WebResult;
 import com.jwzhu.platform.plugs.web.token.TokenService;
 import com.jwzhu.platform.common.web.TokenSubject;
 
 @Service
 public class LoginManager {
+    private Logger logger = LoggerFactory.getLogger(LoginManager.class);
     @Autowired
     private LoginService loginService;
     @Autowired
@@ -26,6 +37,8 @@ public class LoginManager {
     private TokenService tokenService;
     @Autowired
     private CacheUtil cacheUtil;
+    @Autowired
+    private PermissionService permissionService;
 
     public void login(LoginBean bean) {
         Login login = loginService.getByUsername(bean.getUsername());
@@ -62,6 +75,23 @@ public class LoginManager {
 
     public void logout(String token) {
         tokenService.inValidToken(token);
+        String cacheKey = permissionService.getCacheKey(RequestBaseParam.getRequestUser().getId(), null);
+        cacheUtil.delete(cacheKey);
+
+        Set<String> subHosts = cacheUtil.sMembers("SubSystem:" + token);
+        for (String subHost : subHosts) {
+            logger.info("{}退出", subHost);
+            HttpUtil.RequestBean requestBean = new HttpUtil.RequestBean();
+            requestBean.addHeader("x-requested-with", "XMLHttpRequest");
+            requestBean.setUrl(subHost + "/logout");
+            requestBean.addParam("Token", token);
+            String resultStr = HttpUtil.doPost(requestBean);
+            WebResult<String> result = JSON.parseObject(resultStr, new TypeReference<WebResult<String>>() {
+            });
+            if (result.getCode() != ResponseCode.SUCCESS.getCode()) {
+                logger.error("子系统退出失败");
+            }
+        }
     }
 
 }

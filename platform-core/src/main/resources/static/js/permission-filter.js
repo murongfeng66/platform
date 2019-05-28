@@ -2,13 +2,22 @@ function PermissionFilter() {
 }
 
 (() => {
-    function init(){
-        if(typeof PermissionFilter.urls === 'undefined'){
-            let urls = sessionStorage.getItem('resourceUrls');
-            if (urls) {
-                PermissionFilter.urls = urls.split(',');
-            }
+    function init() {
+        if (typeof PermissionFilter.codes !== 'undefined') {
+            return;
         }
+        let codes = sessionStorage.getItem('resourceUrls');
+        if (codes) {
+            PermissionFilter.codes = codes.split(',');
+            return;
+        }
+        Request.get({
+            url: '/getPermissionCodes',
+            async: false,
+            success:function(data){
+                PermissionFilter.codes = data;
+            }
+        });
     }
 
     PermissionFilter.filter = function () {
@@ -21,13 +30,13 @@ function PermissionFilter() {
             }
         });
     };
-    PermissionFilter.check = function(url){
-        if(!url){
+    PermissionFilter.check = function (code) {
+        if (!code) {
             return true;
         }
         init();
-        if(PermissionFilter.urls){
-            return PermissionFilter.urls.indexOf(url) > 0;
+        if (PermissionFilter.codes) {
+            return PermissionFilter.codes.indexOf(code) > 0;
         }
         return false;
     }

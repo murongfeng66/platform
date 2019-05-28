@@ -105,17 +105,17 @@ public class MybatisCutPageInterceptor implements Interceptor {
 
         if (pageBean.needCut()) {
             pageBean.setTotalCount(this.getCount(invocation, configuration, mappedStatement, boundSql, pageBean));
-        }
 
-        if (pageBean.getTotalCount() == 0 || pageBean.getCurrentPage() > pageBean.getTotalPage()) {
-            pageBean.setList(new ArrayList<>());
-            return new ArrayList<>();
-        }
+            if ((pageBean.getTotalCount() == 0 || pageBean.getCurrentPage() > pageBean.getTotalPage())) {
+                pageBean.setList(new ArrayList<>());
+                return new ArrayList<>();
+            }
 
-        String limitSql = getLimitSql(boundSql, pageBean);
-        BoundSql dataBoundSql = new BoundSql(configuration, limitSql, boundSql.getParameterMappings(), boundSql.getParameterObject());
-        MappedStatement newMappedStatement = copyFromMappedStatement(mappedStatement, new PageSqlSource(dataBoundSql));
-        invocation.getArgs()[0] = newMappedStatement;
+            String limitSql = getLimitSql(boundSql, pageBean);
+            BoundSql dataBoundSql = new BoundSql(configuration, limitSql, boundSql.getParameterMappings(), boundSql.getParameterObject());
+            MappedStatement newMappedStatement = copyFromMappedStatement(mappedStatement, new PageSqlSource(dataBoundSql));
+            invocation.getArgs()[0] = newMappedStatement;
+        }
 
         Object object = invocation.proceed();
         if (object instanceof List) {

@@ -1,22 +1,26 @@
 package com.jwzhu.platform.plugs.web.exception;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import com.jwzhu.platform.common.PlatformConfig;
+import com.jwzhu.platform.common.SystemConfig;
 import com.jwzhu.platform.common.exception.BusinessException;
 import com.jwzhu.platform.common.exception.NoPermissionException;
 import com.jwzhu.platform.common.exception.ParamException;
 import com.jwzhu.platform.common.exception.SystemException;
+import com.jwzhu.platform.common.web.RequestBaseParam;
 import com.jwzhu.platform.plugs.web.exception.token.TokenEmptyException;
 import com.jwzhu.platform.plugs.web.exception.token.TokenErrorException;
 import com.jwzhu.platform.plugs.web.exception.token.TokenTimeOutException;
-import com.jwzhu.platform.common.web.RequestBaseParam;
 import com.jwzhu.platform.plugs.web.response.ResponseCode;
 import com.jwzhu.platform.plugs.web.response.WebResult;
 
@@ -25,7 +29,7 @@ public class GlobalExceptionHandler {
 
     private final static Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
     @Autowired
-    private PlatformConfig platformConfig;
+    private SystemConfig systemConfig;
 
     @ExceptionHandler(value = JsonException.class)
     @ResponseBody
@@ -38,18 +42,27 @@ public class GlobalExceptionHandler {
         result.setMessage(getErrorMessage(throwable));
         result.setCostTime(RequestBaseParam.getCostTime());
         if (throwable instanceof TokenErrorException || throwable instanceof TokenEmptyException || throwable instanceof TokenTimeOutException) {
-            result.setRedirect(platformConfig.getLoginUrl());
+            result.setRedirect(systemConfig.getMain().getHost());
         }
         return result;
     }
 
     @ExceptionHandler(value = PageException.class)
-    public ModelAndView PageExceptionHandler(PageException e) {
+    public ModelAndView PageExceptionHandler(PageException e, HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
         Throwable throwable = e.getE();
         logger.error(throwable.getMessage(), throwable);
-        if (throwable instanceof TokenErrorException || throwable instanceof TokenEmptyException || throwable instanceof TokenTimeOutException) {
-            view.setViewName("redirect:" + platformConfig.getLoginUrl());
+        if(throwable instanceof TokenEmptyException){
+            String redirect = "/";
+            if(systemConfig.getSub() != null && !StringUtils.isEmpty(systemConfig.getSub().getHost())){
+                UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(systemConfig.getMain().getCheckLogin());
+                uriComponentsBuilder.queryParam("originUrl", request.getRequestURL().toString());
+                uriComponentsBuilder.queryParam("subHost", systemConfig.getSub().getHost());
+                redirect = uriComponentsBuilder.toUriString();
+            }
+            view.setViewName("redirect:" + redirect);
+        }else if (throwable instanceof TokenErrorException || throwable instanceof TokenTimeOutException) {
+            view.setViewName("redirect:" + systemConfig.getMain().getHost());
         } else {
             ResponseCode responseCode = ResponseCode.get(e.getE());
             view.addObject("responseCode", responseCode.getCode());

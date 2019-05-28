@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>管理员</title>
-    <link rel="icon" type="image/x-icon" href="/image/icon.ico">
+    <link rel="icon" type="image/x-icon" href="http://static.platform.jwzhu.com/image/icon.ico">
 
-    <link rel="stylesheet" href="/font-awesome-4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="http://static.platform.jwzhu.com/css/common.css">
     <style>
         .role {
             padding: 0.5rem 2rem;
@@ -22,7 +21,7 @@
         }
     </style>
 </head>
-<body>
+<body data-plugs="form,table,dialog,permission">
 <form id="form_admin_query" class="form margin-top-10">
     <div class="form-row">
         <div class="form-input-group">
@@ -35,7 +34,7 @@
         </div>
     </div>
 </form>
-<div id="table_admin" data-table>
+<div id="table_admin">
 </div>
 <div id="dialog_admin" class="dialog">
     <div class="dialog-body">
@@ -77,7 +76,7 @@
     </div>
 </div>
 </body>
-<script src="/js/common.js"></script>
+<script src="http://static.platform.jwzhu.com/js/common.js"></script>
 <script type="text/javascript">
     window.onload = function () {
         document.getElementById('form_admin_adminType').initSelect('/admin/getAddAdminType');
@@ -92,7 +91,7 @@
             bottomButtons: [{
                 id: 'save',
                 title: '保存',
-                permission: '/admin/updateById',
+                permission: 'permission.admin.updateById',
                 classNames: 'float-right',
                 closeAfterClick: true,
                 onclick: function () {
@@ -101,7 +100,7 @@
             }, {
                 id: 'submit',
                 title: '提交',
-                permission: '/admin/add',
+                permission: 'permission.admin.add',
                 classNames: 'float-right',
                 closeAfterClick: true,
                 onclick: function () {
@@ -127,7 +126,7 @@
             bottomButtons: [{
                 id: 'add',
                 title: '添加',
-                permission: '/admin/add',
+                permission: 'permission.admin.add',
                 faClass: 'fa-plus',
                 onclick: function () {
                     addAdminView();
@@ -138,7 +137,7 @@
                 operates.push({
                     id: 'edit',
                     title: '编辑',
-                    permission: '/admin/updateById',
+                    permission: 'permission.admin.updateById',
                     onclick: updateAdminView
                 });
                 if (this.adminStatus === 1) {
@@ -146,7 +145,7 @@
                     operates.push({
                         id: 'disable',
                         title: '禁用',
-                        permission: '/admin/disable',
+                        permission: 'permission.admin.disable',
                         onclick: function () {
                             common.confirmRequest(id, '/admin/disable', 'table_admin', '是否确认禁用该管理员');
                         }
@@ -156,14 +155,14 @@
                     operates.push({
                         id: 'enable',
                         title: '启用',
-                        permission: '/admin/enable',
+                        permission: 'permission.admin.enable',
                         onclick: function () {
                             common.confirmRequest(id, '/admin/enable', 'table_admin', '是否确认启用该管理员');
                         }
                     }, {
                         id: 'delete',
                         title: '删除',
-                        permission: '/admin/delete',
+                        permission: 'permission.admin.delete',
                         onclick: function () {
                             common.confirmRequest(id, '/admin/delete', 'table_admin', '是否确认删除该管理员');
                         }
@@ -173,7 +172,7 @@
                     operates.push({
                         id: 'role',
                         title: '角色',
-                        permission: '/role/getAdminRole',
+                        permission: 'permission.admin.getAdminRole',
                         onclick: roleView
                     });
                 }
@@ -193,43 +192,55 @@
     };
 
     let updateAdminView = function () {
-        Request.get('/admin/getById', {id: this.id}).then(function (data) {
-            let _formHtml = document.getElementById('form_admin');
-            _formHtml.addReadOnly('Edit');
-            _formHtml.formShow('Edit');
-            _formHtml.setForm(data);
-            dialogAdmin.setTitle('编辑管理员').hideBottomButton().showBottomButton('save').open();
+        Request.get({
+            url: '/admin/getById',
+            params: {id: this.id},
+            success: data => {
+                let _formHtml = document.getElementById('form_admin');
+                _formHtml.addReadOnly('Edit');
+                _formHtml.formShow('Edit');
+                _formHtml.setForm(data);
+                dialogAdmin.setTitle('编辑管理员').hideBottomButton().showBottomButton('save').open();
+            }
         });
     };
 
     let addAdmin = function () {
         let formData = document.getElementById('form_admin').getForm();
-        Request.post('/admin/add', formData).then(function () {
-            tableAdmin.reload();
+        Request.post({
+            url: '/admin/add',
+            params: formData,
+            success: tableAdmin.reload
         });
     };
 
     let updateAdmin = function () {
         let formData = document.getElementById('form_admin').getForm();
-        Request.post('/admin/updateById', formData).then(function () {
-            tableAdmin.reload();
+        Request.post({
+            url: '/admin/updateById',
+            params: formData,
+            success: tableAdmin.reload
         });
     };
 
     let roleView = function () {
         document.getElementById('dialog_role_adminId').setValue(this.id);
-        Request.get('/role/getAdminRole', {adminId: this.id}).then(function (data) {
-            let htmlString = '';
-            data.forEach(function (item) {
-                htmlString += '<div>';
-                htmlString += '<div class="role">';
-                htmlString += '<span class="role-name">' + item.name + '</span>';
-                htmlString += '<input data-roleCode="' + item.code + '" type="checkbox" class="switch margin-auto margin-right-no" ' + (item.have ? 'checked' : '') + ' onchange="roleChange()">';
-                htmlString += '</div>';
-                htmlString += '</div>';
-            });
-            document.getElementById('role').innerHTML = htmlString;
-            dialogRole.open();
+        Request.get({
+            url: '/role/getAdminRole',
+            params: {adminId: this.id},
+            success: data => {
+                let htmlString = '';
+                data.forEach(function (item) {
+                    htmlString += '<div>';
+                    htmlString += '<div class="role">';
+                    htmlString += '<span class="role-name">' + item.name + '</span>';
+                    htmlString += '<input data-roleCode="' + item.code + '" type="checkbox" class="switch margin-auto margin-right-no" ' + (item.have ? 'checked' : '') + ' onchange="roleChange()">';
+                    htmlString += '</div>';
+                    htmlString += '</div>';
+                });
+                document.getElementById('role').innerHTML = htmlString;
+                dialogRole.open();
+            }
         });
     };
 
@@ -241,9 +252,15 @@
         if ($target.checked) {
             url = '/admin/addAdminRole';
         }
-        Request.post(url, {adminId: adminId, roleCode: roleCode}, true, false).then(data => {
-            if (data.code !== 1) {
-                $target.checked = !$target.checked;
+        Request.post({
+            url: url,
+            params: {adminId: adminId, roleCode: roleCode},
+            returnAll: true,
+            showMessage: false,
+            success: data => {
+                if (data.code !== 1) {
+                    $target.checked = !$target.checked;
+                }
             }
         });
     };

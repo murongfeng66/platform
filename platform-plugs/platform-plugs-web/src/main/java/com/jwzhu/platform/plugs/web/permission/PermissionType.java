@@ -45,8 +45,10 @@ public enum PermissionType {
             }
 
             PermissionService permissionService = ApplicationContextUtil.getBean(PermissionService.class);
-            if(!permissionService.checkPermission(request.getRequestURI())){
-                throw new NoPermissionException();
+            if(permissionService.checkNoPermission(request.getRequestURI())){
+                if(permissionService.checkNoPermission(request.getRequestURL().toString())){
+                    throw new NoPermissionException();
+                }
             }
         }
     },

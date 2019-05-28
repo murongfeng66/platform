@@ -5,7 +5,12 @@ import java.time.LocalDateTime;
 
 public class StringUtil {
 
-    public static String create(String prefix) {
+    /**
+     * 生成编码
+     * yyMMddHHmmss+5位随机数
+     * @param prefix 前缀
+     */
+    public static String createCode(String prefix) {
         StringBuilder stringBuilder = new StringBuilder();
 
         stringBuilder.append(prefix);
