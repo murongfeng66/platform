@@ -1,21 +1,18 @@
-package com.jwzhu.platform.file.model;
+package com.jwzhu.platform.file.bean;
 
 import java.time.LocalDateTime;
 
-import com.jwzhu.platform.common.enums.AvailableStatusEscaper;
-import com.jwzhu.platform.plugs.jsonescape.bind.ShortEscape;
+import com.jwzhu.platform.common.bean.BaseBean;
 
-public class File {
+public class FileBean extends BaseBean {
 
     private Long id;
     private Long regionId;
     private Long folderId;
     private String fileName;
     private Short fileType;
-    @ShortEscape(PermissionTypeEscaper.class)
     private Short permissionType;
     private String permissionData;
-    @ShortEscape(AvailableStatusEscaper.class)
     private Short fileStatus;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;

@@ -1,15 +1,21 @@
 .dialog{
-    display: none;
     position: fixed;
     height: 100%;
-    width: 100%;
+    width: 0;
     background-color: #000000ad;
     top: 0;
 }
 
+.dialog.show{
+    width: 100%;
+}
+
 .dialog-body{
     min-width: 25%;
-    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 1rem;
+    margin: 2rem auto 0;
+    height: 100%;
 }
 
 .dialog-top{
@@ -20,7 +26,7 @@
     text-align: left;
     display: flex;
     position: relative;
-    border-bottom: 1px solid #bbbbbb;
+    border-bottom: 1px solid #e8e8e8;
 }
 
 .dialog-top-title{
@@ -49,21 +55,12 @@
     cursor: pointer;
 }
 
-.dialog-top .close {
-    color: #7c7c7c;
-    font-size: 1.5rem;
-    margin: auto 0 auto auto;
-    cursor: pointer;
-}
-
-.dialog-top .close:hover {
-    color: #c60000;
-}
-
 .dialog-content{
     background-color: #ffffff;
     margin: 0 auto;
     padding: 0.5rem 1rem;
+    overflow: scroll;
+    max-height: calc(100% - 11.5rem);
 }
 
 .dialog-content *{
@@ -73,36 +70,40 @@
 .dialog-bottom{
     margin: 0 auto;
     background-color: #ffffff;
-    padding: 0.5rem 1rem;
     display: none;
     text-align: center;
-    height: 2rem;
-    border-top: 1px solid #bbbbbb;
+    height: 3rem;
+    border-top: 1px solid #e8e8e8;
 }
 
-.dialog-bottom-button{
-    padding: 0.25rem 0.5rem;
-    font-size: 1rem;
-    background: none;
-    border: 1px solid #bbbbbb;
-    border-radius: 0.25rem;
-    cursor: pointer;
+.dialog-bottom button{
+    flex: 1;
+    height: 100%;
+    border: none;
+    border-right: 1px solid #e8e8e8;
+    border-radius: 0;
+}
+
+.dialog-bottom-double{
+    padding: 0;
+    height: 3rem;
 }
 
 .dialog-confirm-cancel{
     width: 50%;
     height: 100%;
     border: none;
-    border-right: 1px solid #757575;
     border-radius: 0;
+    border-right: 1px solid #e8e8e8;
 }
 
 .dialog-confirm-ok{
     width: 50%;
+    height: 100%;
     border: none;
     border-radius: 0;
 }
 
-.dialog-confirm{
+.dialog-top-font-confirm{
     color: #f5dc00;
 }

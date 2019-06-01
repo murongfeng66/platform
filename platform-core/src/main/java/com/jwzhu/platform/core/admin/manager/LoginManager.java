@@ -61,7 +61,9 @@ public class LoginManager {
         RequestBaseParam.setRequestUser(subject);
         RequestBaseParam.setRefreshToken(token);
 
-        String cacheKey = PermissionService.class.getSimpleName() + ":" + admin.getId();
+        String cacheKey = permissionService.getCacheKey(admin.getId(), PermissionService.PermissionCacheType.Url);
+        cacheUtil.delete(cacheKey);
+        cacheKey = permissionService.getCacheKey(admin.getId(), PermissionService.PermissionCacheType.Code);
         cacheUtil.delete(cacheKey);
     }
 
@@ -75,7 +77,9 @@ public class LoginManager {
 
     public void logout(String token) {
         tokenService.inValidToken(token);
-        String cacheKey = permissionService.getCacheKey(RequestBaseParam.getRequestUser().getId(), null);
+        String cacheKey = permissionService.getCacheKey(RequestBaseParam.getRequestUser().getId(), PermissionService.PermissionCacheType.Url);
+        cacheUtil.delete(cacheKey);
+        cacheKey = permissionService.getCacheKey(RequestBaseParam.getRequestUser().getId(), PermissionService.PermissionCacheType.Code);
         cacheUtil.delete(cacheKey);
 
         Set<String> subHosts = cacheUtil.sMembers("SubSystem:" + token);

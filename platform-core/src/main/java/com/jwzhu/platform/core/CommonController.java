@@ -51,7 +51,6 @@ public class CommonController {
     @ControllerHandler(permissionType = PermissionType.No)
     public ModelAndView login(ModelAndView view) {
         view.setViewName("login/login");
-        view.addObject("platformName", systemConfig.getName());
         return view;
     }
 
@@ -96,7 +95,6 @@ public class CommonController {
     @ControllerHandler(permissionType = PermissionType.Only_Login)
     public ModelAndView main(ModelAndView view) {
         view.setViewName("main");
-        view.addObject("platformName", systemConfig.getName());
         view.addObject("admin", userManager.getById(RequestBaseParam.getRequestUser().getId()));
         return view;
     }

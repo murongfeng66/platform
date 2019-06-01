@@ -27,7 +27,7 @@
 
 .date-picker-body-table tbody td.prefix{
     background-color: #f3f3f3;
-    color: #999999;
+    color: #a9a9a9;
 }
 
 .date-picker-body-table tbody td.current{
@@ -36,7 +36,7 @@
 
 .date-picker-body-table tbody td.next{
     background-color: #f3f3f3;
-    color: #999999;
+    color: #a9a9a9;
 }
 
 .date-picker-body-table tbody td.now{
@@ -44,12 +44,12 @@
 }
 
 .date-picker-body-table tbody td.active{
-    background-color: #999999;
+    background-color: #a9a9a9;
     color: #ffffff;
 }
 
 .date-picker-body-table tbody td:hover{
-    background-color: #999999;
+    background-color: #a9a9a9;
     color: #ffffff;
 }
 
@@ -68,7 +68,7 @@
 }
 
 .date-picker-top-left:hover{
-    background-color: #999999;
+    background-color: #a9a9a9;
     color: #ffffff;
 }
 
@@ -78,6 +78,6 @@
 }
 
 .date-picker-top-right:hover{
-    background-color: #999999;
+    background-color: #a9a9a9;
     color: #ffffff;
 }

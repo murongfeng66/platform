@@ -3,183 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title th:text="${platformName}">管理平台</title>
+    <title th:text="${systemName}">管理平台</title>
     <link rel="icon" type="image/x-icon" href="http://static.platform.jwzhu.com/image/icon.ico">
 
+    <link rel="stylesheet" href="http://static.platform.jwzhu.com/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="http://static.platform.jwzhu.com/css/common.css">
-    <style type="text/css">
-
-        .light-line-left {
-            width: 3px;
-            height: 0;
-            background-color: #2196F3;
-            margin: auto 0;
-        }
-
-        .light-line-bottom-div {
-            position: absolute;
-            height: 3px;
-            width: 100%;
-            bottom: 0;
-        }
-
-        .light-line-bottom {
-            width: 0;
-            height: 100%;
-            background-color: #2196F3;
-            margin: 0 auto;
-        }
-
-        .main-body {
-            height: 100%;
-            display: flex;
-        }
-
-        .navigate {
-            display: inline-block;
-            background-color: #252a2f;
-            color: #ffffff;
-            height: 100vh;
-            width: 10rem;
-        }
-
-        .navigate-user {
-            text-align: center;
-            border-bottom: 1px solid #e8e8e8;
-            padding: 2rem 0;
-        }
-
-        .navigate-user-header {
-            height: 4rem;
-            width: 4rem;
-            border-radius: 2rem;
-            box-shadow: 0 0 10px #e8e8e8;
-        }
-
-        .navigate-user-name {
-            margin-top: 0.4rem;
-            padding: 10px;
-        }
-
-        .navigate-menus {
-            padding: 1rem 0;
-        }
-
-        .navigate-menus-item {
-            height: 3rem;
-        }
-
-        .navigate-menus-item:hover {
-            background-color: #33373d;
-            color: #e8e8e8;
-            cursor: pointer;
-        }
-
-        .navigate-menus-item:hover .navigate-menus-item-children {
-            display: block;
-        }
-
-        .menu-item {
-            display: flex;
-            height: 3rem;
-            background-color: #252a2f;
-            position: inherit;
-        }
-
-        .menu-item:hover .light-line-left {
-            height: 100%;
-            animation: height-0-to-100 .2s;
-            -webkit-animation: height-0-to-100 .2s; /* Safari 和 Chrome */
-        }
-
-        .menu-item:hover .light-line-bottom {
-            width: 100%;
-            animation: width-0-to-100 .2s;
-            -webkit-animation: width-0-to-100 .2s; /* Safari 和 Chrome */
-        }
-
-        .navigate-menus-item-children {
-            position: relative;
-            left: 10rem;
-            top: -3rem;
-            display: none;
-            width: 10rem;
-            border-left: 0;
-            z-index: 1;
-        }
-
-        .content {
-            width: calc(100% - 10rem);
-            height: 100%;
-            border: 0;
-            position: fixed;
-            left: 10rem;
-        }
-
-        .content-top {
-            width: 100%;
-            height: 2rem;
-            line-height: 2rem;
-            color: #ffffff;
-        }
-
-        .content-top-nav {
-            display: flex;
-            padding: 0;
-            list-style: none;
-            height: 100%;
-            margin: 0;
-        }
-
-        .content-top-nav-item {
-            flex: 1 1 auto;
-            text-align: center;
-            border: 1px solid #e8e8e8;
-            border-top: 0;
-            cursor: pointer;
-            background-color: #252a2f;
-        }
-
-        .content-top-nav-item:hover {
-            background-color: #7c7c7c;
-        }
-
-        .content-top-nav-item.active {
-            background-color: #7c7c7c;
-        }
-
-        .content-top-nav-item .close {
-            float: left;
-            line-height: 2rem;
-            margin-right: 10px;
-            color: #e8e8e8;
-            height: 2rem;
-            width: 2rem;
-            font-size: 1rem;
-        }
-
-        .content-top-nav-item .close:hover {
-            color: #c60000;
-        }
-
-        .content-body {
-            width: 100%;
-            height: calc(100% - 2rem);
-            border: 0;
-            display: none;
-        }
-
-        .content-body.active {
-            display: block;
-        }
-    </style>
+    <link rel="stylesheet" href="http://static.platform.jwzhu.com/css/main.css">
 </head>
 <body>
 <div id="middle" class="main-body">
     <div class="navigate">
         <div class="navigate-user">
             <img id="navigate_user_header" class="navigate-user-header" src="http://img.jwzhu.com/web_25/building/000017的副本.jpg">
-            <div id="navigate_user_name" class="navigate-user-name"><span th:text="${admin.nickname}"></span><a href="/login/logout" class="margin-left-10" style="color: #ffffff;"><i class="fa fa-sign-out"></i></a></div>
+            <div id="navigate_user_name" class="navigate-user-name"><span th:text="${admin.nickname}"></span><a href="/login/logout" class="margin-left-1" style="color: #ffffff;"><i class="fa fa-sign-out"></i></a></div>
         </div>
         <div id="navigate-menus" class="navigate-menus"></div>
     </div>
@@ -191,6 +27,7 @@
 </div>
 </body>
 <script src="http://static.platform.jwzhu.com/js/common.js"></script>
+<script src="http://static.platform.jwzhu.com/js/request.js"></script>
 <script type="text/javascript">
     window.onload = function () {
         queryMenu();
@@ -204,7 +41,7 @@
                 data.forEach(function (item) {
                     let _firstItemHtml = document.createElement('div');
                     _firstItemHtml.classList.add('navigate-menus-item');
-                    _firstItemHtml.innerHTML = '<div class="menu-item"><div class="light-line-left"></div><div class="margin-auto margin-left-10">' + item.name + '</div></div>';
+                    _firstItemHtml.innerHTML = `<div class="menu-item"><div class="light-line-left"></div><div class="margin-auto margin-left-1">${item.name}</div></div>`;
                     document.getElementById('navigate-menus').appendChild(_firstItemHtml);
                     if (item.children) {
                         addChildren(_firstItemHtml, item.children);
@@ -228,7 +65,7 @@
         children.forEach(function (childrenItem) {
             let _childrenItemHtml = document.createElement('div');
             _childrenItemHtml.classList.add('menu-item');
-            _childrenItemHtml.innerHTML = '<div class="margin-auto margin-left-10">' + childrenItem.name + '</div><div class="light-line-bottom-div"><div class="light-line-bottom"></div></div>';
+            _childrenItemHtml.innerHTML = `<div class="margin-auto margin-left-1">${childrenItem.name}</div><div class="light-line-bottom-div"><div class="light-line-bottom"></div></div>`;
             _childrenHtml.appendChild(_childrenItemHtml);
             if (childrenItem.children) {
                 addChildren(_childrenItemHtml, childrenItem.children);
@@ -256,8 +93,8 @@
                 _activeContent.classList.remove('active');
             }
 
-            let iFrameId = 'menu_content_' + item.code.replace(/\./g, '_');
-            let navItemId = 'content_top_nav_' + item.code.replace(/\./g, '_');
+            let iFrameId = `menu_content_${item.code.replace(/\./g, '_')}`;
+            let navItemId = `content_top_nav_${item.code.replace(/\./g, '_')}`;
             let _iFrameHtml = document.getElementById(iFrameId);
             let _navItemHtml = document.getElementById(navItemId);
 
@@ -267,7 +104,7 @@
                 _navItemHtml.classList.add('content-top-nav-item');
                 _navItemHtml.onclick = navClick;
                 _navItemHtml.setAttribute('data-iFrameId', iFrameId);
-                _navItemHtml.innerHTML = item.name + '<div class="close fa fa-times" onclick="navClose()"></div>';
+                _navItemHtml.innerHTML = `${item.name}<div class="close fa fa-times" onclick="navClose()"></div>`;
                 document.getElementById('content_top_nav').appendChild(_navItemHtml);
 
                 _iFrameHtml = document.createElement('iframe');
@@ -309,8 +146,7 @@
         _navItemHtml.remove();
         _iFrameHtml.remove();
 
-        let nextActiveNavItemSelector = '#' + _navItemHtml.id + '+li';
-        let nextActiveNavItemHtml = document.querySelector(nextActiveNavItemSelector);
+        let nextActiveNavItemHtml = document.querySelector(`#${_navItemHtml.id}+li`);
         nextActiveNavItemHtml = nextActiveNavItemHtml == null ? document.querySelector('#content_top_nav :first-child') : nextActiveNavItemHtml;
         if (nextActiveNavItemHtml != null) {
             let nextActiveIFrameHtml = document.getElementById(nextActiveNavItemHtml.getAttribute('data-iFrameId'));

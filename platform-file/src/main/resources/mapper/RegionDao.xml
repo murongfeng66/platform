@@ -40,7 +40,7 @@
         <if test="sorts != null and sorts.size() > 0">
             order by
             <foreach collection="sorts" item="item" separator=",">
-                #{item.columnName} #{item.sortType}
+                ${item.columnName} ${item.sortType}
             </foreach>
         </if>
     </select>

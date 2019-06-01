@@ -6,10 +6,14 @@
     <title>系统资源</title>
     <link rel="icon" type="image/x-icon" href="http://static.platform.jwzhu.com/image/icon.ico">
 
+    <link rel="stylesheet" href="http://static.platform.jwzhu.com/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="http://static.platform.jwzhu.com/css/common.css">
+    <link rel="stylesheet" href="http://static.platform.jwzhu.com/css/form.css">
+    <link rel="stylesheet" href="http://static.platform.jwzhu.com/css/table.css">
+    <link rel="stylesheet" href="http://static.platform.jwzhu.com/css/dialog.css">
 </head>
-<body data-plugs="form,table,dialog,permission">
-<form id="form_resource_query" class="form margin-top-10">
+<body>
+<form id="form_resource_query" class="form margin-top-1 form-inline">
     <div class="form-row">
         <div class="form-input-group">
             <label class="form-label">关键字：</label>
@@ -23,9 +27,9 @@
             <label class="form-label">状态：</label>
             <select id="form_resource_query_availableStatus" name="resourceStatus" class="form-input"></select>
         </div>
-        <div class="form-input-group">
-            <button type="button" class="button" onclick="(function(){tableResource.reload();})()" data-permission="/resource/queryByParam">查询</button>
-            <button type="reset" class="button">重置</button>
+        <div class="form-input-group margin-left-1">
+            <button type="button" onclick="(function(){tableResource.reload();})()" data-permission="permission.resource.queryByParam">查询</button>
+            <button type="reset" class="margin-left-1">重置</button>
         </div>
     </div>
 </form>
@@ -82,127 +86,126 @@
 </div>
 </body>
 <script src="http://static.platform.jwzhu.com/js/common.js"></script>
+<script src="http://static.platform.jwzhu.com/js/request.js"></script>
+<script src="http://static.platform.jwzhu.com/js/form.js"></script>
+<script src="http://static.platform.jwzhu.com/js/table.js"></script>
+<script src="http://static.platform.jwzhu.com/js/dialog.js"></script>
+<script src="http://static.platform.jwzhu.com/js/permission-filter.js"></script>
 <script type="text/javascript">
     window.onload = function () {
+        PermissionFilter.filter();
         document.getElementById('form_resource_menuShow').initSelect('/yesOrNo');
         document.getElementById('form_resource_type').initSelect('/resource/resourceType');
         document.getElementById('form_resource_query_type').initSelect('/resource/resourceType', true);
         document.getElementById('form_resource_query_availableStatus').initSelect('/availableStatus', true);
-        init();
     };
 
-    let dialogResource, tableResource;
-
-    function init() {
-        dialogResource = Dialog.create({
-            dialogId: 'dialog_resource',
-            bottomButtons: [{
-                id: 'save',
-                title: '保存',
-                permission: 'permission.resource.updateById',
-                classNames: 'float-right',
-                closeAfterClick: true,
-                onclick: function () {
-                    updateResource();
-                }
-            }, {
-                id: 'submit',
-                title: '提交',
-                permission: 'permission.resource.add',
-                classNames: 'float-right',
-                closeAfterClick: true,
-                onclick: function () {
-                    addResource();
-                }
-            }]
-        });
-
-        tableResource = Table.init({
-            tableDivId: 'table_resource',
-            queryFormId: 'form_resource_query',
-            url: '/resource/queryByParam',
-            column: [
-                {title: '父编码', name: 'parentCode'},
-                {title: '编码', name: 'code'},
-                {title: '名称', name: 'name'},
-                {title: '类型', name: 'typeText', width: 80},
-                {title: '状态', name: 'resourceStatusText', width: 80}
-            ],
-            bottomButtons: [{
-                id: 'add',
-                title: '添加',
-                permission: 'permission.resource.add',
-                faClass: 'fa-plus',
-                onclick: function () {
-                    addResourceView();
-                }
-            }],
-            rowOperate: function () {
-                let operates = [];
-                operates.push({
-                    id: 'view',
-                    title: '查看',
-                    permission: 'permission.resource.getById',
-                    onclick: viewResourceView
-                }, {
-                    id: 'edit',
-                    title: '编辑',
-                    permission: 'permission.resource.updateById',
-                    onclick: updateResourceView
-                });
-                if (this.resourceStatus === 1) {
-                    let id = this.id;
-                    operates.push({
-                        id: 'disable',
-                        title: '禁用',
-                        permission: 'permission.resource.disable',
-                        onclick: function () {
-                            common.confirmRequest(id, '/resource/disable', 'table_resource', '是否确认禁用该资源');
-                        }
-                    });
-                } else if (this.resourceStatus === -1) {
-                    let id = this.id;
-                    operates.push({
-                        id: 'enable',
-                        title: '启用',
-                        permission: 'permission.resource.enable',
-                        onclick: function () {
-                            common.confirmRequest(id, '/resource/enable', 'table_resource', '是否确认启用该资源');
-                        }
-                    }, {
-                        id: 'delete',
-                        title: '删除',
-                        permission: 'permission.resource.delete',
-                        onclick: function () {
-                            common.confirmRequest(id, '/resource/delete', 'table_resource', '是否确认删除该资源');
-                        }
-                    });
-                }
-                if (this.type === 1) {
-                    operates.push({
-                        id: 'addPage',
-                        title: '添加页面',
-                        permission: 'permission.resource.add',
-                        onclick: addResourceView
-                    });
-                } else if (this.type === 2) {
-                    operates.push({
-                        id: 'addFunction',
-                        title: '添加功能',
-                        permission: 'permission.resource.add',
-                        onclick: addResourceView
-                    });
-                }
-                operates.push({
-                    id: 'copy',
-                    title: '复制',
-                    permission: 'permission.resource.add',
-                    onclick: copyResourceView
-                });
-                return operates;
+    let dialogResource = Dialog.create({
+        dialogId: 'dialog_resource',
+        bottomButtons: [{
+            id: 'save',
+            title: '保存',
+            permission: 'permission.resource.updateById',
+            closeAfterClick: true,
+            onclick: function () {
+                updateResource();
             }
-        });
-    }
+        }, {
+            id: 'submit',
+            title: '提交',
+            permission: 'permission.resource.add',
+            closeAfterClick: true,
+            onclick: function () {
+                addResource();
+            }
+        }]
+    });
+
+    let tableResource = Table.init({
+        tableDivId: 'table_resource',
+        queryFormId: 'form_resource_query',
+        url: '/resource/queryByParam',
+        column: [
+            {title: '父编码', name: 'parentCode'},
+            {title: '编码', name: 'code'},
+            {title: '名称', name: 'name'},
+            {title: '类型', name: 'typeText', width: 80},
+            {title: '状态', name: 'resourceStatusText', width: 80}
+        ],
+        bottomButtons: [{
+            id: 'add',
+            title: '添加',
+            permission: 'permission.resource.add',
+            faClass: 'fa-plus',
+            onclick: function () {
+                addResourceView();
+            }
+        }],
+        rowOperate: function () {
+            let operates = [];
+            operates.push({
+                id: 'view',
+                title: '查看',
+                permission: 'permission.resource.getById',
+                onclick: viewResourceView
+            }, {
+                id: 'edit',
+                title: '编辑',
+                permission: 'permission.resource.updateById',
+                onclick: updateResourceView
+            });
+            if (this.resourceStatus === 1) {
+                let id = this.id;
+                operates.push({
+                    id: 'disable',
+                    title: '禁用',
+                    permission: 'permission.resource.disable',
+                    onclick: function () {
+                        common.confirmRequest(id, '/resource/disable', 'table_resource', '是否确认禁用该资源');
+                    }
+                });
+            } else if (this.resourceStatus === -1) {
+                let id = this.id;
+                operates.push({
+                    id: 'enable',
+                    title: '启用',
+                    permission: 'permission.resource.enable',
+                    onclick: function () {
+                        common.confirmRequest(id, '/resource/enable', 'table_resource', '是否确认启用该资源');
+                    }
+                }, {
+                    id: 'delete',
+                    title: '删除',
+                    permission: 'permission.resource.delete',
+                    onclick: function () {
+                        common.confirmRequest(id, '/resource/delete', 'table_resource', '是否确认删除该资源');
+                    }
+                });
+            }
+            if (this.type === 1) {
+                operates.push({
+                    id: 'addPage',
+                    title: '添加页面',
+                    permission: 'permission.resource.add',
+                    onclick: addResourceView
+                });
+            } else if (this.type === 2) {
+                operates.push({
+                    id: 'addFunction',
+                    title: '添加功能',
+                    permission: 'permission.resource.add',
+                    onclick: addResourceView
+                });
+            }
+            operates.push({
+                id: 'copy',
+                title: '复制',
+                permission: 'permission.resource.add',
+                onclick: copyResourceView
+            });
+            return operates;
+        }
+    });
 
     let addResourceView = function () {
         let $formHtml = document.getElementById('form_resource');

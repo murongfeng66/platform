@@ -92,11 +92,11 @@ public class MybatisCutPageInterceptor implements Interceptor {
     @SuppressWarnings({"rawtypes", "unchecked"})
     private Object doCutPage(Invocation invocation, PageBean pageBean) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, SQLException {
         MappedStatement mappedStatement = (MappedStatement)invocation.getArgs()[0];
-        ReflectUtils.setFieldValue(mappedStatement.getParameterMap(), "parameterMappings", new ArrayList<>());
+//        ReflectUtils.setFieldValue(mappedStatement.getParameterMap(), "parameterMappings", new ArrayList<>());
         BoundSql boundSql = mappedStatement.getBoundSql(pageBean);
 
-        List parameterMappings = (List) ReflectUtils.getFieldValue(boundSql, "parameterMappings");
-        ReflectUtils.setFieldValue(mappedStatement.getParameterMap(), "parameterMappings", parameterMappings);
+//        List parameterMappings = (List) ReflectUtils.getFieldValue(boundSql, "parameterMappings");
+//        ReflectUtils.setFieldValue(mappedStatement.getParameterMap(), "parameterMappings", parameterMappings);
 
         Configuration configuration = mappedStatement.getConfiguration();
         if (sqlNames.isEmpty()) {
@@ -113,7 +113,13 @@ public class MybatisCutPageInterceptor implements Interceptor {
 
             String limitSql = getLimitSql(boundSql, pageBean);
             BoundSql dataBoundSql = new BoundSql(configuration, limitSql, boundSql.getParameterMappings(), boundSql.getParameterObject());
+            Object additionalParameters = ReflectUtils.getFieldValue(boundSql, "additionalParameters");
+            ReflectUtils.setFieldValue(dataBoundSql, "additionalParameters", additionalParameters);
+            Object metaParameters = ReflectUtils.getFieldValue(boundSql, "metaParameters");
+            ReflectUtils.setFieldValue(dataBoundSql, "metaParameters", metaParameters);
+
             MappedStatement newMappedStatement = copyFromMappedStatement(mappedStatement, new PageSqlSource(dataBoundSql));
+
             invocation.getArgs()[0] = newMappedStatement;
         }
 

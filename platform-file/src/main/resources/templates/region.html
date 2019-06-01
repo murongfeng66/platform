@@ -6,23 +6,14 @@
     <title>文件域</title>
     <link rel="icon" type="image/x-icon" href="http://static.platform.jwzhu.com/image/icon.ico">
 
+    <link rel="stylesheet" href="http://static.platform.jwzhu.com/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="http://static.platform.jwzhu.com/css/common.css">
-    <style>
-        .role {
-            padding: 0.5rem 2rem;
-            border-top: 1px solid #757575;
-            border-bottom: 1px solid #757575;
-            margin-bottom: -1px;
-            display: flex;
-        }
-
-        .role-name {
-            pointer-events: none;
-        }
-    </style>
+    <link rel="stylesheet" href="http://static.platform.jwzhu.com/css/form.css">
+    <link rel="stylesheet" href="http://static.platform.jwzhu.com/css/table.css">
+    <link rel="stylesheet" href="http://static.platform.jwzhu.com/css/dialog.css">
 </head>
-<body data-plugs="form,table,dialog,permission">
-<form id="form_region_query" class="form margin-top-10">
+<body>
+<form id="form_region_query" class="form margin-top-1 form-inline">
     <div class="form-row">
         <div class="form-input-group">
             <label class="form-label">关键字：</label>
@@ -32,9 +23,9 @@
             <label class="form-label">状态：</label>
             <select id="" name="regionStatus" class="form-input"></select>
         </div>
-        <div class="form-input-group">
-            <button type="button" class="button" onclick="(()=>tableRegion.reload())()">查询</button>
-            <button type="reset" class="button">重置</button>
+        <div class="form-input-group margin-left-1">
+            <button type="button" onclick="(()=>tableRegion.reload())()">查询</button>
+            <button type="reset" class="margin-left-1">重置</button>
         </div>
     </div>
 </form>
@@ -75,8 +66,14 @@
 </div>
 </body>
 <script src="http://static.platform.jwzhu.com/js/common.js"></script>
+<script src="http://static.platform.jwzhu.com/js/request.js"></script>
+<script src="http://static.platform.jwzhu.com/js/form.js"></script>
+<script src="http://static.platform.jwzhu.com/js/table.js"></script>
+<script src="http://static.platform.jwzhu.com/js/dialog.js"></script>
+<script src="http://static.platform.jwzhu.com/js/permission-filter.js"></script>
 <script type="text/javascript">
     window.onload = function () {
+        PermissionFilter.filter();
         init();
     };
 
@@ -165,14 +162,6 @@
                         }
                     });
                 }
-                if (this.regionType !== 1) {
-                    operates.push({
-                        id: 'role',
-                        title: '角色',
-                        permission: 'file.region.getRegionRole',
-                        onclick: roleView
-                    });
-                }
                 return operates;
             }
         });
@@ -217,48 +206,6 @@
             url: '/region/updateById',
             params: formData,
             success: tableRegion.reload
-        });
-    };
-
-    let roleView = function () {
-        document.getElementById('dialog_role_regionId').setValue(this.id);
-        Request.get({
-            url: '/role/getRegionRole',
-            params: {regionId: this.id},
-            success: data => {
-                let htmlString = '';
-                data.forEach(function (item) {
-                    htmlString += '<div>';
-                    htmlString += '<div class="role">';
-                    htmlString += '<span class="role-name">' + item.name + '</span>';
-                    htmlString += '<input data-roleCode="' + item.code + '" type="checkbox" class="switch margin-auto margin-right-no" ' + (item.have ? 'checked' : '') + ' onchange="roleChange()">';
-                    htmlString += '</div>';
-                    htmlString += '</div>';
-                });
-                document.getElementById('role').innerHTML = htmlString;
-                dialogRole.open();
-            }
-        });
-    };
-
-    let roleChange = function () {
-        let $target = window.event.target;
-        let regionId = document.getElementById('dialog_role_regionId').value;
-        let roleCode = $target.getAttribute('data-roleCode');
-        let url = '/region/removeRegionRole';
-        if ($target.checked) {
-            url = '/region/addRegionRole';
-        }
-        Request.post({
-            url: url,
-            params: {regionId: regionId, roleCode: roleCode},
-            returnAll: true,
-            showMessage: false,
-            success: data => {
-                if (data.code !== 1) {
-                    $target.checked = !$target.checked;
-                }
-            }
         });
     };
 

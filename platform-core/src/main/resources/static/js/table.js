@@ -13,11 +13,12 @@ const TableCache = {};
             column: o.column,
             selectModel: o.selectModel || 'single',
             bottomButtons: o.bottomButtons || [],
-            reloadButton: o.reloadButton || true,
+            reloadButton: o.reloadButton === undefined ? true : o.reloadButton,
             pageSizes: o.pageSizes || [15, 30, 45],
             rowClick: o.rowClick,
             rowDbClick: o.rowDbClick,
             columnClick: o.columnClick,
+            defaultAverageWidth: o.defaultAverageWidth === undefined ? false : o.defaultAverageWidth,
             rowOperate: o.rowOperate
         };
 
@@ -149,51 +150,62 @@ const TableCache = {};
     }
 
     function createTable() {
-        let $tableDivHtml = document.getElementById(this.tableDivId);
-        let averageColumnNum = this.option.column.length;
-        let tableRemainWidth = $tableDivHtml.clientWidth;
-        this.option.column.forEach((item) => {
-            if (item.width) {
-                averageColumnNum--;
-                tableRemainWidth -= item.width;
-            }
-        });
-        let columnDefaultWidth = (tableRemainWidth / averageColumnNum / $tableDivHtml.clientWidth * 100).toFixed(2);
+        document.getElementById(this.tableDivId).innerHTML = `<table id="${this.tableId}" class="table">
+                                                                    <thead id="${this.tableHeadId}" class="table-head">
+                                                                        <tr>${getHeadHtml.call(this)}</tr>
+                                                                    </thead>
+                                                                    <tbody id="${this.tableBodyId}" class="table-body table-interval">
+                                                                        <tr id="${this.tableBodyId}_row_empty" class="opacity-0-1">
+                                                                            <td class="text-center table-empty" colspan="${this.option.column.length}">暂无数据</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                                <div id="${this.tableBottomId}" class="table-bottom">
+                                                                    <div id="${this.tableBottomPageId}" class="table-bottom-page">
+                                                                        <span id="${this.tableBottomPageFirstId}" class="page-item fa fa-angle-double-left fa-lg" data-page="firstPage" disabled></span>
+                                                                        <span id="${this.tableBottomPagePreId}" class="page-item fa fa-angle-left fa-lg" data-page="prePage" disabled></span>
+                                                                        <input id="${this.tableBottomPagePageId}" type="number" class="page-item page-input" min="1">
+                                                                        <span id="${this.tableBottomPageNextId}" class="page-item fa fa-angle-right fa-lg" data-page="nextPage" disabled></span>
+                                                                        <span id="${this.tableBottomPageLastId}" class="page-item fa fa-angle-double-right fa-lg" data-page="lastPage" disabled></span>
+                                                                        <select id="${this.tableBottomPageSizeId}" class="page-item page-size">
+                                                                            ${getPageSizeHtml.call(this)}
+                                                                        </select>
+                                                                    </div>
+                                                                    <span id="${this.tableBottomInfoId}" class="table-bottom-info"></span>
+                                                                </div>`;
+    }
 
-        let htmlString = '<table id="' + this.tableId + '" class="table"><thead id="' + this.tableHeadId + '" class="table-head">';
-        htmlString += '<tr>';
+    function getHeadHtml() {
+        let htmlString = '';
+
+        let $tableDivHtml = document.getElementById(this.tableDivId);
+
+        let columnDefaultWidth = '';
+        if (this.option.defaultAverageWidth) {
+            let averageColumnNum = this.option.column.length;
+            let tableRemainWidth = $tableDivHtml.clientWidth;
+            this.option.column.forEach((item) => {
+                if (item.width) {
+                    averageColumnNum--;
+                    tableRemainWidth -= item.width;
+                }
+            });
+            columnDefaultWidth = (tableRemainWidth / averageColumnNum / $tableDivHtml.clientWidth * 100).toFixed(2);
+        }
 
         this.option.column.forEach((item) => {
             item.width = item.width ? (item.width / $tableDivHtml.clientWidth * 100).toFixed(2) : columnDefaultWidth;
-
-            htmlString += '<th style="width: ' + item.width + '%">' + item.title + '</th>';
+            htmlString += `<th${item.width ? ` style="width: ${item.width}%"` : ''}>${item.title}</th>`;
         });
-        htmlString += '</tr></thead>';
+        return htmlString;
+    }
 
-        htmlString += '<tbody id="' + this.tableBodyId + '" class="table-body table-interval">';
-        htmlString += '<tr id="' + this.tableBodyId + '_row_empty" class="opacity-0-1"><td class="text-center table-empty" colspan="' + this.option.column.length + '">暂无数据</td></tr>';
-        htmlString += '</tbody></table>';
-
-        htmlString += '<div id="' + this.tableBottomId + '" class="table-bottom">';
-        htmlString += '<div id="' + this.tableBottomPageId + '" class="table-bottom-page">';
-        htmlString += '<span id="' + this.tableBottomPageFirstId + '" class="page-item" data-page="firstPage" disabled>&laquo;</span>';
-        htmlString += '<span id="' + this.tableBottomPagePreId + '" class="page-item" data-page="prePage" disabled>&lt;</span>';
-        htmlString += '<input id="' + this.tableBottomPagePageId + '" type="number" class="page-item page-input" min="1">';
-        htmlString += '<span id="' + this.tableBottomPageNextId + '" class="page-item" data-page="nextPage" disabled>&gt;</span>';
-        htmlString += '<span id="' + this.tableBottomPageLastId + '" class="page-item" data-page="lastPage" disabled>&raquo;</span>';
-        htmlString += '<select id="' + this.tableBottomPageSizeId + '" class="page-item page-size">';
+    function getPageSizeHtml() {
+        let htmlString = '';
         this.option.pageSizes.forEach((pageSize) => {
-            htmlString += '<option value="' + pageSize + '">' + pageSize + '</option>';
+            htmlString += `<option value="${pageSize}">${pageSize}</option>`;
         });
-        htmlString += '</select>';
-        htmlString += '</div>';
-
-        htmlString += '<span id="' + this.tableBottomInfoId + '" class="table-bottom-info">';
-        htmlString += '</span>';
-
-        htmlString += '</div>';
-
-        $tableDivHtml.innerHTML = htmlString;
+        return htmlString;
     }
 
     function bindPageEvent() {
@@ -235,12 +247,7 @@ const TableCache = {};
                 $buttonHtml.classList.add(button.classNames);
             }
             $buttonHtml.style.color = button.color;
-            let htmlString = '';
-            if (button.faClass) {
-                htmlString += '<i class="fa ' + button.faClass + '"></i>';
-            }
-            htmlString += button.title;
-            $buttonHtml.innerHTML = htmlString;
+            $buttonHtml.innerHTML = `${button.faClass ? `<i class="fa ${button.faClass}"></i>` : ''}${button.title}`;
             $buttonHtml.onclick = () => {
                 if (typeof button.onclick === 'function') {
                     button.onclick.call(this);
@@ -364,39 +371,16 @@ const TableCache = {};
             success: data => {
                 let htmlString = '';
                 if (data.code !== 1 || data.totalCount === 0) {
-                    htmlString += '<tr id="' + this.tableBodyId + 'row_empty" class="opacity-0-1"><td class="text-center table-empty" colspan="' + this.option.column.length + '">暂无数据</td></tr>';
+                    htmlString += `<tr id="${this.tableBodyId}row_empty" class="opacity-0-1"><td class="text-center table-empty" colspan="${this.option.column.length}">暂无数据</td></tr>`;
                 } else {
                     data.data.forEach((rowItem, rowIndex) => {
                         this.data.list[rowIndex] = rowItem;
                         this.operateButtons[rowIndex] = [];
 
-                        htmlString += '<tr id="' + this.tableBodyId + '_row_' + rowIndex + '" class="opacity-0-1" data-rowIndex="' + rowIndex + '">';
+                        htmlString += `<tr id="${this.tableBodyId}_row_${rowIndex}" class="opacity-0-1" data-rowIndex="${rowIndex}">`;
 
                         this.option.column.forEach((columnItem, columnIndex) => {
-                            htmlString += '<td data-rowIndex="' + rowIndex + '" data-columnIndex="' + columnIndex + '">';
-                            if (columnItem.name === 'operate' && typeof this.option.rowOperate === 'function') {
-                                let buttons = this.option.rowOperate.call(rowItem);
-                                buttons.forEach((button, index) => {
-                                    if (button.permission && typeof PermissionFilter !== 'undefined' && !PermissionFilter.check(button.permission)) {
-                                        return;
-                                    }
-
-                                    this.operateButtons[rowIndex][index] = button;
-
-                                    htmlString += '<span class="table-row-operate ' + common.string.dealEmpty(button.classNames) + '" data-buttonIndex="' + index + '">';
-                                    if (button.faClass) {
-                                        htmlString += '<i class="fa ' + button.faClass + '"></i>';
-                                    }
-                                    htmlString += button.title + '</span>';
-                                });
-                            } else {
-                                if (columnItem.formatter && typeof columnItem.formatter === 'function') {
-                                    htmlString += common.string.dealEmpty(columnItem.formatter.call(rowItem, rowItem[columnItem.name]));
-                                } else {
-                                    htmlString += common.string.dealEmpty(rowItem[columnItem.name]);
-                                }
-                            }
-                            htmlString += '</td>';
+                            htmlString += `<td data-rowIndex="${rowIndex}" data-columnIndex="${columnIndex}">${getTdHtml.call(this, rowIndex, rowItem, columnItem)}</td>`;
                         });
 
                         htmlString += '</tr>';
@@ -413,8 +397,34 @@ const TableCache = {};
         });
     }
 
+    function getTdHtml(rowIndex, rowItem, columnItem) {
+        if (columnItem.name === 'operate' && typeof this.option.rowOperate === 'function') {
+            let htmlString = '';
+            let buttons = this.option.rowOperate.call(rowItem);
+            buttons.forEach((button, index) => {
+                if (button.permission && typeof PermissionFilter !== 'undefined' && !PermissionFilter.check(button.permission)) {
+                    return;
+                }
+
+                this.operateButtons[rowIndex][index] = button;
+
+                htmlString += `<span class="table-row-operate ${common.string.dealEmpty(button.classNames)}" data-buttonIndex="${index}">
+                                                        ${button.faClass ? `<i class="fa ${button.faClass}"></i>` : ''}
+                                                        ${button.title}
+                                                    </span>`;
+            });
+            return htmlString;
+        } else {
+            if (columnItem.formatter && typeof columnItem.formatter === 'function') {
+                return common.string.dealEmpty(columnItem.formatter.call(rowItem, rowItem[columnItem.name]));
+            } else {
+                return common.string.dealEmpty(rowItem[columnItem.name]);
+            }
+        }
+    }
+
     function updatePage() {
-        document.getElementById(this.tableBottomInfoId).innerHTML = '共' + this.data.totalPage + '页  ' + this.data.totalCount + '行';
+        document.getElementById(this.tableBottomInfoId).innerHTML = `共 ${this.data.totalPage} 页 ${this.data.totalCount} 行`;
 
         let $pageInput = document.getElementById(this.tableBottomPagePageId);
         $pageInput.setValue(this.data.currentPage);

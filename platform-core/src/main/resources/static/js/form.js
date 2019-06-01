@@ -28,35 +28,39 @@
             _this.reset();
         }
 
+        let event = document.createEvent('HTMLEvents');
+        event.initEvent('change', false, true);
+
         formData.forEach(function (key, value) {
             if (FormConfig.loadFormConfig.notEmpty && value === '') {
                 return
             }
 
-            let _formItems = _this.querySelectorAll('[name=' + key + ']');
+            let _formItems = _this.querySelectorAll(`[name=${key}]`);
             _formItems.forEach(function (_item) {
-                _item.setValue(value);
+                _item.value = common.string.dealEmpty(value);
+                _item.dispatchEvent(event);
             });
         });
     };
 
     HTMLElement.prototype.addReadOnly = function (readOnly) {
         this.removeReadOnly();
-        let selector = readOnly ? '[data-readonly*="|' + readOnly + '|"]': '[data-readonly]';
+        let selector = readOnly ? `[data-readonly*="|${readOnly}|"]` : '[data-readonly]';
         this.querySelectorAll(selector).forEach(function (_item) {
             _item.setAttribute('readonly', '');
         })
     };
 
     HTMLElement.prototype.removeReadOnly = function (readOnly) {
-        let selector = readOnly ? '[data-readonly*="|' + readOnly + '|"]': '[data-readonly]';
+        let selector = readOnly ? `[data-readonly*="|${readOnly}|"]` : '[data-readonly]';
         this.querySelectorAll(selector).forEach(function (_item) {
             _item.removeAttribute('readonly');
         })
     };
 
     HTMLElement.prototype.formHide = function (show) {
-        let selector = show ? '[data-show*="|' + show + '|"]': '[data-show]';
+        let selector = show ? `[data-show*="|${show}|"]` : '[data-show]';
         this.querySelectorAll(selector).forEach(function (_item) {
             _item.hide();
         })
@@ -64,7 +68,7 @@
 
     HTMLElement.prototype.formShow = function (show) {
         this.formHide();
-        let selector = show ? '[data-show*="|' + show + '|"]': '[data-show]';
+        let selector = show ? `[data-show*="|${show}|"]` : '[data-show]';
         this.querySelectorAll(selector).forEach(function (_item) {
             _item.show();
         })

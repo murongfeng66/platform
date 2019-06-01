@@ -32,14 +32,20 @@ const DialogCache = {};
 
     Dialog.prototype = {
         open: function () {
+            document.body.style.overflow = 'hidden';
             let $dialog = document.getElementById(this.dialogId);
-            $dialog.style.display = 'block';
+            $dialog.classList.remove('width-100-0');
+            $dialog.classList.add('width-0-100');
+            $dialog.classList.add('show');
             $dialog.style.zIndex = [...document.all].reduce((r, e) => Math.max(r, +window.getComputedStyle(e).zIndex || 0), 0) + 1;
             return this;
         },
         close: function () {
+            document.body.style.overflow = '';
             let $dialog = document.getElementById(this.dialogId);
-            $dialog.style.display = '';
+            $dialog.classList.remove('width-0-100');
+            $dialog.classList.add('width-100-0');
+            $dialog.classList.remove('show');
             $dialog.style.zIndex = '';
             if (this.option.destroyAfterClose === true) {
                 this.destroy();
@@ -55,19 +61,19 @@ const DialogCache = {};
         },
         hideTopButton: function (id) {
             if (id) {
-                let $button = document.getElementById(this.dialogTopId + '_button_' + id);
+                let $button = document.getElementById(`${this.dialogTopI}_button_${id}`);
                 if ($button) {
                     $button.style.display = 'none';
                 }
             } else {
-                document.querySelectorAll('#' + this.dialogTopId + ' .button').forEach((_item) => {
+                document.querySelectorAll(`#${this.dialogTopId} button`).forEach((_item) => {
                     _item.style.display = 'none';
                 });
             }
             return this;
         },
         showTopButton: function (id) {
-            let $button = document.getElementById(this.dialogTopId + '_button_' + id);
+            let $button = document.getElementById(`${this.dialogTopId}_button_${id}`);
             if ($button) {
                 $button.style.display = '';
             }
@@ -75,22 +81,22 @@ const DialogCache = {};
         },
         hideBottomButton: function (id) {
             if (id) {
-                let $button = document.getElementById(this.dialogBottomId + '_button_' + id);
+                let $button = document.getElementById(`${this.dialogBottomId}_button_${id}`);
                 if ($button) {
                     $button.style.display = 'none';
                 }
             } else {
-                document.querySelectorAll('#' + this.dialogBottomId + ' .button').forEach((_item) => {
+                document.querySelectorAll(`#${this.dialogBottomId} button`).forEach((_item) => {
                     _item.style.display = 'none';
                 });
             }
 
             let display = 'none';
-            let $buttonsHtml = document.querySelectorAll('#' + this.dialogBottomId + ' .button');
+            let $buttonsHtml = document.querySelectorAll(`#${this.dialogBottomId} button`);
             for (let index = 0; index < $buttonsHtml.length; index++) {
                 let $itemHtml = $buttonsHtml[index];
                 if ($itemHtml.style.display === '') {
-                    display = 'block';
+                    display = 'flex';
                     break;
                 }
             }
@@ -98,10 +104,10 @@ const DialogCache = {};
             return this;
         },
         showBottomButton: function (id) {
-            let $button = document.getElementById(this.dialogBottomId + '_button_' + id);
+            let $button = document.getElementById(`${this.dialogBottomId}_button_${id}`);
             if ($button) {
                 $button.style.display = '';
-                document.getElementById(this.dialogBottomId).style.display = 'block';
+                document.getElementById(this.dialogBottomId).style.display = 'flex';
             }
             return this;
         },
@@ -120,11 +126,11 @@ const DialogCache = {};
         dialog.option = option;
         dialog.dialogId = option.dialogId;
 
-        dialog.dialogTopId = dialog.dialogId + '_top';
-        dialog.dialogTopTitleId = dialog.dialogTopId + '_title';
-        dialog.dialogBodyId = dialog.dialogId + '_body';
-        dialog.dialogContentId = dialog.dialogBodyId + '_content';
-        dialog.dialogBottomId = dialog.dialogId + '_bottom';
+        dialog.dialogTopId = `${dialog.dialogId}_top`;
+        dialog.dialogTopTitleId = `${dialog.dialogTopId}_title`;
+        dialog.dialogBodyId = `${dialog.dialogId}_body`;
+        dialog.dialogContentId = `${dialog.dialogBodyId}_content`;
+        dialog.dialogBottomId = `${dialog.dialogId}_bottom`;
 
         DialogCache[dialog.dialogId] = dialog;
 
@@ -134,7 +140,7 @@ const DialogCache = {};
     }
 
     function initDialog() {
-        let $dialogBodyHtml = document.querySelector('#' + this.option.dialogId + ' .dialog-body');
+        let $dialogBodyHtml = document.querySelector(`#${this.option.dialogId} .dialog-body`);
         if ($dialogBodyHtml.getAttribute('id')) {
             this.dialogBodyId = $dialogBodyHtml.getAttribute('id');
         } else {
@@ -157,20 +163,20 @@ const DialogCache = {};
         let $dialogTopHtml = document.createElement('div');
         $dialogTopHtml.id = this.dialogTopId;
         $dialogTopHtml.classList.add('dialog-top');
-        let htmlString = '<span id="' + this.dialogTopTitleId + '" class="dialog-top-title">';
+        let htmlString = `<span id="${this.dialogTopTitleId}" class="dialog-top-title">`;
         if (this.option.titleFaClass) {
-            htmlString += '<i class="margin-right-5 fa ' + this.option.titleFaClass + '"></i>';
+            htmlString += `<i class="margin-right-half fa ${this.option.titleFaClass}"></i>`;
         }
-        htmlString += common.string.dealEmpty(this.option.title) + '</span><div class="dialog-top-buttons"></div><div class="close fa fa-times"></div>';
+        htmlString += `${common.string.dealEmpty(this.option.title)}</span><div class="dialog-top-buttons"></div><div class="close fa fa-times"></div>`;
         $dialogTopHtml.innerHTML = htmlString;
         $dialogTopHtml.querySelector('.close').onclick = () => {
-            document.getElementById(this.dialogId).style.display = '';
+            this.close();
         };
 
         let $dialogTopButtonsHtml = $dialogTopHtml.querySelector('.dialog-top-buttons');
         this.option.topButtons.forEach((button) => {
             let $buttonHtml = document.createElement('span');
-            $buttonHtml.id = this.dialogTopId + '_button_' + button.id;
+            $buttonHtml.id = `${this.dialogTopId}_button_${button.id}`;
             $buttonHtml.innerHTML = button.title;
             $buttonHtml.classList.add('dialog-top-buttons-item');
             if (button.classNames) {
@@ -197,9 +203,8 @@ const DialogCache = {};
         let showButton = 0;
         this.option.bottomButtons.forEach((button) => {
             let $buttonHtml = document.createElement('button');
-            $buttonHtml.id = this.dialogBottomId + '_button_' + button.id;
+            $buttonHtml.id = `${this.dialogBottomId}_button_${button.id}`;
             $buttonHtml.innerHTML = button.title;
-            $buttonHtml.classList.add('button', 'button-s');
             if (button.classNames) {
                 $buttonHtml.classList.add(button.classNames);
             }
@@ -220,7 +225,7 @@ const DialogCache = {};
         });
 
         if (showButton > 0) {
-            $dialogBottomHtml.style.display = 'block';
+            $dialogBottomHtml.style.display = 'flex';
         }
     }
 

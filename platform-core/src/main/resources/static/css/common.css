@@ -1,12 +1,17 @@
 body {
     margin: 0;
     background-color: #ffffff;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
-select.form-input {
-    padding-right: 9px;
+select {
+    outline: none;
+    padding: 0.25rem 1.5rem 0.25rem 0.5rem;
     background: url(/image/arrow/solid/down.png) no-repeat scroll calc(100% - 4px) center transparent;
+}
+
+input {
+    padding: 0.25rem 1rem;
+    outline: none;
 }
 
 input[type=checkbox].switch {
@@ -19,6 +24,7 @@ input[type=checkbox].switch {
     outline: none;
     -webkit-transition: .4s;
     transition: .4s;
+    padding: 0;
 }
 
 input[type=checkbox].switch:checked {
@@ -40,10 +46,35 @@ input[type=checkbox].switch:after {
     text-align: center;
 }
 
-input[type=checkbox].switch:checked:after{
+input[type=checkbox].switch:checked:after {
     margin-left: calc(1.2rem + 2px);
     -webkit-transition: .4s;
     transition: .4s;
+}
+
+button {
+    outline: none;
+    background-color: #ffffff;
+    font-size: 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    color: #252a2f;
+}
+
+button:hover {
+    background-color: #cccccc;
+}
+
+button.button-x {
+    padding: 0.5rem 1.5rem;
+}
+
+button.button-s {
+    padding: 0.25rem 0.5rem;
+}
+
+button[type=reset] {
+    color: #919191;
 }
 
 .display-flex {
@@ -102,36 +133,36 @@ input[type=checkbox].switch:checked:after{
     margin-left: 0 !important;
 }
 
-.margin-top-10 {
-    margin-top: 10px !important;
+.margin-top-1 {
+    margin-top: 1rem !important;
 }
 
-.margin-right-10 {
-    margin-right: 10px !important;
+.margin-right-1 {
+    margin-right: 1rem !important;
 }
 
-.margin-bottom-10 {
-    margin-bottom: 10px !important;
+.margin-bottom-1 {
+    margin-bottom: 1rem !important;
 }
 
-.margin-left-10 {
-    margin-left: 10px !important;
+.margin-left-1 {
+    margin-left: 1rem !important;
 }
 
-.margin-top-5 {
-    margin-top: 5px !important;
+.margin-top-half {
+    margin-top: 0.5rem !important;
 }
 
-.margin-right-5 {
-    margin-right: 5px !important;
+.margin-right-half {
+    margin-right: 0.5rem !important;
 }
 
-.margin-bottom-5 {
-    margin-bottom: 5px !important;
+.margin-bottom-half {
+    margin-bottom: 0.5rem !important;
 }
 
-.margin-left-5 {
-    margin-left: 5px !important;
+.margin-left-half {
+    margin-left: 0.5rem !important;
 }
 
 .hide {
@@ -143,14 +174,15 @@ input[type=checkbox].switch:checked:after{
 }
 
 [disabled] {
-    color: #7c7c7c !important;
+    color: #a9a9a9 !important;
     pointer-events: none !important;
     cursor: default !important;
+    background-color: #f5f5f5 !important;
 }
 
 [readonly] {
-    border-color: #7c7c7c !important;
-    color: #7c7c7c !important;
+    border-color: #eaeaea !important;
+    color: #a9a9a9 !important;
     pointer-events: none !important;
     cursor: default !important;
 }
@@ -206,6 +238,24 @@ input[type=checkbox].switch:checked:after{
     }
     to {
         width: 100%
+    }
+}
+
+@keyframes width-100-to-0 {
+    from {
+        width: 100%
+    }
+    to {
+        width: 0
+    }
+}
+
+@-webkit-keyframes width-100-to-0 {
+    from {
+        width: 100%
+    }
+    to {
+        width: 0
     }
 }
 
@@ -268,24 +318,33 @@ input[type=checkbox].switch:checked:after{
     -webkit-animation: opacity-0-to-1 .5s;
 }
 
-.button {
-    background-color: #ffffff;
-    font-size: 1rem;
-    border: 1px solid #757575;
-    border-radius: 0.25rem;
+.width-0-100 {
+    animation: width-0-to-100 .5s;
+    -webkit-animation: width-0-to-100 .5s;
+}
+
+.height-0-100 {
+    animation: height-0-to-100 .5s;
+    -webkit-animation: height-0-to-100 .5s;
+}
+
+.width-100-0 {
+    animation: width-100-to-0 .5s;
+    -webkit-animation: width-100-to-0 .5s;
+}
+
+.height-100-0 {
+    animation: height-100-to-0 .5s;
+    -webkit-animation: height-100-to-0 .5s;
+}
+
+.close {
+    color: #e8e8e8;
+    font-size: 1.2rem;
+    margin: auto 0 auto auto;
     cursor: pointer;
-    color: #252a2f;
 }
 
-.button.button-x {
-    padding: 0.5rem 1.5rem;
-}
-
-.button.button-s {
-    padding: 0.25rem 0.5rem;
-}
-
-.button[type=reset] {
-    color: #919191;
-    border-color: #919191;
+.close:hover {
+    color: #9b9b9b;
 }

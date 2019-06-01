@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jwzhu.platform.file.db.FileDao">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into `File` (regionId, folderId, fileName, fileType, permissionType, permissionData, fileStatus, createTime, originName)
+        values (#{regionId}, #{folderId}, #{fileName}, #{fileType}, #{permissionType}, #{permissionData}, #{fileStatus}, #{createTime}, #{originName})
+    </insert>
+    <update id="updateStatus">
+        update `File`
+        set fileStatus = #{newStatus}, updateTime = #{updateTime}
+        where id = #{id} and fileStatus = #{oldStatus}
+    </update>
+    <select id="getWithLock" resultType="java.lang.String">
+        select fileName
+        from `File`
+        where regionId = #{regionId} and folderId = #{folderId} and fileName = #{fileName}
+    </select>
+    <select id="queryByParam" resultType="com.jwzhu.platform.file.model.File">
+        select id, regionId, folderId, fileName, fileType, permissionType, permissionData, fileStatus, createTime, updateTime, originName
+        from `File`
+        <where>
+            <trim suffixOverrides="and">
+                <if test="regionId != null">
+                    regionId = #{regionId} and
+                </if>
+                <if test="folderId != null">
+                    folderId = #{folderId} and
+                </if>
+                <if test="key != null">
+                    (fileName like concat('%', #{key}, '%') or originName like concat('%', #{key}, '%')) and
+                </if>
+                <if test="fileType != null">
+                    fileType = #{fileType} and
+                </if>
+                <if test="permissionType != null">
+                    permissionType = #{permissionType} and
+                </if>
+                <if test="fileStatus != null">
+                    fileStatus = #{fileStatus} and
+                </if>
+            </trim>
+        </where>
+        <if test="sorts != null and sorts.size() > 0">
+            order by
+            <foreach collection="sorts" item="item" separator=",">
+                ${item.columnName} ${item.sortType}
+            </foreach>
+        </if>
+    </select>
+</mapper>

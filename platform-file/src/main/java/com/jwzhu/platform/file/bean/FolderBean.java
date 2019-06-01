@@ -1,25 +1,21 @@
-package com.jwzhu.platform.file.model;
+package com.jwzhu.platform.file.bean;
 
 import java.time.LocalDateTime;
 
-import com.jwzhu.platform.common.enums.AvailableStatusEscaper;
-import com.jwzhu.platform.plugs.jsonescape.bind.ShortEscape;
+import com.jwzhu.platform.common.bean.BaseBean;
 
-public class File {
+public class FolderBean extends BaseBean {
 
     private Long id;
     private Long regionId;
-    private Long folderId;
-    private String fileName;
-    private Short fileType;
-    @ShortEscape(PermissionTypeEscaper.class)
+    private String folderName;
+    private String folderCode;
+    private Short folderStatus;
     private Short permissionType;
     private String permissionData;
-    @ShortEscape(AvailableStatusEscaper.class)
-    private Short fileStatus;
+    private String path;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
-    private String originName;
 
     public Long getId() {
         return id;
@@ -37,28 +33,28 @@ public class File {
         this.regionId = regionId;
     }
 
-    public Long getFolderId() {
-        return folderId;
+    public String getFolderName() {
+        return folderName;
     }
 
-    public void setFolderId(Long folderId) {
-        this.folderId = folderId;
+    public void setFolderName(String folderName) {
+        this.folderName = folderName;
     }
 
-    public String getFileName() {
-        return fileName;
+    public String getFolderCode() {
+        return folderCode;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setFolderCode(String folderCode) {
+        this.folderCode = folderCode;
     }
 
-    public Short getFileType() {
-        return fileType;
+    public Short getFolderStatus() {
+        return folderStatus;
     }
 
-    public void setFileType(Short fileType) {
-        this.fileType = fileType;
+    public void setFolderStatus(Short folderStatus) {
+        this.folderStatus = folderStatus;
     }
 
     public Short getPermissionType() {
@@ -77,12 +73,12 @@ public class File {
         this.permissionData = permissionData;
     }
 
-    public Short getFileStatus() {
-        return fileStatus;
+    public String getPath() {
+        return path;
     }
 
-    public void setFileStatus(Short fileStatus) {
-        this.fileStatus = fileStatus;
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public LocalDateTime getCreateTime() {
@@ -99,13 +95,5 @@ public class File {
 
     public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public String getOriginName() {
-        return originName;
-    }
-
-    public void setOriginName(String originName) {
-        this.originName = originName;
     }
 }

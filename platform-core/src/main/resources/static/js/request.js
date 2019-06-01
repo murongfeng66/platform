@@ -1,32 +1,25 @@
 const Request = {};
 (function () {
     Request.get = function (o) {
-        let option = {
-            url: o.url,
-            type: 'GET',
-            params: o.params,
-            returnAll: o.returnAll,
-            showMessage: o.showMessage,
-            async: o.async,
-            success: o.success,
-            fail: o.fail
-        };
-        return request(option);
+        return request(createOption(o, 'GET'));
     };
 
     Request.post = function (o) {
-        let option = {
+        return request(createOption(o, 'POST'));
+    };
+
+    function createOption(o, type) {
+        return {
             url: o.url,
-            type: 'POST',
+            type: type,
             params: o.params,
-            returnAll: o.returnAll,
-            showMessage: o.showMessage,
-            async: o.async,
+            returnAll: o.returnAll === undefined ? false : o.returnAll,
+            showMessage: o.showMessage === undefined ? true : o.showMessage,
+            async: o.async === undefined ? true : o.async,
             success: o.success,
             fail: o.fail
         };
-        return request(option);
-    };
+    }
 
     /**
      * @return {string}
@@ -52,7 +45,7 @@ const Request = {};
         let urls = url.split('?');
         let urlSearchParams = new URLSearchParams(urls[1]);
         urlSearchParams.set(name, value);
-        return urls[0] + '?' + urlSearchParams.toString();
+        return `${urls[0]}?${urlSearchParams.toString()}`;
     };
 
     function response(xhr, o) {
@@ -61,7 +54,7 @@ const Request = {};
             data = JSON.parse(xhr.responseText);
         } catch (e) {
             Toast.error('请求失败');
-            console.error('响应内容错误：' + o.url);
+            console.error(`响应内容错误：${o.url}`);
             console.error(e);
         }
 
@@ -97,7 +90,7 @@ const Request = {};
                 response(xhr, o);
             } else {
                 Toast.error('请求失败');
-                console.error('响应类型[' + responseContentTypes + ']不支持：' + o.url);
+                console.error(`响应类型[${responseContentTypes}]不支持：${o.url}`);
             }
         }
     }
@@ -109,7 +102,7 @@ const Request = {};
                     requestSuccess(xhr, o);
                 } else {
                     Toast.error('请求失败');
-                    console.error('请求失败：' + o.url);
+                    console.error(`请求失败：${o.url}`);
                 }
             }
         };
@@ -126,8 +119,9 @@ const Request = {};
                 }
                 urlSearchParams.set(key, value);
             });
-            o.url = urls[0] + '?' + urlSearchParams.toString();
+            o.url = `${urls[0]}?${urlSearchParams.toString()}`;
         }
+
         xhr.open(o.type, o.url, o.async);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
         xhr.setRequestHeader("x-requested-with", "XMLHttpRequest");

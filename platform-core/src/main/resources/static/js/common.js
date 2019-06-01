@@ -15,8 +15,8 @@ initHtml();
 
 function initHtml() {
     removeFormDefaultEvent();
-    loadJs(common.config.plugsConfig.request.js);
-    loadCss(common.config.plugsConfig.fontIcon.css);
+    // loadJs(common.config.plugsConfig.request.js);
+    // loadCss(common.config.plugsConfig.fontIcon.css);
     let plugs = document.body.getAttribute('data-plugs');
     if (plugs) {
         plugs = plugs.split(',');
@@ -90,11 +90,11 @@ Toast.error = function (message) {
 Toast.show = function (message, type, time) {
     type = type || 'info';
     time = time || 2000;
-    let active = "toast-active";
-    let div = document.createElement("div");
-    div.classList.add("toast-container");
-    div.innerHTML = '<div class="toast-message-container toast-' + type + '">' + message + "</div>";
-    div.addEventListener("webkitTransitionEnd", function () {
+    let active = 'toast-active';
+    let div = document.createElement('div');
+    div.classList.add('toast-container');
+    div.innerHTML = `<div class="toast-message-container toast-${type}">${message}</div>`;
+    div.addEventListener('webkitTransitionEnd', function () {
         div.classList.contains(active) || div.parentNode.removeChild(div);
     });
     document.body.appendChild(div);
@@ -188,9 +188,9 @@ HTMLElement.prototype.initSelect = function (url, addAddOption, map) {
             }
             data.forEach(function (key, value) {
                 if (map) {
-                    htmlString += '<option value="' + key[map.value] + '">' + key[map.text] + '</option>';
+                    htmlString += `<option value="${key[map.value]}">${key[map.text]}</option>`;
                 } else {
-                    htmlString += '<option value="' + key + '">' + value + '</option>';
+                    htmlString += `<option value="${key}">${value}</option>`;
                 }
             });
             _this.innerHTML = htmlString;
@@ -205,13 +205,9 @@ HTMLElement.prototype.initSelect = function (url, addAddOption, map) {
  */
 HTMLElement.prototype.setValue = function (value) {
     this.value = common.string.dealEmpty(value);
-    if (this.fireEvent) {
-        this.fireEvent('onchange');
-    } else {
-        let event = document.createEvent('HTMLEvents');
-        event.initEvent('change', false, true);
-        this.dispatchEvent(event);
-    }
+    let event = document.createEvent('HTMLEvents');
+    event.initEvent('change', false, true);
+    this.dispatchEvent(event);
 };
 
 /**
@@ -260,14 +256,14 @@ SelectDialog.createSelect = function (o) {
         throw 'column不能为空';
     }
 
-    option.dialogId = 'dialog_select_' + option.id;
-    option.tableId = 'table_select_' + option.id;
+    option.dialogId = `dialog_select_${option.id}`;
+    option.tableId = `table_select_${option.id}`;
 
     if (!document.getElementById(option.dialogId)) {
         let $dialog = document.createElement('div');
         $dialog.id = option.dialogId;
         $dialog.classList.add('dialog');
-        $dialog.innerHTML = '<div class="dialog-body"><div id="' + option.tableId + '" class="dialog-content"></div></div>';
+        $dialog.innerHTML = `<div class="dialog-body"><div id="${option.tableId}" class="dialog-content"></div></div>`;
         document.body.appendChild($dialog);
     }
 
@@ -298,13 +294,13 @@ common.confirmRequest = function (id, url, tableId, info) {
         $dialog = document.createElement('div');
         $dialog.id = 'dialog_confirm';
         $dialog.classList.add('dialog');
-        $dialog.innerHTML = '<div class="dialog-body"><div class="dialog-content">' + info + '</div></div>';
+        $dialog.innerHTML = `<div class="dialog-body"><div class="dialog-content">${info}</div></div>`;
         document.body.appendChild($dialog);
     }
 
-    Dialog.create({
+    let dialog = Dialog.create({
         dialogId: 'dialog_confirm',
-        titleFaClass: 'fa-exclamation-triangle dialog-confirm',
+        titleFaClass: 'fa-exclamation-triangle dialog-top-font-confirm',
         title: '确认提示',
         width: '25%',
         destroyAfterClose: true,
@@ -329,4 +325,5 @@ common.confirmRequest = function (id, url, tableId, info) {
             }
         }]
     }).open();
+    // document.getElementById(dialog.dialogBottomId).classList.add('dialog-bottom-double');
 };

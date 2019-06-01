@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jwzhu.platform.file.db.FolderDao">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert Folder (regionId, folderName, folderCode, folderStatus, permissionType, permissionData, path, createTime)
+        values (#{regionId}, #{folderName}, #{folderCode}, #{folderStatus}, #{permissionType}, #{permissionData}, #{path}, #{createTime})
+    </insert>
+    <update id="updateById">
+        update Folder
+        set regionId = #{regionId}, folderName = #{folderName}, permissionType = #{permissionType}, path = #{path}, updateTime = #{updateTime}
+        where id = #{id}
+    </update>
+    <update id="updateStatus">
+        update Folder
+        set folderStatus = #{newStatus}, updateTime = #{updateTime}
+        where id = #{id} and folderStatus = #{oldStatus}
+    </update>
+    <select id="queryByParam" resultType="com.jwzhu.platform.file.model.Folder">
+        select id, regionId, folderName, folderCode, folderStatus, permissionType, permissionData, path, createTime, updateTime
+        from Folder
+        <where>
+            <trim suffixOverrides="and">
+                <if test="key != null">
+                    (folderName like concat('%', #{key}, '%') or folderCode like concat('%', #{key}, '%')) and
+                </if>
+                <if test="regionId != null">
+                    regionId = #{regionId} and
+                </if>
+                <if test="folderStatus != null">
+                    folderStatus = #{folderStatus} and
+                </if>
+                <if test="permissionType != null">
+                    permissionType = #{permissionType} and
+                </if>
+                <if test="excludeStatus != null and excludeStatus.length > 0">
+                    folderStatus not in
+                    <foreach collection="excludeStatus" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </trim>
+        </where>
+        <if test="sorts != null and sorts.size() > 0">
+            order by
+            <foreach collection="sorts" item="item" separator=",">
+                ${item.columnName} ${item.sortType}
+            </foreach>
+        </if>
+    </select>
+    <select id="getById" resultType="com.jwzhu.platform.file.model.Folder">
+        select id, regionId, folderName, folderCode, folderStatus, permissionType, permissionData, path, createTime, updateTime
+        from Folder
+        where id = #{id}
+    </select>
+    <select id="getByPathWithLock" resultType="java.lang.String">
+        select path
+        from Folder
+        where regionId = #{regionId} and path = #{path} for update
+    </select>
+    <select id="getByCode" resultType="com.jwzhu.platform.file.model.Folder">
+        select id, regionId, folderName, folderCode, folderStatus, permissionType, permissionData, path, createTime, updateTime
+        from Folder
+        where folderCode = #{folderCode}
+    </select>
+</mapper>

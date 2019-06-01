@@ -6,7 +6,11 @@
     <title>系统资源</title>
     <link rel="icon" type="image/x-icon" href="http://static.platform.jwzhu.com/image/icon.ico">
 
+    <link rel="stylesheet" href="http://static.platform.jwzhu.com/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="http://static.platform.jwzhu.com/css/common.css">
+    <link rel="stylesheet" href="http://static.platform.jwzhu.com/css/form.css">
+    <link rel="stylesheet" href="http://static.platform.jwzhu.com/css/table.css">
+    <link rel="stylesheet" href="http://static.platform.jwzhu.com/css/dialog.css">
     <style>
         .permission {
             padding: 0.5rem 2rem;
@@ -30,8 +34,8 @@
         }
     </style>
 </head>
-<body data-plugs="form,table,dialog,permission">
-<form id="form_role_query" class="form margin-top-10">
+<body>
+<form id="form_role_query" class="form margin-top-1 form-inline">
     <div class="form-row">
         <div class="form-input-group">
             <label class="form-label">关键字：</label>
@@ -41,9 +45,9 @@
             <label class="form-label">状态：</label>
             <select id="form_role_query_roleStatus" name="roleStatus" class="form-input"></select>
         </div>
-        <div class="form-input-group">
-            <button type="button" class="button" onclick="(()=>tableRole.reload())()">查询</button>
-            <button type="reset" class="button">重置</button>
+        <div class="form-input-group margin-left-1">
+            <button type="button" onclick="(()=>tableRole.reload())()">查询</button>
+            <button type="reset" class="margin-left-1">重置</button>
         </div>
     </div>
 </form>
@@ -62,7 +66,7 @@
             <div class="form-row">
                 <div class="form-input-group flex-1">
                     <label class="form-label">名称：</label>
-                    <input type="text" name="name" class="form-input">
+                    <input type="text" name="name" class="form-input" data-readonly>
                 </div>
             </div>
         </form>
@@ -78,107 +82,108 @@
 </div>
 </body>
 <script src="http://static.platform.jwzhu.com/js/common.js"></script>
+<script src="http://static.platform.jwzhu.com/js/request.js"></script>
+<script src="http://static.platform.jwzhu.com/js/form.js"></script>
+<script src="http://static.platform.jwzhu.com/js/table.js"></script>
+<script src="http://static.platform.jwzhu.com/js/dialog.js"></script>
+<script src="http://static.platform.jwzhu.com/js/permission-filter.js"></script>
 <script type="text/javascript">
     window.onload = function () {
+        PermissionFilter.filter();
         document.getElementById('form_role_query_roleStatus').initSelect('/availableStatus', true);
-        init();
     };
     const permissionType = {1: 'M', 2: 'P', 3: 'F'};
 
-    let dialogRole, dialogPermission, tableRole;
-
-    function init() {
-        dialogRole = Dialog.create({
-            dialogId: 'dialog_role',
-            bottomButtons: [{
-                id: 'save',
-                title: '保存',
-                permission: 'permission.role.updateById',
-                classNames: 'float-right',
-                closeAfterClick: true,
-                onclick: function () {
-                    updateRole();
-                }
-            }, {
-                id: 'submit',
-                title: '提交',
-                permission: 'permission.role.add',
-                classNames: 'float-right',
-                closeAfterClick: true,
-                onclick: function () {
-                    addRole();
-                }
-            }]
-        });
-
-        dialogPermission = Dialog.create({
-            dialogId: 'dialog_permission',
-            title: '资源权限'
-        });
-
-        tableRole = Table.init({
-            tableDivId: 'table_role',
-            queryFormId: 'form_role_query',
-            url: '/role/queryByParam',
-            column: [
-                {title: '编码', name: 'code'},
-                {title: '名称', name: 'name'},
-                {title: '状态', name: 'roleStatusText'},
-                {title: '添加时间', name: 'createTime'}],
-            bottomButtons: [{
-                id: 'add',
-                title: '添加',
-                permission: 'permission.role.add',
-                faClass: 'fa-plus',
-                onclick: function () {
-                    addRoleView();
-                }
-            }],
-            rowOperate: function () {
-                let operates = [];
-                operates.push({
-                    id: 'edit',
-                    title: '编辑',
-                    permission: 'permission.role.updateById',
-                    onclick: updateRoleView
-                }, {
-                    id: 'permission',
-                    title: '权限',
-                    permission: 'permission.role.queryRoleResource',
-                    onclick: permissionView
-                });
-                if (this.roleStatus === 1) {
-                    let id = this.id;
-                    operates.push({
-                        id: 'disable',
-                        title: '禁用',
-                        permission: 'permission.role.disable',
-                        onclick: function () {
-                            common.confirmRequest(id, '/role/disable', 'table_role', '是否确认禁用该角色');
-                        }
-                    });
-                } else if (this.roleStatus === -1) {
-                    let id = this.id;
-                    operates.push({
-                        id: 'enable',
-                        title: '启用',
-                        permission: 'permission.role.enable',
-                        onclick: function () {
-                            common.confirmRequest(id, '/role/enable', 'table_role', '是否确认启用该角色');
-                        }
-                    }, {
-                        id: 'delete',
-                        title: '删除',
-                        permission: 'permission.role.delete',
-                        onclick: function () {
-                            common.confirmRequest(id, '/role/delete', 'table_role', '是否确认删除该角色');
-                        }
-                    });
-                }
-                return operates;
+    let dialogRole = Dialog.create({
+        dialogId: 'dialog_role',
+        bottomButtons: [{
+            id: 'save',
+            title: '保存',
+            permission: 'permission.role.updateById',
+            classNames: 'float-right',
+            closeAfterClick: true,
+            onclick: function () {
+                updateRole();
             }
-        });
-    }
+        }, {
+            id: 'submit',
+            title: '提交',
+            permission: 'permission.role.add',
+            classNames: 'float-right',
+            closeAfterClick: true,
+            onclick: function () {
+                addRole();
+            }
+        }]
+    });
+
+    let dialogPermission = Dialog.create({
+        dialogId: 'dialog_permission',
+        title: '资源权限'
+    });
+
+    let tableRole = Table.init({
+        tableDivId: 'table_role',
+        queryFormId: 'form_role_query',
+        url: '/role/queryByParam',
+        column: [
+            {title: '编码', name: 'code'},
+            {title: '名称', name: 'name'},
+            {title: '状态', name: 'roleStatusText'},
+            {title: '添加时间', name: 'createTime'}],
+        bottomButtons: [{
+            id: 'add',
+            title: '添加',
+            permission: 'permission.role.add',
+            faClass: 'fa-plus',
+            onclick: function () {
+                addRoleView();
+            }
+        }],
+        rowOperate: function () {
+            let operates = [];
+            operates.push({
+                id: 'edit',
+                title: '编辑',
+                permission: 'permission.role.updateById',
+                onclick: updateRoleView
+            }, {
+                id: 'permission',
+                title: '权限',
+                permission: 'permission.role.queryRoleResource',
+                onclick: permissionView
+            });
+            if (this.roleStatus === 1) {
+                let id = this.id;
+                operates.push({
+                    id: 'disable',
+                    title: '禁用',
+                    permission: 'permission.role.disable',
+                    onclick: function () {
+                        common.confirmRequest(id, '/role/disable', 'table_role', '是否确认禁用该角色');
+                    }
+                });
+            } else if (this.roleStatus === -1) {
+                let id = this.id;
+                operates.push({
+                    id: 'enable',
+                    title: '启用',
+                    permission: 'permission.role.enable',
+                    onclick: function () {
+                        common.confirmRequest(id, '/role/enable', 'table_role', '是否确认启用该角色');
+                    }
+                }, {
+                    id: 'delete',
+                    title: '删除',
+                    permission: 'permission.role.delete',
+                    onclick: function () {
+                        common.confirmRequest(id, '/role/delete', 'table_role', '是否确认删除该角色');
+                    }
+                });
+            }
+            return operates;
+        }
+    });
 
     let addRoleView = function () {
         document.getElementById('form_role').reset();
@@ -226,13 +231,13 @@
             success: data => {
                 let htmlString = '';
                 data.forEach(function (item) {
-                    htmlString += '<div>';
-                    htmlString += '<div class="permission" onclick="permissionClick()">';
-                    htmlString += '<span class="permission-name">' + item.name + '</span>';
-                    htmlString += '<input data-content="' + common.string.dealEmpty(permissionType[item.type]) + '" data-resourceCode="' + item.code + '" type="checkbox" class="switch margin-auto margin-right-no" ' + (item.have ? 'checked' : '') + ' onchange="permissionChange()">';
-                    htmlString += '</div>';
-                    htmlString += '<div class="permission-children">' + getChildrenHtmlString(item.children) + '</div>';
-                    htmlString += '</div>';
+                    htmlString += `<div>
+                                        <div class="permission" onclick="permissionClick()">
+                                            <span class="permission-name">${item.name}</span>
+                                            <input data-content="${common.string.dealEmpty(permissionType[item.type])}" data-resourceCode="${item.code}" type="checkbox" class="switch margin-auto margin-right-no" ${item.have ? 'checked' : ''} onchange="permissionChange()">
+                                        </div>
+                                        <div class="permission-children">${getChildrenHtmlString(item.children)}</div>
+                                   </div>`;
                 });
                 document.getElementById('permission').innerHTML = htmlString;
                 dialogPermission.open();
@@ -247,13 +252,13 @@
         }
 
         children.forEach(function (item) {
-            htmlString += '<div>';
-            htmlString += '<div class="permission" onclick="permissionClick()">';
-            htmlString += '<span class="permission-name">' + item.name + '</span>';
-            htmlString += '<input data-content="' + common.string.dealEmpty(permissionType[item.type]) + '" data-resourceCode="' + item.code + '" type="checkbox" class="switch margin-auto margin-right-no" ' + (item.have ? 'checked' : '') + ' onchange="permissionChange()">';
-            htmlString += '</div>';
-            htmlString += '<div class="permission-children">' + getChildrenHtmlString(item.children) + '</div>';
-            htmlString += '</div>';
+            htmlString += `<div>
+                                <div class="permission" onclick="permissionClick()">
+                                    <span class="permission-name">${item.name}</span>
+                                    <input data-content="${common.string.dealEmpty(permissionType[item.type])}" data-resourceCode="${item.code}" type="checkbox" class="switch margin-auto margin-right-no" ${item.have ? 'checked' : ''} onchange="permissionChange()">
+                                </div>
+                                <div class="permission-children">${getChildrenHtmlString(item.children)}</div>
+                           </div>`;
         });
         return htmlString;
     };

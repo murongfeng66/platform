@@ -1,23 +1,16 @@
-package com.jwzhu.platform.file.model;
+package com.jwzhu.platform.file.bean;
 
 import java.time.LocalDateTime;
 
-import com.jwzhu.platform.common.enums.AvailableStatusEscaper;
-import com.jwzhu.platform.plugs.jsonescape.bind.ShortEscape;
+import com.jwzhu.platform.common.bean.BaseBean;
 
-public class Folder {
+public class FolderUpdateBean extends BaseBean {
 
     private Long id;
     private Long regionId;
     private String folderName;
-    private String folderCode;
-    @ShortEscape(AvailableStatusEscaper.class)
-    private Short folderStatus;
-    @ShortEscape(PermissionTypeEscaper.class)
     private Short permissionType;
-    private String permissionData;
     private String path;
-    private LocalDateTime createTime;
     private LocalDateTime updateTime;
 
     public Long getId() {
@@ -44,22 +37,6 @@ public class Folder {
         this.folderName = folderName;
     }
 
-    public String getFolderCode() {
-        return folderCode;
-    }
-
-    public void setFolderCode(String folderCode) {
-        this.folderCode = folderCode;
-    }
-
-    public Short getFolderStatus() {
-        return folderStatus;
-    }
-
-    public void setFolderStatus(Short folderStatus) {
-        this.folderStatus = folderStatus;
-    }
-
     public Short getPermissionType() {
         return permissionType;
     }
@@ -68,28 +45,12 @@ public class Folder {
         this.permissionType = permissionType;
     }
 
-    public String getPermissionData() {
-        return permissionData;
-    }
-
-    public void setPermissionData(String permissionData) {
-        this.permissionData = permissionData;
-    }
-
     public String getPath() {
         return path;
     }
 
     public void setPath(String path) {
         this.path = path;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
     }
 
     public LocalDateTime getUpdateTime() {
