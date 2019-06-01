@@ -7,6 +7,10 @@ function DatePicker(){}
             id = id || $input.getAttribute('name');
             id += '_date_picker';
             $input.onfocus = () => {
+
+
+
+
                 let $datePicker = document.getElementById(id);
                 if (!$datePicker) {
                     $datePicker = document.createElement('div');
@@ -18,12 +22,12 @@ function DatePicker(){}
                     let topMonthId = `${id}_body_top_month`;
 
                     $datePicker.innerHTML = `<div class="date-picker-top">
-                                                <span class="date-picker-top-left prefixMonth">&lt;</span>
-                                                <span class="date-picker-top-left prefixYear">&laquo;</span>
-                                                <span id="${topYearId}" class="margin-right-half"></span>
-                                                <span id="${topMonthId}" class="margin-left-half"></span>
-                                                <span class="date-picker-top-right nextMonth">&gt;</span>
-                                                <span class="date-picker-top-right nextYear">&raquo;</span>
+                                                <span class="prefixYear fa fa-angle-double-left"></span>
+                                                <span class="prefixMonth fa fa-angle-left"></span>
+                                                <span id="${topYearId}"></span>
+                                                <span id="${topMonthId}"></span>
+                                                <span class="nextMonth fa fa-angle-right"></span>
+                                                <span class="nextYear fa fa-angle-double-right"></span>
                                              </div>
                                              <table class="date-picker-body-table">
                                                 <thead><tr><th>日</th><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th>六</th></tr></thead>
@@ -53,7 +57,22 @@ function DatePicker(){}
                         $datePicker.style.display = '';
 
                         let year = document.getElementById(topYearId).innerText;
-                        let month = document.getElementById(topMonthId).innerText.fixLength(2, '0', 'prefix');
+                        let month = document.getElementById(topMonthId).innerText;
+                        if(target.classList.contains('prefix')){
+                            month --;
+                        }
+                        if(target.classList.contains('next')){
+                            month ++;
+                        }
+                        if(month === 0){
+                            month = 12;
+                            year --;
+                        }
+                        if(month === 13){
+                            month = 1;
+                            year ++;
+                        }
+                        month = month.fixLength(2, '0', 'prefix');
                         let day = target.innerText.fixLength(2, '0', 'prefix');
                         let selected = `${year}-${month}-${day}`;
                         $input.setValue(selected);
@@ -72,6 +91,7 @@ function DatePicker(){}
             });
         });
     };
+
 
     function createPickerBody(id, monthChangeValue) {
         let tableBodyId = `${id}_body_table_body`;
@@ -96,6 +116,7 @@ function DatePicker(){}
         currentMonth = currentMonth ? currentMonth - 1 : currentDate.getMonth();
         currentDate.setMonth(currentMonth + monthChangeValue);
 
+        //是否是现在的月份
         let isNow = now.getFullYear() === currentDate.getFullYear() && now.getMonth() === currentDate.getMonth();
         let isCurrent = false;
         let date;
@@ -141,13 +162,13 @@ function DatePicker(){}
                 classNames = 'next';
             } else {
                 classNames = 'current';
-            }
+                if (isNow  && item === now.getDate()) {
+                    classNames += ' now';
+                }
 
-            if (isNow && item === now.getDate()) {
-                classNames += ' now';
-            }
-            if (isCurrent && item === date.getDate()) {
-                classNames += ' active';
+                if (isCurrent && item === date.getDate()) {
+                    classNames += ' active';
+                }
             }
             htmlString += `<td class="${classNames}">${item}</td>`;
             if (remainder === 0) {

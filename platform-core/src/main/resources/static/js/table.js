@@ -247,7 +247,7 @@ const TableCache = {};
                 $buttonHtml.classList.add(button.classNames);
             }
             $buttonHtml.style.color = button.color;
-            $buttonHtml.innerHTML = `${button.faClass ? `<i class="fa ${button.faClass}"></i>` : ''}${button.title}`;
+            $buttonHtml.innerHTML = `${button.faClass ? `<i class="fa ${button.faClass} margin-right-half"></i>` : ''}${button.title}`;
             $buttonHtml.onclick = () => {
                 if (typeof button.onclick === 'function') {
                     button.onclick.call(this);

@@ -1,21 +1,26 @@
 body {
     margin: 0;
     background-color: #ffffff;
+    font-weight: 200;
+    color: #252525;
 }
 
 select {
     outline: none;
-    padding: 0.25rem 1.5rem 0.25rem 0.5rem;
-    background: url(/image/arrow/solid/down.png) no-repeat scroll calc(100% - 4px) center transparent;
+    font-weight: 200;
+    background: none;
+    color: #252525;
 }
 
 input {
     padding: 0.25rem 1rem;
     outline: none;
+    font-weight: 200;
 }
 
 input[type=checkbox].switch {
     height: 1.2rem;
+    appearance: none;
     -webkit-appearance: none;
     width: 2.4rem;
     min-width: 2.4rem;
@@ -58,7 +63,7 @@ button {
     font-size: 1rem;
     border-radius: 0.25rem;
     cursor: pointer;
-    color: #252a2f;
+    font-weight: 200;
 }
 
 button:hover {
@@ -75,6 +80,31 @@ button.button-s {
 
 button[type=reset] {
     color: #919191;
+}
+
+[disabled] {
+    color: #a9a9a9 !important;
+    pointer-events: none !important;
+    cursor: default !important;
+    background-color: #f5f5f5 !important;
+}
+
+[readonly] {
+    border-color: #eaeaea !important;
+    color: #a9a9a9 !important;
+    cursor: default !important;
+}
+
+select[readonly] {
+    pointer-events: none !important;
+}
+
+input[type=checkbox][readonly] {
+    pointer-events: none !important;
+}
+
+input[type=radio][readonly] {
+    pointer-events: none !important;
 }
 
 .display-flex {
@@ -173,20 +203,6 @@ button[type=reset] {
     text-align: center !important;
 }
 
-[disabled] {
-    color: #a9a9a9 !important;
-    pointer-events: none !important;
-    cursor: default !important;
-    background-color: #f5f5f5 !important;
-}
-
-[readonly] {
-    border-color: #eaeaea !important;
-    color: #a9a9a9 !important;
-    pointer-events: none !important;
-    cursor: default !important;
-}
-
 .toast-container {
     position: fixed;
     z-index: 9999;
@@ -213,7 +229,6 @@ button[type=reset] {
 }
 
 .toast-info {
-    color: #252a2f;
     background-color: #e8e8e8;
 }
 
@@ -313,9 +328,32 @@ button[type=reset] {
     }
 }
 
+@keyframes opacity-1-to-0 {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+@-webkit-keyframes opacity-1-to-0 {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
 .opacity-0-1 {
     animation: opacity-0-to-1 .5s;
     -webkit-animation: opacity-0-to-1 .5s;
+}
+
+.opacity-1-0 {
+    animation: opacity-1-to-0 .5s;
+    -webkit-animation: opacity-1-to-0 .5s;
 }
 
 .width-0-100 {

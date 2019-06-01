@@ -26,10 +26,9 @@
 
 .navigate {
     display: inline-block;
-    background-color: #252a2f;
-    color: #ffffff;
     height: 100vh;
     width: 10rem;
+    border-right: 1px solid #e8e8e8;
 }
 
 .navigate-user {
@@ -59,8 +58,7 @@
 }
 
 .navigate-menus-item:hover {
-    background-color: #33373d;
-    color: #e8e8e8;
+    background-color: #ebebeb;
     cursor: pointer;
 }
 
@@ -71,20 +69,19 @@
 .menu-item {
     display: flex;
     height: 3rem;
-    background-color: #252a2f;
     position: inherit;
 }
 
 .menu-item:hover .light-line-left {
     height: 100%;
     animation: height-0-to-100 .2s;
-    -webkit-animation: height-0-to-100 .2s; /* Safari 和 Chrome */
+    -webkit-animation: height-0-to-100 .2s;
 }
 
 .menu-item:hover .light-line-bottom {
     width: 100%;
     animation: width-0-to-100 .2s;
-    -webkit-animation: width-0-to-100 .2s; /* Safari 和 Chrome */
+    -webkit-animation: width-0-to-100 .2s;
 }
 
 .navigate-menus-item-children {
@@ -95,6 +92,7 @@
     width: 10rem;
     border-left: 0;
     z-index: 1;
+    background-color: #ebebeb;
 }
 
 .content {
@@ -102,14 +100,13 @@
     height: 100%;
     border: 0;
     position: fixed;
-    left: 10rem;
+    left: calc(10rem + 1px);
 }
 
 .content-top {
     width: 100%;
     height: 2rem;
     line-height: 2rem;
-    color: #ffffff;
 }
 
 .content-top-nav {
@@ -123,22 +120,25 @@
 .content-top-nav-item {
     flex: 1 1 auto;
     text-align: center;
-    border: 1px solid #e8e8e8;
+    border-left: 1px solid #e8e8e8;
+    border-bottom: 1px solid #e8e8e8;
     border-top: 0;
     cursor: pointer;
-    background-color: #a9a9a9;
-    margin-right: -1px;
+    color: #ebebeb;
+}
+
+.content-top-nav-item:first-child{
+    border-left: 0;
 }
 
 .content-top-nav-item:hover {
     background-color: #ffffff;
-    color: #000000;
 }
 
 .content-top-nav-item.active {
     background-color: #ffffff;
-    color: #000000;
     border-bottom: 0;
+    color: #252525;
 }
 
 .content-top-nav-item .close {

@@ -1,5 +1,8 @@
 const common = {};
 
+/**
+ * 控件加载配置
+ */
 common.config = {
     plugsConfig: {
         request: {js: 'http://static.platform.jwzhu.com/js/request.js'},
@@ -11,8 +14,10 @@ common.config = {
         fontIcon: {css: 'http://static.platform.jwzhu.com/font-awesome-4.7.0/css/font-awesome.min.css'}
     }
 };
-initHtml();
 
+/**
+ * 初始化页面及控件，需放在最后调用
+ */
 function initHtml() {
     removeFormDefaultEvent();
     // loadJs(common.config.plugsConfig.request.js);
@@ -25,9 +30,21 @@ function initHtml() {
             loadJs(config.js).then(config.loadJs);
             loadCss(config.css).then(config.loadCss);
         });
+    } else {
+        if (typeof PermissionFilter !== 'undefined') {
+            PermissionFilter.filter();
+        }
+        if (typeof DatePicker !== 'undefined') {
+            DatePicker.init();
+        }
     }
 }
 
+/**
+ * 加载JS文件
+ * @param url 文件URL
+ * @returns {Promise<resolve>} 异步处理
+ */
 function loadJs(url) {
     return new Promise(resolve => {
         if (!url) {
@@ -41,6 +58,11 @@ function loadJs(url) {
     });
 }
 
+/**
+ * 加载CSS文件
+ * @param url 文件URL
+ * @returns {Promise<resolve>} 异步处理
+ */
 function loadCss(url) {
     return new Promise(resolve => {
         if (!url) {
@@ -54,6 +76,11 @@ function loadCss(url) {
     });
 }
 
+/**
+ * 处理JS或CSS文件加载完成
+ * @param $element 文件元素
+ * @param resolve 成功回调
+ */
 function loadFinish($element, resolve) {
     if (!resolve || typeof resolve === 'undefined') {
         return;
@@ -72,6 +99,9 @@ function loadFinish($element, resolve) {
     }
 }
 
+/**
+ * 取消Form表单的默认提交事件
+ */
 function removeFormDefaultEvent() {
     document.querySelectorAll('form').forEach(function ($form) {
         $form.onsubmit = () => {
@@ -98,18 +128,29 @@ Toast.show = function (message, type, time) {
         div.classList.contains(active) || div.parentNode.removeChild(div);
     });
     document.body.appendChild(div);
-    div.offsetHeight;
     div.classList.add(active);
     setTimeout(function () {
-        div.classList.remove(active)
+        div.classList.remove(active);
     }, time);
 };
 
 common.string = {};
+/**
+ * 处理字符串空值
+ * @param str 待处理字符串
+ * @returns ''/str 空串或传入字符串
+ */
 common.string.dealEmpty = function (str) {
     return str || '';
 };
 
+/**
+ * 返回指定长度的字符串
+ * @param length 长度
+ * @param char 填充字符
+ * @param position 填充位置：prefix=前面，默认后面
+ * @returns {string} 处理完成的字符串
+ */
 Object.prototype.fixLength = function (length, char, position) {
     let str = this.toString();
     if (str.length === length) {
@@ -119,7 +160,7 @@ Object.prototype.fixLength = function (length, char, position) {
         return str.substr(0, length);
     }
     let chars = '';
-    for (let i = 0; i < length - this.length; i++) {
+    for (let i = 0; i < length - str.length; i++) {
         chars += char;
     }
     if (position === 'prefix') {
@@ -157,13 +198,6 @@ Object.prototype.forEach = function (itemFunction) {
         }
         itemFunction.call(this, objectKey, this[objectKey]);
     }
-};
-
-/**
- * 遍历Object对象中的数据
- */
-Object.prototype.dealEmpty = function () {
-    return this || '';
 };
 
 /**
@@ -298,7 +332,7 @@ common.confirmRequest = function (id, url, tableId, info) {
         document.body.appendChild($dialog);
     }
 
-    let dialog = Dialog.create({
+    Dialog.create({
         dialogId: 'dialog_confirm',
         titleFaClass: 'fa-exclamation-triangle dialog-top-font-confirm',
         title: '确认提示',
@@ -325,5 +359,6 @@ common.confirmRequest = function (id, url, tableId, info) {
             }
         }]
     }).open();
-    // document.getElementById(dialog.dialogBottomId).classList.add('dialog-bottom-double');
 };
+
+initHtml();

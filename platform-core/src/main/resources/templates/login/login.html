@@ -11,22 +11,22 @@
     <link rel="stylesheet" href="http://static.platform.jwzhu.com/css/form.css">
     <style type="text/css">
         .login-content {
-            background-color: #1b1b1b;
             position: fixed;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
             display: flex;
+            background: url(http://static.platform.jwzhu.com/image/login_backgroud.jpg) no-repeat;
+            background-size: cover;
         }
 
         .login-box {
-            margin: auto;
+            margin: auto 25% auto auto;
             width: 20rem;
         }
 
         .login-box-top {
-            color: #ffffff;
             text-align: center;
         }
 
@@ -72,9 +72,9 @@
     </div>
 </div>
 </body>
-<script src="http://static.platform.jwzhu.com/js/common.js"></script>
 <script src="http://static.platform.jwzhu.com/js/request.js"></script>
 <script src="http://static.platform.jwzhu.com/js/form.js"></script>
+<script src="http://static.platform.jwzhu.com/js/common.js"></script>
 <script type="text/javascript">
     window.onload = function () {
         document.getElementById('form_login_password').keyDownEnter(login);

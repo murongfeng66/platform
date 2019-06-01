@@ -65,107 +65,101 @@
     </div>
 </div>
 </body>
-<script src="http://static.platform.jwzhu.com/js/common.js"></script>
 <script src="http://static.platform.jwzhu.com/js/request.js"></script>
 <script src="http://static.platform.jwzhu.com/js/form.js"></script>
 <script src="http://static.platform.jwzhu.com/js/table.js"></script>
 <script src="http://static.platform.jwzhu.com/js/dialog.js"></script>
 <script src="http://static.platform.jwzhu.com/js/permission-filter.js"></script>
+<script src="http://static.platform.jwzhu.com/js/common.js"></script>
 <script type="text/javascript">
     window.onload = function () {
-        PermissionFilter.filter();
-        init();
     };
 
-    let dialogRegion, dialogRole, tableRegion;
-
-    function init() {
-        dialogRegion = Dialog.create({
-            dialogId: 'dialog_region',
-            bottomButtons: [{
-                id: 'save',
-                title: '保存',
-                permission: 'file.region.updateById',
-                classNames: 'float-right',
-                closeAfterClick: true,
-                onclick: function () {
-                    updateRegion();
-                }
-            }, {
-                id: 'submit',
-                title: '提交',
-                permission: 'file.region.add',
-                classNames: 'float-right',
-                closeAfterClick: true,
-                onclick: function () {
-                    addRegion();
-                }
-            }]
-        });
-
-        dialogRole = Dialog.create({
-            dialogId: 'dialog_role',
-            title: '角色'
-        });
-
-        tableRegion = Table.init({
-            tableDivId: 'table_region',
-            queryFormId: 'form_region_query',
-            url: '/region/queryByParam',
-            column: [
-                {title: '编码', name: 'regionCode'},
-                {title: '名称', name: 'regionName'},
-                {title: '状态', name: 'regionStatusText'},
-                {title: '添加时间', name: 'createTime'}],
-            bottomButtons: [{
-                id: 'add',
-                title: '添加',
-                permission: 'file.region.add',
-                faClass: 'fa-plus',
-                onclick: function () {
-                    addRegionView();
-                }
-            }],
-            rowOperate: function () {
-                let operates = [];
-                operates.push({
-                    id: 'edit',
-                    title: '编辑',
-                    permission: 'file.region.updateById',
-                    onclick: updateRegionView
-                });
-                if (this.regionStatus === 1) {
-                    let id = this.id;
-                    operates.push({
-                        id: 'disable',
-                        title: '禁用',
-                        permission: 'file.region.disable',
-                        onclick: function () {
-                            common.confirmRequest(id, '/region/disable', 'table_region', '是否确认禁用该文件域');
-                        }
-                    });
-                } else if (this.regionStatus === -1) {
-                    let id = this.id;
-                    operates.push({
-                        id: 'enable',
-                        title: '启用',
-                        permission: 'file.region.enable',
-                        onclick: function () {
-                            common.confirmRequest(id, '/region/enable', 'table_region', '是否确认启用该文件域');
-                        }
-                    }, {
-                        id: 'delete',
-                        title: '删除',
-                        permission: 'file.region.delete',
-                        onclick: function () {
-                            common.confirmRequest(id, '/region/delete', 'table_region', '是否确认删除该文件域');
-                        }
-                    });
-                }
-                return operates;
+    let dialogRegion = Dialog.create({
+        dialogId: 'dialog_region',
+        bottomButtons: [{
+            id: 'save',
+            title: '保存',
+            permission: 'file.region.updateById',
+            classNames: 'float-right',
+            closeAfterClick: true,
+            onclick: function () {
+                updateRegion();
             }
-        });
-    }
+        }, {
+            id: 'submit',
+            title: '提交',
+            permission: 'file.region.add',
+            classNames: 'float-right',
+            closeAfterClick: true,
+            onclick: function () {
+                addRegion();
+            }
+        }]
+    });
+
+    let dialogRole = Dialog.create({
+        dialogId: 'dialog_role',
+        title: '角色'
+    });
+
+    let tableRegion = Table.init({
+        tableDivId: 'table_region',
+        queryFormId: 'form_region_query',
+        url: '/region/queryByParam',
+        column: [
+            {title: '编码', name: 'regionCode'},
+            {title: '名称', name: 'regionName'},
+            {title: '状态', name: 'regionStatusText'},
+            {title: '添加时间', name: 'createTime'}],
+        bottomButtons: [{
+            id: 'add',
+            title: '添加',
+            permission: 'file.region.add',
+            faClass: 'fa-plus',
+            onclick: function () {
+                addRegionView();
+            }
+        }],
+        rowOperate: function () {
+            let operates = [];
+            operates.push({
+                id: 'edit',
+                title: '编辑',
+                permission: 'file.region.updateById',
+                onclick: updateRegionView
+            });
+            if (this.regionStatus === 1) {
+                let id = this.id;
+                operates.push({
+                    id: 'disable',
+                    title: '禁用',
+                    permission: 'file.region.disable',
+                    onclick: function () {
+                        common.confirmRequest(id, '/region/disable', 'table_region', '是否确认禁用该文件域');
+                    }
+                });
+            } else if (this.regionStatus === -1) {
+                let id = this.id;
+                operates.push({
+                    id: 'enable',
+                    title: '启用',
+                    permission: 'file.region.enable',
+                    onclick: function () {
+                        common.confirmRequest(id, '/region/enable', 'table_region', '是否确认启用该文件域');
+                    }
+                }, {
+                    id: 'delete',
+                    title: '删除',
+                    permission: 'file.region.delete',
+                    onclick: function () {
+                        common.confirmRequest(id, '/region/delete', 'table_region', '是否确认删除该文件域');
+                    }
+                });
+            }
+            return operates;
+        }
+    });
 
     let addRegionView = function () {
         let _formHtml = document.getElementById('form_region');

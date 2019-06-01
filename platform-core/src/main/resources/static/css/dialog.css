@@ -4,6 +4,7 @@
     width: 0;
     background-color: #000000ad;
     top: 0;
+    overflow: scroll;
 }
 
 .dialog.show{
@@ -14,8 +15,7 @@
     min-width: 25%;
     overflow: hidden;
     border-radius: 1rem;
-    margin: 2rem auto 0;
-    height: 100%;
+    margin: 2rem auto;
 }
 
 .dialog-top{
@@ -39,7 +39,6 @@
     left: 0;
     pointer-events: none;
     height: 1.5rem;
-    color: #2196F3;
     text-align: center;
     line-height: 1.25rem;
 }
@@ -60,7 +59,7 @@
     margin: 0 auto;
     padding: 0.5rem 1rem;
     overflow: scroll;
-    max-height: calc(100% - 11.5rem);
+    /*max-height: calc(100% - 11.5rem);*/
 }
 
 .dialog-content *{

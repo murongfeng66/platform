@@ -1,6 +1,5 @@
 .form {
     margin: 1rem 0;
-    color: #252a2f;
 }
 
 .form-row {
@@ -44,9 +43,6 @@
     border: 1px solid #cccccc;
     border-radius: 0.25rem;
     font-size: 1rem;
-    color: #252a2f;
-    appearance: none;
-    -webkit-appearance: none;
     flex: 3;
 }
 

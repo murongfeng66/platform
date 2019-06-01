@@ -34,22 +34,26 @@ const DialogCache = {};
         open: function () {
             document.body.style.overflow = 'hidden';
             let $dialog = document.getElementById(this.dialogId);
-            $dialog.classList.remove('width-100-0');
             $dialog.classList.add('width-0-100');
             $dialog.classList.add('show');
             $dialog.style.zIndex = [...document.all].reduce((r, e) => Math.max(r, +window.getComputedStyle(e).zIndex || 0), 0) + 1;
+            setTimeout(() => {
+                $dialog.classList.remove('width-0-100');
+            }, 600);
             return this;
         },
         close: function () {
             document.body.style.overflow = '';
             let $dialog = document.getElementById(this.dialogId);
-            $dialog.classList.remove('width-0-100');
             $dialog.classList.add('width-100-0');
             $dialog.classList.remove('show');
             $dialog.style.zIndex = '';
             if (this.option.destroyAfterClose === true) {
                 this.destroy();
             }
+            setTimeout(() => {
+                $dialog.classList.remove('width-100-0');
+            }, 600);
             return this;
         },
         setTitle: function (title) {
