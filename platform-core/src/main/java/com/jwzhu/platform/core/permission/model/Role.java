@@ -2,8 +2,8 @@ package com.jwzhu.platform.core.permission.model;
 
 import java.time.LocalDateTime;
 
-import com.jwzhu.platform.common.enums.AvailableStatusEscaper;
-import com.jwzhu.platform.plugs.jsonescape.bind.ShortEscape;
+import com.jwzhu.platform.common.enums.AvailableStatus;
+import com.jwzhu.platform.plugs.jsonescape.bind.EnumEscape;
 
 public class Role {
 
@@ -12,7 +12,7 @@ public class Role {
     private String name;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
-    @ShortEscape(AvailableStatusEscaper.class)
+    @EnumEscape(AvailableStatus.class)
     private Short roleStatus;
 
     public Long getId() {

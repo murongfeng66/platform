@@ -2,8 +2,8 @@ package com.jwzhu.platform.file.model;
 
 import java.time.LocalDateTime;
 
-import com.jwzhu.platform.common.enums.AvailableStatusEscaper;
-import com.jwzhu.platform.plugs.jsonescape.bind.ShortEscape;
+import com.jwzhu.platform.common.enums.AvailableStatus;
+import com.jwzhu.platform.plugs.jsonescape.bind.EnumEscape;
 
 public class File {
 
@@ -12,10 +12,10 @@ public class File {
     private Long folderId;
     private String fileName;
     private Short fileType;
-    @ShortEscape(PermissionTypeEscaper.class)
+    @EnumEscape(PermissionType.class)
     private Short permissionType;
     private String permissionData;
-    @ShortEscape(AvailableStatusEscaper.class)
+    @EnumEscape(AvailableStatus.class)
     private Short fileStatus;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;

@@ -4,11 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.jwzhu.platform.common.exception.SystemException;
+import com.jwzhu.platform.plugs.jsonescape.bind.JsonEscapeInterface;
 
 /**
  * 是否枚举
  **/
-public enum YesOrNo {
+public enum YesOrNo  implements JsonEscapeInterface<Short> {
 
     Yes((short) 1, "是"),
     No((short) 0, "否");
@@ -56,4 +57,8 @@ public enum YesOrNo {
         throw new SystemException("无此[" + code + "]枚举");
     }
 
+    @Override
+    public Object getMessage(Short id) {
+        return null;
+    }
 }

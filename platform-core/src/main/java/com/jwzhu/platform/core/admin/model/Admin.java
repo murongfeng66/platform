@@ -2,9 +2,9 @@ package com.jwzhu.platform.core.admin.model;
 
 import java.time.LocalDateTime;
 
-import com.jwzhu.platform.common.enums.AdminTypeEscaper;
-import com.jwzhu.platform.common.enums.AvailableStatusEscaper;
-import com.jwzhu.platform.plugs.jsonescape.bind.ShortEscape;
+import com.jwzhu.platform.common.enums.AdminType;
+import com.jwzhu.platform.common.enums.AvailableStatus;
+import com.jwzhu.platform.plugs.jsonescape.bind.EnumEscape;
 
 public class Admin {
 
@@ -12,9 +12,9 @@ public class Admin {
     private String nickname;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
-    @ShortEscape(AvailableStatusEscaper.class)
+    @EnumEscape(AvailableStatus.class)
     private Short adminStatus;
-    @ShortEscape(AdminTypeEscaper.class)
+    @EnumEscape(AdminType.class)
     private Short adminType;
 
     public Short getAdminStatus() {

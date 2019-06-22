@@ -2,9 +2,9 @@ package com.jwzhu.platform.core.permission.model;
 
 import java.time.LocalDateTime;
 
-import com.jwzhu.platform.common.enums.AvailableStatusEscaper;
-import com.jwzhu.platform.common.enums.YesOrNoEscaper;
-import com.jwzhu.platform.plugs.jsonescape.bind.ShortEscape;
+import com.jwzhu.platform.common.enums.AvailableStatus;
+import com.jwzhu.platform.common.enums.YesOrNo;
+import com.jwzhu.platform.plugs.jsonescape.bind.EnumEscape;
 
 public class Resource {
 
@@ -14,11 +14,11 @@ public class Resource {
     private String name;
     private String url;
     private Integer sort;
-    @ShortEscape(ResourceTypeEscaper.class)
+    @EnumEscape(ResourceType.class)
     private Short type;
-    @ShortEscape(YesOrNoEscaper.class)
+    @EnumEscape(YesOrNo.class)
     private Short menuShow;
-    @ShortEscape(AvailableStatusEscaper.class)
+    @EnumEscape(AvailableStatus.class)
     private Short resourceStatus;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;

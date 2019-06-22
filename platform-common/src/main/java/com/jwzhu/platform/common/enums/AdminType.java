@@ -4,11 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.jwzhu.platform.common.exception.SystemException;
+import com.jwzhu.platform.plugs.jsonescape.bind.JsonEscapeInterface;
 
 /**
  * 管理员类型
  **/
-public enum AdminType {
+public enum AdminType implements JsonEscapeInterface<Short> {
 
     Super((short) 1, "超级管理员"),
     Admin((short) 2, "管理员");
@@ -43,10 +44,6 @@ public enum AdminType {
         }
     }
 
-    public static String message(Short code) {
-        return map.get(code);
-    }
-
     public static AdminType get(short code) {
         for (AdminType item : AdminType.values()) {
             if (item.code == code) {
@@ -56,4 +53,8 @@ public enum AdminType {
         throw new SystemException("无此[" + code + "]枚举");
     }
 
+    @Override
+    public Object getMessage(Short id) {
+        return map.get(id);
+    }
 }

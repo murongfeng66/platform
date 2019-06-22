@@ -2,8 +2,8 @@ package com.jwzhu.platform.file.model;
 
 import java.time.LocalDateTime;
 
-import com.jwzhu.platform.common.enums.AvailableStatusEscaper;
-import com.jwzhu.platform.plugs.jsonescape.bind.ShortEscape;
+import com.jwzhu.platform.common.enums.AvailableStatus;
+import com.jwzhu.platform.plugs.jsonescape.bind.EnumEscape;
 
 public class Folder {
 
@@ -11,9 +11,9 @@ public class Folder {
     private Long regionId;
     private String folderName;
     private String folderCode;
-    @ShortEscape(AvailableStatusEscaper.class)
+    @EnumEscape(AvailableStatus.class)
     private Short folderStatus;
-    @ShortEscape(PermissionTypeEscaper.class)
+    @EnumEscape(PermissionType.class)
     private Short permissionType;
     private String permissionData;
     private String path;

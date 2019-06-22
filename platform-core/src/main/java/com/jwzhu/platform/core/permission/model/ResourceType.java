@@ -4,11 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.jwzhu.platform.common.exception.SystemException;
+import com.jwzhu.platform.plugs.jsonescape.bind.JsonEscapeInterface;
 
 /**
  * 资源类型
  **/
-public enum ResourceType {
+public enum ResourceType  implements JsonEscapeInterface<Short> {
 
     Menu((short) 1, "菜单"),
     Page((short) 2, "页面"),
@@ -22,8 +23,6 @@ public enum ResourceType {
      * 描述
      */
     private String message;
-
-    ResourceType(){}
 
     ResourceType(short code, String message) {
         this.code = code;
@@ -57,5 +56,10 @@ public enum ResourceType {
             }
         }
         throw new SystemException("无此[" + code + "]枚举");
+    }
+
+    @Override
+    public Object getMessage(Short id) {
+        return map.get(id);
     }
 }

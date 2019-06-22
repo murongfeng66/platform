@@ -2,15 +2,15 @@ package com.jwzhu.platform.file.model;
 
 import java.time.LocalDateTime;
 
-import com.jwzhu.platform.common.enums.AvailableStatusEscaper;
-import com.jwzhu.platform.plugs.jsonescape.bind.ShortEscape;
+import com.jwzhu.platform.common.enums.AvailableStatus;
+import com.jwzhu.platform.plugs.jsonescape.bind.EnumEscape;
 
 public class Region {
 
     private Long id;
     private String regionName;
     private String regionCode;
-    @ShortEscape(AvailableStatusEscaper.class)
+    @EnumEscape(AvailableStatus.class)
     private Short regionStatus;
     private String path;
     private LocalDateTime createTime;

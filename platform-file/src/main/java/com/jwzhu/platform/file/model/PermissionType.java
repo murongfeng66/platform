@@ -4,11 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.jwzhu.platform.common.exception.SystemException;
+import com.jwzhu.platform.plugs.jsonescape.bind.JsonEscapeInterface;
 
 /**
  * 文件夹权限类型
  **/
-public enum PermissionType {
+public enum PermissionType implements JsonEscapeInterface<Short> {
 
     Public((short) 1, "公共"),
     Admin((short) 2, "管理员"),
@@ -58,4 +59,8 @@ public enum PermissionType {
         throw new SystemException("无此[" + code + "]枚举");
     }
 
+    @Override
+    public Object getMessage(Short id) {
+        return map.get(id);
+    }
 }
