@@ -43,12 +43,14 @@ public class ControllerAspect {
     @Autowired
     private TokenService tokenService;
 
-    @Pointcut(value = "@annotation(controllerHandler)")
+    @Pointcut(value = "@within(controllerHandler) || @annotation(controllerHandler)")
     public void pointCut(ControllerHandler controllerHandler) {
     }
 
     @Before(value = "pointCut(controllerHandler)", argNames = "joinPoint,controllerHandler")
     public void before(JoinPoint joinPoint, ControllerHandler controllerHandler) {
+        controllerHandler = controllerHandler == null ? joinPoint.getTarget().getClass().getAnnotation(ControllerHandler.class) : controllerHandler;
+
         HttpServletRequest request = RequestUtil.getRequest();
         if (request != null) {
             logger.info("请求地址：{}", request.getRequestURI());
@@ -56,7 +58,7 @@ public class ControllerAspect {
         }
         logger.info("请求接口：{}.{}", joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName());
 
-        String token = getToken(controllerHandler);
+        String token = getToken();
 
         if (controllerHandler.clearToken()) {
             clearToken();
@@ -117,7 +119,7 @@ public class ControllerAspect {
         }
     }
 
-    private String getToken(ControllerHandler controllerHandler) {
+    private String getToken() {
         HttpServletRequest request = RequestUtil.getRequest();
         if (request == null) {
             return null;
@@ -189,8 +191,9 @@ public class ControllerAspect {
         logger.info("接口耗时：{}\n", RequestBaseParam.getCostTime());
     }
 
-    @AfterReturning(value = "pointCut(controllerHandler)", argNames = "controllerHandler,returnValue", returning = "returnValue")
-    public void afterReturning(ControllerHandler controllerHandler, Object returnValue) throws JsonProcessingException {
+    @AfterReturning(value = "pointCut(controllerHandler)", argNames = "joinPoint,controllerHandler,returnValue", returning = "returnValue")
+    public void afterReturning(JoinPoint joinPoint, ControllerHandler controllerHandler, Object returnValue) throws JsonProcessingException {
+        controllerHandler = controllerHandler == null ? joinPoint.getTarget().getClass().getAnnotation(ControllerHandler.class) : controllerHandler;
         if (controllerHandler.printResponse()) {
             logger.info("接口响应：{}\n", objectMapper.writeValueAsString(returnValue));
         }

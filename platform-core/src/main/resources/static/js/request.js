@@ -96,15 +96,12 @@ const Request = {};
     }
 
     function finish(xhr, o) {
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    requestSuccess(xhr, o);
-                } else {
-                    Toast.error('请求失败');
-                    console.error(`请求失败：${o.url}`);
-                }
-            }
+        xhr.onload = function () {
+            requestSuccess(xhr, o);
+        };
+        xhr.onerror = function () {
+            Toast.error('请求失败');
+            console.error(`请求失败：${o.url}`);
         };
     }
 
@@ -123,6 +120,7 @@ const Request = {};
         }
 
         xhr.open(o.type, o.url, o.async);
+        xhr.withCredentials = true;
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
         xhr.setRequestHeader("x-requested-with", "XMLHttpRequest");
 

@@ -21,7 +21,7 @@
         </div>
         <div class="form-input-group">
             <label class="form-label">状态：</label>
-            <select id="" name="regionStatus" class="form-input"></select>
+            <select id="form_region_query_regionStatus" name="regionStatus" class="form-input"></select>
         </div>
         <div class="form-input-group margin-left-1">
             <button type="button" onclick="(()=>tableRegion.reload())()">查询</button>
@@ -73,6 +73,7 @@
 <script src="http://static.platform.jwzhu.com/js/common.js"></script>
 <script type="text/javascript">
     window.onload = function () {
+        document.getElementById('form_region_query_regionStatus').initSelect('http://admin.platform.jwzhu.com/availableStatus', true);
     };
 
     let dialogRegion = Dialog.create({
@@ -190,7 +191,9 @@
         Request.post({
             url: '/region/add',
             params: formData,
-            success: tableRegion.reload
+            success: () => {
+                tableRegion.reload();
+            }
         });
     };
 
@@ -199,7 +202,9 @@
         Request.post({
             url: '/region/updateById',
             params: formData,
-            success: tableRegion.reload
+            success: () => {
+                tableRegion.reload();
+            }
         });
     };
 

@@ -294,7 +294,9 @@
         Request.post({
             url: '/resource/add',
             params: formData,
-            success: tableResource.reload
+            success: () => {
+                tableResource.reload();
+            }
         });
     };
 
@@ -303,7 +305,9 @@
         Request.post({
             url: '/resource/updateById',
             params: formData,
-            success: tableResource.reload
+            success: () => {
+                tableResource.reload();
+            }
         });
     };
 

@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
         ModelAndView view = new ModelAndView();
         Throwable throwable = e.getE();
         logger.error(throwable.getMessage(), throwable);
-        if(throwable instanceof TokenEmptyException){
+        if (throwable instanceof TokenEmptyException || throwable instanceof TokenTimeOutException) {
             String redirect = "/";
             if(systemConfig.getSub() != null && !StringUtils.isEmpty(systemConfig.getSub().getHost())){
                 UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(systemConfig.getMain().getCheckLogin());
@@ -61,7 +61,7 @@ public class GlobalExceptionHandler {
                 redirect = uriComponentsBuilder.toUriString();
             }
             view.setViewName("redirect:" + redirect);
-        }else if (throwable instanceof TokenErrorException || throwable instanceof TokenTimeOutException) {
+        } else if (throwable instanceof TokenErrorException) {
             view.setViewName("redirect:" + systemConfig.getMain().getHost());
         } else {
             ResponseCode responseCode = ResponseCode.get(e.getE());
