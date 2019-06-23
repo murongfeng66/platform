@@ -138,10 +138,11 @@ common.string = {};
 /**
  * 处理字符串空值
  * @param str 待处理字符串
+ * @param defaultValue 默认值
  * @returns ''/str 空串或传入字符串
  */
-common.string.dealEmpty = function (str) {
-    return str || '';
+common.string.dealEmpty = function (str, defaultValue) {
+    return str || defaultValue || '';
 };
 
 /**

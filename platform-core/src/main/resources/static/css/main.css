@@ -45,7 +45,7 @@
 }
 
 .navigate-user-name {
-    margin-top: 0.4rem;
+    margin-top: 0.5rem;
     padding: 10px;
 }
 
@@ -132,11 +132,10 @@
 }
 
 .content-top-nav-item:hover {
-    background-color: #ffffff;
+    color: #252525;
 }
 
 .content-top-nav-item.active {
-    background-color: #ffffff;
     border-bottom: 0;
     color: #252525;
 }

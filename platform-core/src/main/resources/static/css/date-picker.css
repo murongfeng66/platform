@@ -8,20 +8,48 @@
     display: block;
 }
 
+.date-picker-top {
+    text-align: center;
+    display: flex;
+}
+
+.date-picker-top span {
+    padding: 0.5rem;;
+    margin: auto;
+    cursor: pointer;
+}
+
+.date-picker-top span[id] {
+    cursor: auto;
+}
+
+.date-picker-top span.fa:hover {
+    background-color: #a9a9a9;
+    color: #ffffff;
+}
+
+.date-picker-top span:first-child {
+    margin-left: 0;
+}
+
+.date-picker-top span:last-child {
+    margin-right: 0;
+}
+
 .date-picker-body-table{
     border-collapse: collapse;
 }
 
 .date-picker-body-table thead th{
     text-align: center;
-    padding: 0 0.5rem;
+    padding: 0.75rem;
     font-weight: normal;
     background-color: #e8e8e8;
 }
 
 .date-picker-body-table tbody td{
     text-align: center;
-    padding: 0.5rem;
+    padding: 0.75rem;
     cursor: pointer;
 }
 
@@ -49,32 +77,4 @@
 .date-picker-body-table tbody td:hover{
     background-color: #a9a9a9;
     color: #ffffff;
-}
-
-.date-picker-top{
-    text-align: center;
-    display: flex;
-}
-
-.date-picker-top span{
-    padding: 0.25rem 0.5rem;;
-    margin: auto;
-    cursor: pointer;
-}
-
-.date-picker-top span[id]{
-    cursor: auto;
-}
-
-.date-picker-top span.fa:hover{
-    background-color: #a9a9a9;
-    color: #ffffff;
-}
-
-.date-picker-top span:first-child{
-    margin-left: 0;
-}
-
-.date-picker-top span:last-child{
-    margin-right: 0;
 }

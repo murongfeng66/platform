@@ -161,7 +161,7 @@ const TableCache = {};
                                                                     </tbody>
                                                                 </table>
                                                                 <div id="${this.tableBottomId}" class="table-bottom">
-                                                                    <div id="${this.tableBottomPageId}" class="table-bottom-page">
+                                                                    <div id="${this.tableBottomPageId}" class="table-bottom-page hide">
                                                                         <span id="${this.tableBottomPageFirstId}" class="page-item fa fa-angle-double-left fa-lg" data-page="firstPage" disabled></span>
                                                                         <span id="${this.tableBottomPagePreId}" class="page-item fa fa-angle-left fa-lg" data-page="prePage" disabled></span>
                                                                         <input id="${this.tableBottomPagePageId}" type="number" class="page-item page-input" min="1">
@@ -223,7 +223,7 @@ const TableCache = {};
         };
         document.getElementById(this.tableBottomPagePageId).onkeydown = () => {
             if (window.event.keyCode === 13) {
-                this.option.queryParam.currentPage = this.value;
+                this.option.queryParam.currentPage = window.event.target.value;
                 gotoPage.call(this);
             }
         };
@@ -416,9 +416,9 @@ const TableCache = {};
             return htmlString;
         } else {
             if (columnItem.formatter && typeof columnItem.formatter === 'function') {
-                return common.string.dealEmpty(columnItem.formatter.call(rowItem, rowItem[columnItem.name]));
+                return common.string.dealEmpty(columnItem.formatter.call(rowItem, rowItem[columnItem.name]), '-');
             } else {
-                return common.string.dealEmpty(rowItem[columnItem.name]);
+                return common.string.dealEmpty(rowItem[columnItem.name], '-');
             }
         }
     }
@@ -426,6 +426,12 @@ const TableCache = {};
     function updatePage() {
         document.getElementById(this.tableBottomInfoId).innerHTML = `共 ${this.data.totalPage} 页 ${this.data.totalCount} 行`;
 
+        let $pageDiv = document.getElementById(this.tableBottomPageId);
+        if (this.data.totalPage <= 1) {
+            $pageDiv.classList.add('hide');
+            return;
+        }
+        $pageDiv.classList.remove('hide');
         let $pageInput = document.getElementById(this.tableBottomPagePageId);
         $pageInput.setValue(this.data.currentPage);
         $pageInput.setAttribute('max', this.data.totalPage);

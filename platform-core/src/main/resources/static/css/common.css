@@ -8,8 +8,14 @@ body {
 select {
     outline: none;
     font-weight: 200;
-    background: none;
     color: #252525;
+    padding: 0.25rem 1rem;
+    background: none;
+    /*-webkit-appearance: none;*/
+    /*background: url(http://static.platform.jwzhu.com/image/arrow/solid/ud.png) no-repeat;*/
+    /*background-position-y: center;*/
+    /*background-position-x: calc(100% - 4px);*/
+    /*background-size: contain;*/
 }
 
 input {
@@ -385,4 +391,33 @@ input[type=radio][readonly] {
 
 .close:hover {
     color: #9b9b9b;
+}
+
+.fadeIn {
+    -webkit-animation: fadeInDown .3s;
+    animation: fadeInDown .3s;
+}
+
+@keyframes fadeInDown {
+    0% {
+        -webkit-transform: translate3d(0, -20%, 0);
+        transform: translate3d(0, -20%, 0);
+        opacity: 0;
+    }
+    100% {
+        -webkit-transform: none;
+        transform: none;
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes fadeInDown {
+    0% {
+        -webkit-transform: translate3d(0, -20%, 0);
+        opacity: 0;
+    }
+    100% {
+        -webkit-transform: none;
+        opacity: 1;
+    }
 }

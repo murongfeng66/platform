@@ -68,9 +68,7 @@ const Request = {};
                 o.success(o.returnAll === true ? data : data.data);
             }
         } else {
-            if (showMessage) {
-                Toast.error(data.message);
-            }
+            Toast.error(data.message);
             if (typeof o.fail === 'function') {
                 o.fail(o.returnAll === true ? data : data.data);
             }
