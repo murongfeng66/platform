@@ -1,6 +1,5 @@
 package com.jwzhu.platform.core.permission.service;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,21 +12,17 @@ import org.springframework.util.StringUtils;
 
 import com.jwzhu.platform.common.bean.LongBean;
 import com.jwzhu.platform.common.bean.UpdateStatusBean;
+import com.jwzhu.platform.common.enums.AdminType;
 import com.jwzhu.platform.common.enums.AvailableStatus;
 import com.jwzhu.platform.common.enums.YesOrNo;
 import com.jwzhu.platform.common.exception.BusinessException;
-import com.jwzhu.platform.common.enums.AdminType;
+import com.jwzhu.platform.common.web.RequestInfo;
 import com.jwzhu.platform.core.permission.bean.GetRoleResourceBean;
 import com.jwzhu.platform.core.permission.bean.QueryMenuBean;
 import com.jwzhu.platform.core.permission.bean.ResourceBean;
 import com.jwzhu.platform.core.permission.bean.ResourceListBean;
 import com.jwzhu.platform.core.permission.db.ResourceDao;
-import com.jwzhu.platform.core.permission.model.Menu;
-import com.jwzhu.platform.core.permission.model.Resource;
-import com.jwzhu.platform.core.permission.model.ResourceList;
-import com.jwzhu.platform.core.permission.model.ResourcePermission;
-import com.jwzhu.platform.core.permission.model.ResourceType;
-import com.jwzhu.platform.common.web.RequestBaseParam;
+import com.jwzhu.platform.core.permission.model.*;
 
 @Service
 public class ResourceService {
@@ -42,7 +37,7 @@ public class ResourceService {
         if (!StringUtils.isEmpty(bean.getUrl()) && resourceDao.getByUrl(bean.getUrl()) != null) {
             throw new BusinessException("存在相同的资源URL");
         }
-        bean.setCreateTime(bean.getCreateTime() == null ? RequestBaseParam.getRequestTime() : bean.getCreateTime());
+        bean.setCreateTime(bean.getCreateTime() == null ? RequestInfo.getRequestTime() : bean.getCreateTime());
         bean.setResourceStatus(bean.getResourceStatus() == null ? AvailableStatus.Enable.getCode() : bean.getResourceStatus());
         bean.setMenuShow(bean.getMenuShow() == null ? YesOrNo.No.getCode() : bean.getMenuShow());
         bean.setSort(bean.getSort() == null ? 10 : bean.getSort());
@@ -55,8 +50,8 @@ public class ResourceService {
 
     public List<Menu> queryMenu() {
         QueryMenuBean bean = new QueryMenuBean();
-        if (RequestBaseParam.getRequestUser().getType() != AdminType.Super.getCode()) {
-            bean.setSelfId(RequestBaseParam.getRequestUser().getId());
+        if (RequestInfo.getRequestUser().getType() != AdminType.Super.getCode()) {
+            bean.setSelfId(RequestInfo.getRequestUser().getId());
         }
         bean.setMenuShow(YesOrNo.Yes.getCode());
         bean.setEnableStatusCode(AvailableStatus.Enable.getCode());
@@ -86,7 +81,7 @@ public class ResourceService {
     }
 
     public void updateById(ResourceBean bean) {
-        bean.setUpdateTime(bean.getUpdateTime() == null ? RequestBaseParam.getRequestTime() : bean.getUpdateTime());
+        bean.setUpdateTime(bean.getUpdateTime() == null ? RequestInfo.getRequestTime() : bean.getUpdateTime());
         if (resourceDao.updateById(bean) == 0) {
             throw new BusinessException("更新失败");
         }
@@ -97,8 +92,8 @@ public class ResourceService {
     }
 
     public List<ResourcePermission> queryRoleResource(GetRoleResourceBean bean) {
-        if (RequestBaseParam.getRequestUser().getType() != AdminType.Super.getCode()) {
-            bean.setSelfId(RequestBaseParam.getRequestUser().getId());
+        if (RequestInfo.getRequestUser().getType() != AdminType.Super.getCode()) {
+            bean.setSelfId(RequestInfo.getRequestUser().getId());
         }
         bean.setEnableStatusCode(AvailableStatus.Enable.getCode());
 
@@ -143,7 +138,7 @@ public class ResourceService {
     }
 
     private void updateStatus(UpdateStatusBean bean, String errorMessage){
-        bean.setUpdateTime(bean.getUpdateTime() == null ? RequestBaseParam.getRequestTime() : bean.getUpdateTime());
+        bean.setUpdateTime(bean.getUpdateTime() == null ? RequestInfo.getRequestTime() : bean.getUpdateTime());
         if(resourceDao.updateStatus(bean) == 0){
             throw new BusinessException(errorMessage);
         }

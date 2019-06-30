@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.jwzhu.platform.common.enums.AvailableStatus;
 import com.jwzhu.platform.common.util.StringUtil;
-import com.jwzhu.platform.common.web.RequestBaseParam;
+import com.jwzhu.platform.common.web.RequestInfo;
 import com.jwzhu.platform.file.bean.RegionBean;
 import com.jwzhu.platform.file.bean.RegionListBean;
 import com.jwzhu.platform.file.db.RegionDao;
@@ -20,7 +20,7 @@ public class RegionService {
     private RegionDao regionDao;
 
     public void insert(RegionBean bean) {
-        bean.setCreateTime(bean.getCreateTime() == null ? RequestBaseParam.getRequestTime() : bean.getCreateTime());
+        bean.setCreateTime(bean.getCreateTime() == null ? RequestInfo.getRequestTime() : bean.getCreateTime());
         bean.setRegionStatus(bean.getRegionStatus() == null ? AvailableStatus.Enable.getCode() : bean.getRegionStatus());
         bean.setRegionCode(bean.getRegionCode() == null ? StringUtil.createCode("FR") : bean.getRegionCode());
         regionDao.insert(bean);

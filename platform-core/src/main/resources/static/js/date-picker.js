@@ -6,17 +6,15 @@ function DatePicker(){}
             let id = $input.getAttribute('id');
             id = id || $input.getAttribute('name');
             id += '_date_picker';
+            $input.setAttribute('autocomplete','off');
             $input.onfocus = () => {
-
-
-
 
                 let $datePicker = document.getElementById(id);
                 if (!$datePicker) {
                     $datePicker = document.createElement('div');
                     $datePicker.id = id;
                     $datePicker.classList.add('date-picker-body');
-                    document.body.appendChild($datePicker);
+                    $input.parentNode.appendChild($datePicker);
                     let tableBodyId = `${id}_body_table_body`;
                     let topYearId = `${id}_body_top_year`;
                     let topMonthId = `${id}_body_top_month`;

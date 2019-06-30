@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.jwzhu.platform.common.SystemConfig;
 import com.jwzhu.platform.common.bean.LongBean;
 import com.jwzhu.platform.common.exception.BusinessException;
-import com.jwzhu.platform.common.web.RequestBaseParam;
+import com.jwzhu.platform.common.web.RequestInfo;
 import com.jwzhu.platform.common.web.TokenSubject;
 import com.jwzhu.platform.core.permission.bean.GetRoleResourceBean;
 import com.jwzhu.platform.core.permission.bean.ResourceBean;
@@ -63,12 +63,12 @@ public class ResourceManager implements PermissionService {
 
     @Override
     public boolean checkNoPermission(String url) {
-        String cacheKey = getCacheKey(RequestBaseParam.getRequestUser().getId(), PermissionCacheType.Url);
+        String cacheKey = getCacheKey(RequestInfo.getRequestUser().getId(), PermissionCacheType.Url);
         if (cacheUtil.exist(cacheKey)) {
             return !cacheUtil.sExists(cacheKey, url);
         }
 
-        List<String> urls = resourceService.queryAdminResourceUrl(RequestBaseParam.getRequestUser().getId(), RequestBaseParam.getRequestUser().getType());
+        List<String> urls = resourceService.queryAdminResourceUrl(RequestInfo.getRequestUser().getId(), RequestInfo.getRequestUser().getType());
         cacheUtil.sAdd(cacheKey, urls.toArray(new String[]{}));
         cacheUtil.expired(cacheKey, systemConfig.getResourceTimeout().toMillis());
         return !urls.contains(url);
@@ -77,7 +77,7 @@ public class ResourceManager implements PermissionService {
     @Override
     public Collection<String> getPermissions(PermissionCacheType type) {
         type = type == null ? PermissionCacheType.Url : type;
-        TokenSubject subject = RequestBaseParam.getRequestUser();
+        TokenSubject subject = RequestInfo.getRequestUser();
         String cacheKey = getCacheKey(subject.getId(), type);
         if (cacheUtil.exist(cacheKey)) {
             return cacheUtil.sMembers(cacheKey);

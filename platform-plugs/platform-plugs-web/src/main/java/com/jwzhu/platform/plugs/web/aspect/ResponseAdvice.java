@@ -17,8 +17,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jwzhu.platform.common.bean.PageBean;
 import com.jwzhu.platform.common.exception.SystemException;
-import com.jwzhu.platform.common.web.RequestBaseParam;
-import com.jwzhu.platform.plugs.web.request.RequestUtil;
+import com.jwzhu.platform.common.web.RequestInfo;
+import com.jwzhu.platform.common.web.RequestUtil;
 import com.jwzhu.platform.plugs.web.response.PageResult;
 import com.jwzhu.platform.plugs.web.response.ResponseCode;
 import com.jwzhu.platform.plugs.web.response.WebResult;
@@ -57,13 +57,13 @@ public class ResponseAdvice implements ResponseBodyAdvice {
             webResult.setCode(ResponseCode.SUCCESS.getCode());
         }
         if (webResult.getCostTime() == null) {
-            webResult.setCostTime(RequestBaseParam.getCostTime());
+            webResult.setCostTime(RequestInfo.getCostTime());
         }
 
-        if (!StringUtils.isEmpty(RequestBaseParam.getRefreshToken())) {
-            webResult.setToken(RequestBaseParam.getRefreshToken());
-            logger.debug("存入Token：{}", RequestBaseParam.getRefreshToken());
-            RequestUtil.setSession(tokenService.getTokenConfig().getParamName(), RequestBaseParam.getRefreshToken());
+        if (!StringUtils.isEmpty(RequestInfo.getRefreshToken())) {
+            webResult.setToken(RequestInfo.getRefreshToken());
+            logger.debug("存入Token：{}", RequestInfo.getRefreshToken());
+            RequestUtil.setSession(tokenService.getTokenConfig().getParamName(), RequestInfo.getRefreshToken());
         }
 
         if (body instanceof String) {

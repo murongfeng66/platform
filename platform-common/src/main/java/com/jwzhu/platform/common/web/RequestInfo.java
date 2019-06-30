@@ -7,42 +7,40 @@ import java.util.UUID;
 import org.springframework.util.StringUtils;
 
 import com.jwzhu.platform.common.exception.SystemException;
-import com.jwzhu.platform.common.web.RequestType;
-import com.jwzhu.platform.common.web.TokenSubject;
 
-public class RequestBaseParam {
+public class RequestInfo {
     /**
      * 请求ID
      */
-    private static ThreadLocal<String> REQUEST_ID = new ThreadLocal<>();
+    private static RequestBaseParam<String> REQUEST_ID = new RequestBaseParam<>("REQUEST_ID");
     /**
      * 请求时间
      */
-    private static ThreadLocal<LocalDateTime> REQUEST_TIME = new ThreadLocal<>();
+    private static RequestBaseParam<LocalDateTime> REQUEST_TIME = new RequestBaseParam<>("REQUEST_TIME");
     /**
      * 响应时间
      */
-    private static ThreadLocal<LocalDateTime> RESPONSE_TIME = new ThreadLocal<>();
+    private static RequestBaseParam<LocalDateTime> RESPONSE_TIME = new RequestBaseParam<>("RESPONSE_TIME");
     /**
      * 处理时长
      */
-    private static ThreadLocal<Long> COST_TIME = new ThreadLocal<>();
+    private static RequestBaseParam<Long> COST_TIME = new RequestBaseParam<>("COST_TIME");
     /**
      * 请求类型
      */
-    private static ThreadLocal<RequestType> REQUEST_TYPE = new ThreadLocal<>();
+    private static RequestBaseParam<RequestType> REQUEST_TYPE = new RequestBaseParam<>("REQUEST_TYPE");
     /**
      * 处理时长
      */
-    private static ThreadLocal<TokenSubject> REQUEST_USER = new ThreadLocal<>();
+    private static RequestBaseParam<TokenSubject> REQUEST_USER = new RequestBaseParam<>("REQUEST_USER");
     /**
      * 刷新Token
      */
-    private static ThreadLocal<String> REFRESH_TOKEN = new ThreadLocal<>();
+    private static RequestBaseParam<String> REFRESH_TOKEN = new RequestBaseParam<>("REFRESH_TOKEN");
     /**
      * 请求Token
      */
-    private static ThreadLocal<String> REQUEST_TOKEN = new ThreadLocal<>();
+    private static RequestBaseParam<String> REQUEST_TOKEN = new RequestBaseParam<>("REQUEST_TOKEN");
 
     /**
      * 初始化请求ID
@@ -162,4 +160,22 @@ public class RequestBaseParam {
     public static String getRequestToken(){
         return REQUEST_TOKEN.get();
     }
+
+    static class RequestBaseParam<T>{
+        private String name;
+
+        public RequestBaseParam(String name) {
+            this.name = "RequestInfo."+name;
+        }
+
+        public void set(T t){
+            RequestUtil.getRequest().setAttribute(name, t);
+        }
+        
+        @SuppressWarnings("unchecked")
+        public T get(){
+            return (T)RequestUtil.getRequest().getAttribute(name);
+        }
+    }
+
 }

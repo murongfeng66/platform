@@ -17,7 +17,7 @@ import com.jwzhu.platform.common.exception.BusinessException;
 import com.jwzhu.platform.common.exception.NoPermissionException;
 import com.jwzhu.platform.common.exception.ParamException;
 import com.jwzhu.platform.common.exception.SystemException;
-import com.jwzhu.platform.common.web.RequestBaseParam;
+import com.jwzhu.platform.common.web.RequestInfo;
 import com.jwzhu.platform.plugs.web.exception.token.TokenEmptyException;
 import com.jwzhu.platform.plugs.web.exception.token.TokenErrorException;
 import com.jwzhu.platform.plugs.web.exception.token.TokenTimeOutException;
@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
         ResponseCode responseCode = ResponseCode.get(e.getE());
         result.setCode(responseCode.getCode());
         result.setMessage(getErrorMessage(throwable));
-        result.setCostTime(RequestBaseParam.getCostTime());
+        result.setCostTime(RequestInfo.getCostTime());
         if (throwable instanceof TokenErrorException || throwable instanceof TokenEmptyException || throwable instanceof TokenTimeOutException) {
             result.setRedirect(systemConfig.getMain().getHost());
         }
@@ -67,7 +67,7 @@ public class GlobalExceptionHandler {
             ResponseCode responseCode = ResponseCode.get(e.getE());
             view.addObject("responseCode", responseCode.getCode());
             view.addObject("message", getErrorMessage(throwable));
-            view.addObject("costTime", RequestBaseParam.getCostTime());
+            view.addObject("costTime", RequestInfo.getCostTime());
             view.setViewName("/error");
         }
         return view;

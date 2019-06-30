@@ -1,9 +1,8 @@
 package com.jwzhu.platform.core;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,7 @@ import com.jwzhu.platform.common.enums.AvailableStatus;
 import com.jwzhu.platform.common.enums.YesOrNo;
 import com.jwzhu.platform.common.exception.SystemException;
 import com.jwzhu.platform.common.util.HttpUtil;
-import com.jwzhu.platform.common.web.RequestBaseParam;
+import com.jwzhu.platform.common.web.RequestInfo;
 import com.jwzhu.platform.core.admin.manager.LoginManager;
 import com.jwzhu.platform.core.permission.manager.ResourceManager;
 import com.jwzhu.platform.core.permission.model.Menu;
@@ -57,7 +56,7 @@ public class CommonController {
     @GetMapping("checkLogin")
     @ControllerHandler(permissionType = PermissionType.No)
     public ModelAndView checkLogin(ModelAndView view, HttpServletRequest request) {
-        if (RequestBaseParam.getRequestUser() != null) {
+        if (RequestInfo.getRequestUser() != null) {
             String subHost = request.getParameter("subHost");
             if (StringUtils.isEmpty(subHost)) {
                 view.setViewName("redirect:/");
@@ -67,7 +66,7 @@ public class CommonController {
                 HttpUtil.RequestBean requestBean = new HttpUtil.RequestBean();
                 requestBean.setUrl(subHost + "/subInitLoginInfo");
                 requestBean.addHeader("x-requested-with", "XMLHttpRequest");
-                requestBean.addHeader("Token", RequestBaseParam.getRequestToken());
+                requestBean.addHeader("Token", RequestInfo.getRequestToken());
                 requestBean.addParam("resourceCodes", JSON.toJSONString(resourceManager.getPermissions(PermissionService.PermissionCacheType.Code)));
                 requestBean.addParam("resourceUrls", JSON.toJSONString(resourceManager.getPermissions(PermissionService.PermissionCacheType.Url)));
                 String resultStr = HttpUtil.doPost(requestBean);
@@ -77,10 +76,10 @@ public class CommonController {
                     throw new SystemException("初始化子系统登录信息失败");
                 }
 
-                cacheUtil.sAdd("SubSystem:" + RequestBaseParam.getRequestToken(), subHost);
+                cacheUtil.sAdd("SubSystem:" + RequestInfo.getRequestToken(), subHost);
 
                 UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(subHost + "/setTokenToCookie");
-                uriComponentsBuilder.queryParam("Token", RequestBaseParam.getRequestToken());
+                uriComponentsBuilder.queryParam("Token", RequestInfo.getRequestToken());
                 uriComponentsBuilder.queryParam("originUrl", originUrl);
                 view.setViewName("redirect:" + uriComponentsBuilder.toUriString());
             }
@@ -95,7 +94,7 @@ public class CommonController {
     @ControllerHandler(permissionType = PermissionType.Only_Login)
     public ModelAndView main(ModelAndView view) {
         view.setViewName("main");
-        view.addObject("admin", userManager.getById(RequestBaseParam.getRequestUser().getId()));
+        view.addObject("admin", userManager.getById(RequestInfo.getRequestUser().getId()));
         return view;
     }
 

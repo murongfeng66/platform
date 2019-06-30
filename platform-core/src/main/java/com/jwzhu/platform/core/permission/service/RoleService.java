@@ -7,10 +7,11 @@ import org.springframework.stereotype.Service;
 
 import com.jwzhu.platform.common.bean.LongBean;
 import com.jwzhu.platform.common.bean.UpdateStatusBean;
+import com.jwzhu.platform.common.enums.AdminType;
 import com.jwzhu.platform.common.enums.AvailableStatus;
 import com.jwzhu.platform.common.exception.BusinessException;
-import com.jwzhu.platform.common.enums.AdminType;
 import com.jwzhu.platform.common.exception.NoPermissionException;
+import com.jwzhu.platform.common.web.RequestInfo;
 import com.jwzhu.platform.core.permission.bean.GetMyRoleBean;
 import com.jwzhu.platform.core.permission.bean.PermissionSaveBean;
 import com.jwzhu.platform.core.permission.bean.RoleBean;
@@ -18,7 +19,6 @@ import com.jwzhu.platform.core.permission.bean.RoleListBean;
 import com.jwzhu.platform.core.permission.db.RoleDao;
 import com.jwzhu.platform.core.permission.model.AdminRole;
 import com.jwzhu.platform.core.permission.model.Role;
-import com.jwzhu.platform.common.web.RequestBaseParam;
 
 @Service
 public class RoleService {
@@ -32,7 +32,7 @@ public class RoleService {
             throw new BusinessException("该角色已存在");
         }
 
-        bean.setCreateTime(bean.getCreateTime() == null ? RequestBaseParam.getRequestTime() : bean.getCreateTime());
+        bean.setCreateTime(bean.getCreateTime() == null ? RequestInfo.getRequestTime() : bean.getCreateTime());
         bean.setRoleStatus(bean.getRoleStatus() == null ? AvailableStatus.Enable.getCode(): bean.getRoleStatus());
         roleDao.insert(bean);
     }
@@ -46,14 +46,14 @@ public class RoleService {
     }
 
     public void updateById(RoleBean bean) {
-        bean.setUpdateTime(bean.getUpdateTime() == null ? RequestBaseParam.getRequestTime() : bean.getUpdateTime());
+        bean.setUpdateTime(bean.getUpdateTime() == null ? RequestInfo.getRequestTime() : bean.getUpdateTime());
         if (roleDao.updateById(bean) == 0) {
             throw new BusinessException("更新失败");
         }
     }
 
     private void updateStatus(UpdateStatusBean bean, String errorMessage){
-        bean.setUpdateTime(bean.getUpdateTime() == null ? RequestBaseParam.getRequestTime() : bean.getUpdateTime());
+        bean.setUpdateTime(bean.getUpdateTime() == null ? RequestInfo.getRequestTime() : bean.getUpdateTime());
         if(roleDao.updateStatus(bean) == 0){
             throw new BusinessException(errorMessage);
         }
@@ -85,13 +85,13 @@ public class RoleService {
 
     public void addPermission(PermissionSaveBean bean) {
         roleDao.deleteRoleResource(bean);
-        bean.setCreateTime(bean.getCreateTime() == null ? RequestBaseParam.getRequestTime() : bean.getCreateTime());
+        bean.setCreateTime(bean.getCreateTime() == null ? RequestInfo.getRequestTime() : bean.getCreateTime());
         roleDao.insertRoleResource(bean);
     }
 
     public void removePermission(PermissionSaveBean bean) {
-        if(RequestBaseParam.getRequestUser().getType() != AdminType.Super.getCode()){
-            List<String> adminRoleCode = roleDao.getAllRoleByAdminId(RequestBaseParam.getRequestUser().getId());
+        if(RequestInfo.getRequestUser().getType() != AdminType.Super.getCode()){
+            List<String> adminRoleCode = roleDao.getAllRoleByAdminId(RequestInfo.getRequestUser().getId());
             if(adminRoleCode.contains(bean.getRoleCode())){
                 throw new NoPermissionException("不允许修改自己角色的权限");
             }
@@ -100,8 +100,8 @@ public class RoleService {
     }
 
     public List<AdminRole> getAdminRole(GetMyRoleBean bean) {
-        if(RequestBaseParam.getRequestUser().getType() != AdminType.Super.getCode()){
-            bean.setSelfId(RequestBaseParam.getRequestUser().getId());
+        if(RequestInfo.getRequestUser().getType() != AdminType.Super.getCode()){
+            bean.setSelfId(RequestInfo.getRequestUser().getId());
         }
 
         bean.setRoleStatus(AvailableStatus.Enable.getCode());

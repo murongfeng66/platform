@@ -1,4 +1,4 @@
-package com.jwzhu.platform.plugs.web.request;
+package com.jwzhu.platform.common.web;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -6,12 +6,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.jwzhu.platform.common.exception.SystemException;
+
 public class RequestUtil {
 
     public static HttpServletRequest getRequest() {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (requestAttributes == null) {
-            return null;
+            throw new SystemException("ServletRequestAttributes为空");
         }
         return requestAttributes.getRequest();
     }
@@ -19,33 +21,22 @@ public class RequestUtil {
     public static HttpServletResponse getResponse() {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (requestAttributes == null) {
-            return null;
+            throw new SystemException("ServletRequestAttributes为空");
         }
         return requestAttributes.getResponse();
     }
 
-    public static boolean isAjax(){
-        HttpServletRequest request = getRequest();
-        if(request != null){
-            String requestedWith = request.getHeader("x-requested-with");
-            return requestedWith != null && requestedWith.equalsIgnoreCase("XMLHttpRequest");
-        }
-        return false;
+    public static boolean isAjax() {
+        String requestedWith = getRequest().getHeader("x-requested-with");
+        return requestedWith != null && requestedWith.equalsIgnoreCase("XMLHttpRequest");
     }
 
-    public static void setSession(String name, String value){
-        HttpServletRequest request = getRequest();
-        if(request != null){
-            request.getSession().setAttribute(name, value);
-        }
+    public static void setSession(String name, String value) {
+        getRequest().getSession().setAttribute(name, value);
     }
 
-    public static String getSession(String name){
-        HttpServletRequest request = getRequest();
-        if(request != null){
-            return request.getSession().getAttribute(name).toString();
-        }
-        return null;
+    public static String getSession(String name) {
+        return getRequest().getSession().getAttribute(name).toString();
     }
 
 }

@@ -4,11 +4,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.jwzhu.platform.common.enums.AdminType;
 import com.jwzhu.platform.common.exception.NoPermissionException;
-import com.jwzhu.platform.common.exception.SystemException;
+import com.jwzhu.platform.common.web.RequestInfo;
+import com.jwzhu.platform.common.web.RequestUtil;
 import com.jwzhu.platform.permission.PermissionService;
 import com.jwzhu.platform.plugs.web.ApplicationContextUtil;
-import com.jwzhu.platform.common.web.RequestBaseParam;
-import com.jwzhu.platform.plugs.web.request.RequestUtil;
 
 public enum PermissionType {
 
@@ -26,7 +25,7 @@ public enum PermissionType {
     Only_Login{
         @Override
         public void check() {
-            if(RequestBaseParam.getRequestUser() == null){
+            if(RequestInfo.getRequestUser() == null){
                 throw new NoPermissionException();
             }
         }
@@ -40,9 +39,6 @@ public enum PermissionType {
             PermissionType.Only_Login.check();
 
             HttpServletRequest request = RequestUtil.getRequest();
-            if(request == null){
-                throw new SystemException("请求对象为空");
-            }
 
             PermissionService permissionService = ApplicationContextUtil.getBean(PermissionService.class);
             if(permissionService.checkNoPermission(request.getRequestURI())){
@@ -58,7 +54,7 @@ public enum PermissionType {
     SupperAdmin{
         @Override
         public void check() {
-            if(RequestBaseParam.getRequestUser().getType() != AdminType.Super.getCode()){
+            if(RequestInfo.getRequestUser().getType() != AdminType.Super.getCode()){
                 throw new NoPermissionException();
             }
         }

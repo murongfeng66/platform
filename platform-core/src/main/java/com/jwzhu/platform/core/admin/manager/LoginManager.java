@@ -11,8 +11,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.jwzhu.platform.common.enums.AvailableStatus;
 import com.jwzhu.platform.common.exception.BusinessException;
-import com.jwzhu.platform.common.exception.SystemException;
 import com.jwzhu.platform.common.util.HttpUtil;
+import com.jwzhu.platform.common.web.RequestInfo;
+import com.jwzhu.platform.common.web.TokenSubject;
 import com.jwzhu.platform.core.admin.bean.LoginBean;
 import com.jwzhu.platform.core.admin.model.Admin;
 import com.jwzhu.platform.core.admin.model.Login;
@@ -20,11 +21,9 @@ import com.jwzhu.platform.core.admin.service.AdminService;
 import com.jwzhu.platform.core.admin.service.LoginService;
 import com.jwzhu.platform.permission.PermissionService;
 import com.jwzhu.platform.plugs.cache.base.CacheUtil;
-import com.jwzhu.platform.common.web.RequestBaseParam;
 import com.jwzhu.platform.plugs.web.response.ResponseCode;
 import com.jwzhu.platform.plugs.web.response.WebResult;
 import com.jwzhu.platform.plugs.web.token.TokenService;
-import com.jwzhu.platform.common.web.TokenSubject;
 
 @Service
 public class LoginManager {
@@ -58,8 +57,8 @@ public class LoginManager {
         subject.setType(admin.getAdminType());
         String token = tokenService.createToken(subject);
 
-        RequestBaseParam.setRequestUser(subject);
-        RequestBaseParam.setRefreshToken(token);
+        RequestInfo.setRequestUser(subject);
+        RequestInfo.setRefreshToken(token);
 
         String cacheKey = permissionService.getCacheKey(admin.getId(), PermissionService.PermissionCacheType.Url);
         cacheUtil.delete(cacheKey);
@@ -77,9 +76,9 @@ public class LoginManager {
 
     public void logout(String token) {
         tokenService.inValidToken(token);
-        String cacheKey = permissionService.getCacheKey(RequestBaseParam.getRequestUser().getId(), PermissionService.PermissionCacheType.Url);
+        String cacheKey = permissionService.getCacheKey(RequestInfo.getRequestUser().getId(), PermissionService.PermissionCacheType.Url);
         cacheUtil.delete(cacheKey);
-        cacheKey = permissionService.getCacheKey(RequestBaseParam.getRequestUser().getId(), PermissionService.PermissionCacheType.Code);
+        cacheKey = permissionService.getCacheKey(RequestInfo.getRequestUser().getId(), PermissionService.PermissionCacheType.Code);
         cacheUtil.delete(cacheKey);
 
         Set<String> subHosts = cacheUtil.sMembers("SubSystem:" + token);

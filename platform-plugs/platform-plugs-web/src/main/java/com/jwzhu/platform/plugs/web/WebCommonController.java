@@ -1,8 +1,7 @@
 package com.jwzhu.platform.plugs.web;
 
-import java.util.Collection;
-
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,7 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
 import com.jwzhu.platform.common.SystemConfig;
-import com.jwzhu.platform.common.web.RequestBaseParam;
+import com.jwzhu.platform.common.web.RequestInfo;
 import com.jwzhu.platform.common.web.TokenSubject;
 import com.jwzhu.platform.permission.PermissionService;
 import com.jwzhu.platform.plugs.cache.base.CacheUtil;
@@ -74,8 +73,8 @@ public class WebCommonController {
     @ResponseBody
     @ControllerHandler(permissionType = PermissionType.Only_Login)
     public String logout() {
-        TokenSubject subject = tokenService.analyzeToken(RequestBaseParam.getRequestToken());
-        cacheUtil.delete(tokenService.getCacheKey(RequestBaseParam.getRequestToken()));
+        TokenSubject subject = tokenService.analyzeToken(RequestInfo.getRequestToken());
+        cacheUtil.delete(tokenService.getCacheKey(RequestInfo.getRequestToken()));
 
         String cacheKey = permissionService.getCacheKey(subject.getId(), PermissionService.PermissionCacheType.Code);
         cacheUtil.delete(cacheKey);

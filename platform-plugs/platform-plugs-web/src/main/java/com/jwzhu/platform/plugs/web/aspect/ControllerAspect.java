@@ -5,12 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.AfterThrowing;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +15,9 @@ import org.springframework.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jwzhu.platform.common.web.RequestBaseParam;
+import com.jwzhu.platform.common.web.RequestInfo;
 import com.jwzhu.platform.common.web.RequestType;
+import com.jwzhu.platform.common.web.RequestUtil;
 import com.jwzhu.platform.common.web.TokenSubject;
 import com.jwzhu.platform.plugs.web.annotations.ControllerHandler;
 import com.jwzhu.platform.plugs.web.exception.JsonException;
@@ -29,7 +25,6 @@ import com.jwzhu.platform.plugs.web.exception.PageException;
 import com.jwzhu.platform.plugs.web.exception.token.TokenEmptyException;
 import com.jwzhu.platform.plugs.web.param.BaseParam;
 import com.jwzhu.platform.plugs.web.permission.PermissionType;
-import com.jwzhu.platform.plugs.web.request.RequestUtil;
 import com.jwzhu.platform.plugs.web.token.TokenService;
 
 @Aspect
@@ -52,10 +47,8 @@ public class ControllerAspect {
         controllerHandler = controllerHandler == null ? joinPoint.getTarget().getClass().getAnnotation(ControllerHandler.class) : controllerHandler;
 
         HttpServletRequest request = RequestUtil.getRequest();
-        if (request != null) {
-            logger.info("请求地址：{}", request.getRequestURI());
-            initRequestType(request);
-        }
+        logger.info("请求地址：{}", request.getRequestURI());
+        initRequestType(request);
         logger.info("请求接口：{}.{}", joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName());
 
         String token = getToken();
@@ -68,8 +61,8 @@ public class ControllerAspect {
             if (PermissionType.No != controllerHandler.permissionType()) {
                 throw new TokenEmptyException();
             }
-            RequestBaseParam.setRequestToken(null);
-            RequestBaseParam.setRequestUser(null);
+            RequestInfo.setRequestToken(null);
+            RequestInfo.setRequestUser(null);
         } else {
             logger.debug("取出Token：{}", token);
             try {
@@ -78,13 +71,13 @@ public class ControllerAspect {
                 clearToken();
                 throw e;
             }
-            RequestBaseParam.setRequestToken(token);
+            RequestInfo.setRequestToken(token);
         }
 
         controllerHandler.permissionType().check();
 
-        RequestBaseParam.initRequestId();
-        RequestBaseParam.initRequestTime();
+        RequestInfo.initRequestId();
+        RequestInfo.initRequestTime();
 
         for (Object arg : joinPoint.getArgs()) {
             if (arg instanceof BaseParam) {
@@ -99,31 +92,25 @@ public class ControllerAspect {
 
     private void clearToken() {
         HttpServletResponse response = RequestUtil.getResponse();
-        if(response != null){
+        if (response != null) {
             Cookie cookie = new Cookie(tokenService.getTokenConfig().getParamName(), null);
             cookie.setPath("/");
             response.addCookie(cookie);
         }
-        HttpServletRequest request = RequestUtil.getRequest();
-        if(request != null){
-            request.getSession().removeAttribute(tokenService.getTokenConfig().getParamName());
-        }
+        RequestUtil.getRequest().getSession().removeAttribute(tokenService.getTokenConfig().getParamName());
     }
 
     private void initRequestType(HttpServletRequest request) {
         String requestTypeString = request.getParameter("requestType");
         if (StringUtils.isEmpty(requestTypeString)) {
-            RequestBaseParam.initRequestType(RequestUtil.isAjax() ? RequestType.Ajax.getCode() : RequestType.Page.getCode());
+            RequestInfo.initRequestType(RequestUtil.isAjax() ? RequestType.Ajax.getCode() : RequestType.Page.getCode());
         } else {
-            RequestBaseParam.initRequestType(Short.valueOf(requestTypeString));
+            RequestInfo.initRequestType(Short.valueOf(requestTypeString));
         }
     }
 
     private String getToken() {
         HttpServletRequest request = RequestUtil.getRequest();
-        if (request == null) {
-            return null;
-        }
 
         String token = request.getParameter(tokenService.getTokenConfig().getParamName());
         if (StringUtils.isEmpty(token)) {
@@ -167,8 +154,8 @@ public class ControllerAspect {
 
     private void analyzeToken(String token) {
         TokenSubject subject = tokenService.checkToken(token);
-        RequestBaseParam.setRefreshToken(tokenService.updateToken(subject));
-        RequestBaseParam.setRequestUser(subject);
+        RequestInfo.setRefreshToken(tokenService.updateToken(subject));
+        RequestInfo.setRequestUser(subject);
     }
 
     @AfterThrowing(value = "pointCut(controllerHandler)", argNames = "e,controllerHandler", throwing = "e")
@@ -178,7 +165,7 @@ public class ControllerAspect {
     }
 
     private void wrapException(Throwable e) {
-        if (RequestBaseParam.getRequestType() == RequestType.Ajax) {
+        if (RequestInfo.getRequestType() == RequestType.Ajax) {
             throw new JsonException(e);
         } else {
             throw new PageException(e);
@@ -187,8 +174,8 @@ public class ControllerAspect {
 
     @After(value = "pointCut(controllerHandler)", argNames = "controllerHandler")
     public void after(ControllerHandler controllerHandler) {
-        RequestBaseParam.initResponseTime();
-        logger.info("接口耗时：{}\n", RequestBaseParam.getCostTime());
+        RequestInfo.initResponseTime();
+        logger.info("接口耗时：{}\n", RequestInfo.getCostTime());
     }
 
     @AfterReturning(value = "pointCut(controllerHandler)", argNames = "joinPoint,controllerHandler,returnValue", returning = "returnValue")

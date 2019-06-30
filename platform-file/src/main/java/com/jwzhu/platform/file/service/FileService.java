@@ -17,11 +17,11 @@ import com.jwzhu.platform.common.enums.AvailableStatus;
 import com.jwzhu.platform.common.exception.BusinessException;
 import com.jwzhu.platform.common.exception.SystemException;
 import com.jwzhu.platform.common.util.StringUtil;
-import com.jwzhu.platform.common.web.RequestBaseParam;
-import com.jwzhu.platform.file.db.FileDao;
+import com.jwzhu.platform.common.web.RequestInfo;
 import com.jwzhu.platform.file.FileConfig;
 import com.jwzhu.platform.file.bean.FileBean;
 import com.jwzhu.platform.file.bean.FileListBean;
+import com.jwzhu.platform.file.db.FileDao;
 import com.jwzhu.platform.file.model.File;
 import com.jwzhu.platform.file.model.Folder;
 
@@ -38,7 +38,7 @@ public class FileService {
         if (fileDao.getWithLock(bean) != null) {
             throw new BusinessException("存在相同文件");
         }
-        bean.setCreateTime(bean.getCreateTime() == null ? RequestBaseParam.getRequestTime() : bean.getCreateTime());
+        bean.setCreateTime(bean.getCreateTime() == null ? RequestInfo.getRequestTime() : bean.getCreateTime());
         bean.setFileStatus(bean.getFileStatus() == null ? AvailableStatus.Enable.getCode() : bean.getFileStatus());
         fileDao.insert(bean);
     }
@@ -48,7 +48,7 @@ public class FileService {
     }
 
     private void updateStatus(UpdateStatusBean bean, String errorMessage) {
-        bean.setUpdateTime(bean.getUpdateTime() == null ? RequestBaseParam.getRequestTime() : bean.getUpdateTime());
+        bean.setUpdateTime(bean.getUpdateTime() == null ? RequestInfo.getRequestTime() : bean.getUpdateTime());
         if (fileDao.updateStatus(bean) == 0) {
             throw new BusinessException(errorMessage);
         }

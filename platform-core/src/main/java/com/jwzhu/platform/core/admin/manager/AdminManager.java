@@ -9,18 +9,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jwzhu.platform.common.bean.LongBean;
+import com.jwzhu.platform.common.enums.AdminType;
 import com.jwzhu.platform.common.exception.BusinessException;
 import com.jwzhu.platform.common.exception.NoPermissionException;
+import com.jwzhu.platform.common.web.RequestInfo;
 import com.jwzhu.platform.core.admin.bean.AdminBean;
 import com.jwzhu.platform.core.admin.bean.AdminListBean;
 import com.jwzhu.platform.core.admin.bean.AdminSaveBean;
 import com.jwzhu.platform.core.admin.bean.LoginBean;
 import com.jwzhu.platform.core.admin.model.Admin;
-import com.jwzhu.platform.common.enums.AdminType;
 import com.jwzhu.platform.core.admin.service.AdminService;
 import com.jwzhu.platform.core.admin.service.LoginService;
 import com.jwzhu.platform.core.permission.bean.AdminRoleBean;
-import com.jwzhu.platform.common.web.RequestBaseParam;
 
 @Service
 public class AdminManager {
@@ -57,7 +57,7 @@ public class AdminManager {
 
     public Map<Short, String> getAddAdminType() {
         Map<Short, String> map = new HashMap<>();
-        if(RequestBaseParam.getRequestUser().getType() == AdminType.Super.getCode()){
+        if(RequestInfo.getRequestUser().getType() == AdminType.Super.getCode()){
             map.put(AdminType.Admin.getCode(), AdminType.Admin.getMessage());
         }
         return map;
@@ -75,7 +75,7 @@ public class AdminManager {
     }
 
     private void checkTarget(long targetAdminId){
-        if(RequestBaseParam.getRequestUser().getType() != AdminType.Super.getCode() && RequestBaseParam.getRequestUser().getId() == targetAdminId){
+        if(RequestInfo.getRequestUser().getType() != AdminType.Super.getCode() && RequestInfo.getRequestUser().getId() == targetAdminId){
             throw new NoPermissionException("不允许修改自己");
         }
     }
