@@ -12,35 +12,49 @@ public class RequestInfo {
     /**
      * 请求ID
      */
-    private static RequestBaseParam<String> REQUEST_ID = new RequestBaseParam<>("REQUEST_ID");
+    private static ThreadLocal<String> REQUEST_ID = new ThreadLocal<>();
     /**
      * 请求时间
      */
-    private static RequestBaseParam<LocalDateTime> REQUEST_TIME = new RequestBaseParam<>("REQUEST_TIME");
+    private static ThreadLocal<LocalDateTime> REQUEST_TIME = new ThreadLocal<>();
     /**
      * 响应时间
      */
-    private static RequestBaseParam<LocalDateTime> RESPONSE_TIME = new RequestBaseParam<>("RESPONSE_TIME");
+    private static ThreadLocal<LocalDateTime> RESPONSE_TIME = new ThreadLocal<>();
     /**
      * 处理时长
      */
-    private static RequestBaseParam<Long> COST_TIME = new RequestBaseParam<>("COST_TIME");
+    private static ThreadLocal<Long> COST_TIME = new ThreadLocal<>();
     /**
      * 请求类型
      */
-    private static RequestBaseParam<RequestType> REQUEST_TYPE = new RequestBaseParam<>("REQUEST_TYPE");
+    private static ThreadLocal<RequestType> REQUEST_TYPE = new ThreadLocal<>();
     /**
      * 处理时长
      */
-    private static RequestBaseParam<TokenSubject> REQUEST_USER = new RequestBaseParam<>("REQUEST_USER");
+    private static ThreadLocal<TokenSubject> REQUEST_USER = new ThreadLocal<>();
     /**
      * 刷新Token
      */
-    private static RequestBaseParam<String> REFRESH_TOKEN = new RequestBaseParam<>("REFRESH_TOKEN");
+    private static ThreadLocal<String> REFRESH_TOKEN = new ThreadLocal<>();
     /**
      * 请求Token
      */
-    private static RequestBaseParam<String> REQUEST_TOKEN = new RequestBaseParam<>("REQUEST_TOKEN");
+    private static ThreadLocal<String> REQUEST_TOKEN = new ThreadLocal<>();
+
+    /**
+     * 清理基础参数
+     */
+    public static void clear(){
+        REQUEST_ID.remove();
+        REQUEST_TIME.remove();
+        RESPONSE_TIME.remove();
+        COST_TIME.remove();
+        REQUEST_TYPE.remove();
+        REQUEST_USER.remove();
+        REFRESH_TOKEN.remove();
+        REQUEST_TOKEN.remove();
+    }
 
     /**
      * 初始化请求ID
@@ -159,23 +173,6 @@ public class RequestInfo {
 
     public static String getRequestToken(){
         return REQUEST_TOKEN.get();
-    }
-
-    static class RequestBaseParam<T>{
-        private String name;
-
-        public RequestBaseParam(String name) {
-            this.name = "RequestInfo."+name;
-        }
-
-        public void set(T t){
-            RequestUtil.getRequest().setAttribute(name, t);
-        }
-        
-        @SuppressWarnings("unchecked")
-        public T get(){
-            return (T)RequestUtil.getRequest().getAttribute(name);
-        }
     }
 
 }
