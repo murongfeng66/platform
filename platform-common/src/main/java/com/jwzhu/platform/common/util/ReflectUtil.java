@@ -1,11 +1,7 @@
-package com.jwzhu.platform.common.reflect;
+package com.jwzhu.platform.common.util;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.jwzhu.platform.common.exception.SystemException;
 
@@ -13,7 +9,7 @@ import com.jwzhu.platform.common.exception.SystemException;
 /**
  * 反射工具
  */
-public class ReflectUtils {
+public class ReflectUtil {
 
 	/**
 	 * 获取指定对象里面的指定属性
@@ -124,5 +120,5 @@ public class ReflectUtils {
 		return t;
 	}
 
-	private ReflectUtils() {}
+	private ReflectUtil() {}
 }

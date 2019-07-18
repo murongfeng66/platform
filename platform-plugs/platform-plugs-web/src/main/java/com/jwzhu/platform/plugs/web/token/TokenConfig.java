@@ -34,11 +34,6 @@ public class TokenConfig {
      * 在请求中的Token参数名称
      */
     private String paramName = "Token";
-    /**
-     * 当Token存在过期时长时，刷新Token的时长（ms），为0时不刷新
-     */
-    @DurationUnit(ChronoUnit.MILLIS)
-    private Duration tokenUpdateTime = Duration.ofMinutes(25);
 
     public Duration getExpiredTime() {
         return expiredTime;
@@ -95,13 +90,5 @@ public class TokenConfig {
 
     public void setParamName(String paramName) {
         this.paramName = paramName;
-    }
-
-    public Duration getTokenUpdateTime() {
-        return tokenUpdateTime;
-    }
-
-    public void setTokenUpdateTime(Duration tokenUpdateTime) {
-        this.tokenUpdateTime = tokenUpdateTime;
     }
 }

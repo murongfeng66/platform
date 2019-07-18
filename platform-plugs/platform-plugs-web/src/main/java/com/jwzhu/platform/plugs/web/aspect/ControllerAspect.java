@@ -154,7 +154,6 @@ public class ControllerAspect {
 
     private void analyzeToken(String token) {
         TokenSubject subject = tokenService.checkToken(token);
-        RequestInfo.setRefreshToken(tokenService.updateToken(subject));
         RequestInfo.setRequestUser(subject);
     }
 

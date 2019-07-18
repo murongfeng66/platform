@@ -59,15 +59,4 @@ public class TokenService {
     public TokenConfig getTokenConfig() {
         return tokenConfig;
     }
-
-    public String updateToken(TokenSubject subject) {
-        if (subject.getTime() != null && tokenConfig.getExpiredTime().toMillis() > 0 && tokenConfig.getTokenUpdateTime().toMillis() > 0 && System.currentTimeMillis() - subject.getTime() > tokenConfig.getTokenUpdateTime().toMillis()) {
-            TokenSubject newSubject = new TokenSubject();
-            newSubject.setId(subject.getId());
-            newSubject.setType(subject.getType());
-            logger.info("刷新Token");
-            return createToken(newSubject);
-        }
-        return null;
-    }
 }

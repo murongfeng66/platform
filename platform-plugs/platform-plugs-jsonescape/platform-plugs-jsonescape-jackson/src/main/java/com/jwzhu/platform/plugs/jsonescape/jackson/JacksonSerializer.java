@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.jwzhu.platform.common.exception.SystemException;
-import com.jwzhu.platform.common.reflect.ReflectUtils;
+import com.jwzhu.platform.common.util.ReflectUtil;
 
 public abstract class JacksonSerializer <T> extends JsonSerializer<T> {
 
@@ -25,9 +25,9 @@ public abstract class JacksonSerializer <T> extends JsonSerializer<T> {
     }
 
     Field getField(Object object, String fieldName) {
-        Field field = ReflectUtils.getField(object, fieldName);
+        Field field = ReflectUtil.getField(object, fieldName);
         if (field == null) {
-            List<Field> fields = ReflectUtils.getFields(object);
+            List<Field> fields = ReflectUtil.getFields(object);
             for (Field field1 : fields) {
                 JsonProperty jsonProperty = field1.getAnnotation(JsonProperty.class);
                 if (jsonProperty != null && jsonProperty.value().equals(fieldName)) {

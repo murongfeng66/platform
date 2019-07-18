@@ -5,11 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
@@ -18,12 +14,7 @@ import org.apache.ibatis.logging.jdbc.ConnectionLogger;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
-import org.apache.ibatis.plugin.Interceptor;
-import org.apache.ibatis.plugin.Intercepts;
-import org.apache.ibatis.plugin.Invocation;
-import org.apache.ibatis.plugin.Plugin;
-import org.apache.ibatis.plugin.Signature;
-import org.apache.ibatis.scripting.defaults.RawSqlSource;
+import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
@@ -31,7 +22,7 @@ import org.apache.ibatis.transaction.Transaction;
 
 import com.jwzhu.platform.common.bean.PageBean;
 import com.jwzhu.platform.common.exception.SystemException;
-import com.jwzhu.platform.common.reflect.ReflectUtils;
+import com.jwzhu.platform.common.util.ReflectUtil;
 
 @Intercepts({@Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class})})
 public class MybatisCutPageInterceptor implements Interceptor {
@@ -92,11 +83,11 @@ public class MybatisCutPageInterceptor implements Interceptor {
     @SuppressWarnings({"rawtypes", "unchecked"})
     private Object doCutPage(Invocation invocation, PageBean pageBean) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, SQLException {
         MappedStatement mappedStatement = (MappedStatement)invocation.getArgs()[0];
-//        ReflectUtils.setFieldValue(mappedStatement.getParameterMap(), "parameterMappings", new ArrayList<>());
+//        ReflectUtil.setFieldValue(mappedStatement.getParameterMap(), "parameterMappings", new ArrayList<>());
         BoundSql boundSql = mappedStatement.getBoundSql(pageBean);
 
-//        List parameterMappings = (List) ReflectUtils.getFieldValue(boundSql, "parameterMappings");
-//        ReflectUtils.setFieldValue(mappedStatement.getParameterMap(), "parameterMappings", parameterMappings);
+//        List parameterMappings = (List) ReflectUtil.getFieldValue(boundSql, "parameterMappings");
+//        ReflectUtil.setFieldValue(mappedStatement.getParameterMap(), "parameterMappings", parameterMappings);
 
         Configuration configuration = mappedStatement.getConfiguration();
         if (sqlNames.isEmpty()) {
@@ -113,10 +104,10 @@ public class MybatisCutPageInterceptor implements Interceptor {
 
             String limitSql = getLimitSql(boundSql, pageBean);
             BoundSql dataBoundSql = new BoundSql(configuration, limitSql, boundSql.getParameterMappings(), boundSql.getParameterObject());
-            Object additionalParameters = ReflectUtils.getFieldValue(boundSql, "additionalParameters");
-            ReflectUtils.setFieldValue(dataBoundSql, "additionalParameters", additionalParameters);
-            Object metaParameters = ReflectUtils.getFieldValue(boundSql, "metaParameters");
-            ReflectUtils.setFieldValue(dataBoundSql, "metaParameters", metaParameters);
+            Object additionalParameters = ReflectUtil.getFieldValue(boundSql, "additionalParameters");
+            ReflectUtil.setFieldValue(dataBoundSql, "additionalParameters", additionalParameters);
+            Object metaParameters = ReflectUtil.getFieldValue(boundSql, "metaParameters");
+            ReflectUtil.setFieldValue(dataBoundSql, "metaParameters", metaParameters);
 
             MappedStatement newMappedStatement = copyFromMappedStatement(mappedStatement, new PageSqlSource(dataBoundSql));
 
