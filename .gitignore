@@ -1,4 +1,10 @@
+#Idea
 .idea/
 *.iml
+#Project
 **/target/
 **/log/**
+#Eclipse
+.settings/
+.classpath
+.project

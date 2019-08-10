@@ -17,7 +17,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.jwzhu.platform.common.SystemConfig;
 import com.jwzhu.platform.common.enums.AvailableStatus;
 import com.jwzhu.platform.common.enums.YesOrNo;
 import com.jwzhu.platform.common.exception.SystemException;
@@ -39,8 +38,6 @@ public class CommonController {
     private static Logger logger = LoggerFactory.getLogger(CommonController.class);
     @Autowired
     private ResourceManager resourceManager;
-    @Autowired
-    private SystemConfig systemConfig;
     @Autowired
     private LoginManager userManager;
     @Autowired

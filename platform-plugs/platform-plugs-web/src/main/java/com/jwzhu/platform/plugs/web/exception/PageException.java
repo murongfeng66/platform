@@ -2,6 +2,8 @@ package com.jwzhu.platform.plugs.web.exception;
 
 public class PageException extends RuntimeException{
 
+	private static final long serialVersionUID = -7339597489592382130L;
+	
 	private Throwable e;
 
 	public PageException(Throwable e){

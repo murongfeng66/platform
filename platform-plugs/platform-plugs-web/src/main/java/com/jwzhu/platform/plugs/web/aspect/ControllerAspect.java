@@ -81,7 +81,7 @@ public class ControllerAspect {
 
         for (Object arg : joinPoint.getArgs()) {
             if (arg instanceof BaseParam) {
-                BaseParam param = (BaseParam) arg;
+                BaseParam<?> param = (BaseParam<?>) arg;
                 logger.info("请求参数：{}", JSON.toJSONString(param));
                 if (controllerHandler.validParam()) {
                     param.valid(controllerHandler.validGroups());

@@ -1,11 +1,10 @@
 package com.jwzhu.platform.plugs.web.param;
 
-import java.util.Set;
-
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import java.util.Set;
 
 import org.springframework.beans.BeanUtils;
 
@@ -30,7 +29,7 @@ public abstract class BaseParam<T extends BaseBean> {
         return target;
     }
 
-    public void valid(Class... groups) {
+    public void valid(Class<?>... groups) {
         Validator validator = factory.getValidator();
         Set<ConstraintViolation<BaseParam<T>>> constraintViolations = validator.validate(this, groups);
 

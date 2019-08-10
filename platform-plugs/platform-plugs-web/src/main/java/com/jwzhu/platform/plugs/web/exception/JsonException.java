@@ -2,6 +2,8 @@ package com.jwzhu.platform.plugs.web.exception;
 
 public class JsonException extends RuntimeException{
 
+	private static final long serialVersionUID = -6579541414171016305L;
+	
 	private Throwable e;
 
 	public JsonException(Throwable e){

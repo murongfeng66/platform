@@ -1,9 +1,7 @@
 package com.jwzhu.platform.plugs.web.param;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
-import com.jwzhu.platform.common.bean.LongBean;
 import com.jwzhu.platform.common.bean.StringBean;
 
 public class StringParam extends BaseParam<StringBean> {

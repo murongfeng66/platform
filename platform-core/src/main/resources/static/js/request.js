@@ -75,7 +75,7 @@ const Request = {};
         }
 
         if (data.redirect) {
-            window.location.href = Request.addParamToUrl(data.redirect, 'originUrl', window.location.href);
+            window.location.href = data.redirect;
         }
     }
 

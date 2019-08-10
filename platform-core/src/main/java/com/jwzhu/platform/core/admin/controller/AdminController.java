@@ -17,7 +17,6 @@ import com.jwzhu.platform.core.admin.param.AdminAddParam;
 import com.jwzhu.platform.core.admin.param.AdminListParam;
 import com.jwzhu.platform.core.admin.param.AdminRoleSaveParam;
 import com.jwzhu.platform.core.admin.param.AdminUpdateParam;
-import com.jwzhu.platform.core.permission.param.PermissionSaveParam;
 import com.jwzhu.platform.plugs.web.annotations.ControllerHandler;
 import com.jwzhu.platform.plugs.web.param.LongParam;
 import com.jwzhu.platform.plugs.web.permission.PermissionType;

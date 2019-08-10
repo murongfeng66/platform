@@ -2,6 +2,8 @@ package com.jwzhu.platform.common.exception;
 
 public class NoPermissionException extends RuntimeException{
 
+	private static final long serialVersionUID = 2097927904837929095L;
+
 	public NoPermissionException(){
 		super("无权限");
 	}

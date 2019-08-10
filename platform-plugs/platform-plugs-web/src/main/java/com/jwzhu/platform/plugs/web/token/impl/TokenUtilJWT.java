@@ -1,31 +1,22 @@
 package com.jwzhu.platform.plugs.web.token.impl;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSON;
+import com.jwzhu.platform.common.web.TokenSubject;
 import com.jwzhu.platform.plugs.web.exception.token.TokenTimeOutException;
 import com.jwzhu.platform.plugs.web.token.TokenConfig;
-import com.jwzhu.platform.common.web.TokenSubject;
 import com.jwzhu.platform.plugs.web.token.TokenUtil;
 
 public class TokenUtilJWT implements TokenUtil {
-
-    private static Logger logger = LoggerFactory.getLogger(TokenUtilJWT.class);
 
     private TokenConfig tokenConfig;
 

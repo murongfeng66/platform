@@ -1,12 +1,11 @@
 package com.jwzhu.platform.plugs.web.aspect;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.util.StringUtils;
@@ -25,7 +24,7 @@ import com.jwzhu.platform.plugs.web.response.WebResult;
 import com.jwzhu.platform.plugs.web.token.TokenService;
 
 @ControllerAdvice
-public class ResponseAdvice implements ResponseBodyAdvice {
+public class ResponseAdvice implements ResponseBodyAdvice<Object> {
 
     private static Logger logger = LoggerFactory.getLogger(ResponseAdvice.class);
     @Autowired
@@ -34,21 +33,22 @@ public class ResponseAdvice implements ResponseBodyAdvice {
     private TokenService tokenService;
 
     @Override
-    public boolean supports(MethodParameter returnType, Class converterType) {
+    public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
         return true;
     }
 
-    @Override
-    public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
+    @SuppressWarnings("unchecked")
+	@Override
+    public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
         if ("/error".equals(request.getURI().getPath())) {
             return body;
         }
 
         response.getHeaders().setContentType(MediaType.parseMediaType(MediaType.APPLICATION_JSON_UTF8_VALUE));
 
-        WebResult webResult;
+        WebResult<?> webResult;
         if (body instanceof WebResult) {
-            webResult = (WebResult) body;
+            webResult = (WebResult<?>) body;
         } else {
             webResult = new WebResult<>(body);
         }
@@ -73,8 +73,8 @@ public class ResponseAdvice implements ResponseBodyAdvice {
                 throw new SystemException(e);
             }
         }else if(body instanceof PageBean){
-            PageBean pageBean = (PageBean) body;
-            PageResult<List> pageResult = new PageResult<>();
+            PageBean<Object> pageBean = (PageBean<Object>) body;
+            PageResult<Object> pageResult = new PageResult<>();
             pageResult.setTotalPage(pageBean.getTotalPage());
             pageResult.setPageSize(pageBean.getPageSize());
             pageResult.setTotalCount(pageBean.getTotalCount());

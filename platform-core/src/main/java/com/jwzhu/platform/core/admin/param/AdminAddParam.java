@@ -3,7 +3,6 @@ package com.jwzhu.platform.core.admin.param;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import com.jwzhu.platform.core.admin.bean.AdminBean;
 import com.jwzhu.platform.core.admin.bean.AdminSaveBean;
 import com.jwzhu.platform.plugs.web.param.BaseParam;
 
