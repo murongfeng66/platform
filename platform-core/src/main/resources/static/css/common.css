@@ -71,6 +71,7 @@ button {
     cursor: pointer;
     font-weight: 200;
     letter-spacing: 1rem;
+    text-indent: 1rem;
 }
 
 button:hover {
