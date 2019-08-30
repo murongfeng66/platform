@@ -17,12 +17,17 @@
             width: 100%;
             height: 100%;
             display: flex;
-            background: url(https://static.platform.jwzhu.com/image/login_backgroud.jpg) no-repeat;
+            background: url(https://static.platform.jwzhu.com/image/login_background.png) no-repeat;
             background-size: cover;
         }
 
+        .login-window {
+            margin: auto auto auto 20%;
+            width: 20rem;
+        }
+
         .login-box {
-            margin: auto 25% auto auto;
+            margin: auto 20% auto auto;
             width: 20rem;
         }
 
@@ -46,10 +51,24 @@
             letter-spacing: 2rem;
             text-indent: 2rem;
         }
+
+        .footer{
+            bottom: 0;
+            position: fixed;
+            text-align: center;
+            width: 100%;
+            font-size: 0.5rem;
+        }
+
+        .footer a {
+             text-decoration: unset;
+             color: #000000;
+         }
     </style>
 </head>
 <body>
 <div class="login-content">
+    <img src="https://static.platform.jwzhu.com/image/login_window.png" class="login-window" alt="" />
     <div class="login-box">
         <div class="login-box-top">
             <h2 th:text="${systemName}">统一管理平台</h2>
@@ -71,6 +90,10 @@
         <div class="login-box-bottom">
             <button type="button" class="button-x" onclick="login()">登录</button>
         </div>
+    </div>
+    <div class="footer">
+        ©2019
+        <a href="http://www.beian.miit.gov.cn">备案号粤ICP备18131041号</a>
     </div>
 </div>
 </body>
@@ -94,7 +117,6 @@
                 sessionStorage.setItem('resourceUrls', data);
             }
         });
-        console.info('finish');
     };
 </script>
 </html>
