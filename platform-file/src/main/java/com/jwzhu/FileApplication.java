@@ -9,12 +9,12 @@ import com.jwzhu.platform.plugs.jsonescape.base.JsonEscaperScan;
 
 @SpringBootApplication
 @ServletComponentScan
-@MapperScan("com.jwzhu.platform.core.*.db")
+@MapperScan("com.jwzhu.platform.file.db")
 @JsonEscaperScan
-public class PlatformCoreApplication {
+public class FileApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(PlatformCoreApplication.class, args);
+        SpringApplication.run(FileApplication.class, args);
     }
 
 }

@@ -83,11 +83,7 @@ public class MybatisCutPageInterceptor implements Interceptor {
     @SuppressWarnings({"rawtypes", "unchecked"})
     private Object doCutPage(Invocation invocation, PageBean pageBean) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, SQLException {
         MappedStatement mappedStatement = (MappedStatement)invocation.getArgs()[0];
-//        ReflectUtil.setFieldValue(mappedStatement.getParameterMap(), "parameterMappings", new ArrayList<>());
         BoundSql boundSql = mappedStatement.getBoundSql(pageBean);
-
-//        List parameterMappings = (List) ReflectUtil.getFieldValue(boundSql, "parameterMappings");
-//        ReflectUtil.setFieldValue(mappedStatement.getParameterMap(), "parameterMappings", parameterMappings);
 
         Configuration configuration = mappedStatement.getConfiguration();
         if (sqlNames.isEmpty()) {
