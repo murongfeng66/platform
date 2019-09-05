@@ -1,3 +1,7 @@
+html {
+
+}
+
 body {
     margin: 0;
     background-color: #ffffff;
@@ -11,11 +15,6 @@ select {
     color: #252525;
     padding: 0.25rem 1rem;
     background: none;
-    /*-webkit-appearance: none;*/
-    /*background: url(https://static.platform.jwzhu.com/image/arrow/solid/ud.png) no-repeat;*/
-    /*background-position-y: center;*/
-    /*background-position-x: calc(100% - 4px);*/
-    /*background-size: contain;*/
 }
 
 input {
@@ -70,6 +69,7 @@ button {
     border-radius: 0.25rem;
     cursor: pointer;
     font-weight: 200;
+    padding: 0.25rem 0.75rem;
 }
 
 button:hover {
