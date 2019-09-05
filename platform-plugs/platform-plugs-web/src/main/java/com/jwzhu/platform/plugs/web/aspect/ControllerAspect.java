@@ -48,6 +48,7 @@ public class ControllerAspect {
 
         HttpServletRequest request = RequestUtil.getRequest();
         logger.info("请求地址：{}", request.getRequestURI());
+        logger.info("请求SessionId：{}", request.getSession().getId());
         initRequestType(request);
         logger.info("请求接口：{}.{}", joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName());
 

@@ -30,7 +30,7 @@ public class ResourceController {
 
     @RequestMapping("page")
     @ControllerHandler
-    public ModelAndView login(ModelAndView view) {
+    public ModelAndView page(ModelAndView view) {
         view.setViewName("permission/resource");
         return view;
     }

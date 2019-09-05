@@ -145,34 +145,6 @@
                 permission: 'permission.admin.updateById',
                 onclick: updateAdminView
             });
-            if (this.adminStatus === 1) {
-                let id = this.id;
-                operates.push({
-                    id: 'disable',
-                    title: '禁用',
-                    permission: 'permission.admin.disable',
-                    onclick: function () {
-                        common.confirmRequest(id, '/admin/disable', 'table_admin', '是否确认禁用该管理员');
-                    }
-                });
-            } else if (this.adminStatus === -1) {
-                let id = this.id;
-                operates.push({
-                    id: 'enable',
-                    title: '启用',
-                    permission: 'permission.admin.enable',
-                    onclick: function () {
-                        common.confirmRequest(id, '/admin/enable', 'table_admin', '是否确认启用该管理员');
-                    }
-                }, {
-                    id: 'delete',
-                    title: '删除',
-                    permission: 'permission.admin.delete',
-                    onclick: function () {
-                        common.confirmRequest(id, '/admin/delete', 'table_admin', '是否确认删除该管理员');
-                    }
-                });
-            }
             if (this.adminType !== 1) {
                 operates.push({
                     id: 'role',
@@ -180,6 +152,34 @@
                     permission: 'permission.admin.getAdminRole',
                     onclick: roleView
                 });
+                if (this.adminStatus === 1) {
+                    let id = this.id;
+                    operates.push({
+                        id: 'disable',
+                        title: '禁用',
+                        permission: 'permission.admin.disable',
+                        onclick: function () {
+                            common.confirmRequest(id, '/admin/disable', 'table_admin', '是否确认禁用该管理员');
+                        }
+                    });
+                } else if (this.adminStatus === -1) {
+                    let id = this.id;
+                    operates.push({
+                        id: 'enable',
+                        title: '启用',
+                        permission: 'permission.admin.enable',
+                        onclick: function () {
+                            common.confirmRequest(id, '/admin/enable', 'table_admin', '是否确认启用该管理员');
+                        }
+                    }, {
+                        id: 'delete',
+                        title: '删除',
+                        permission: 'permission.admin.delete',
+                        onclick: function () {
+                            common.confirmRequest(id, '/admin/delete', 'table_admin', '是否确认删除该管理员');
+                        }
+                    });
+                }
             }
             return operates;
         }
