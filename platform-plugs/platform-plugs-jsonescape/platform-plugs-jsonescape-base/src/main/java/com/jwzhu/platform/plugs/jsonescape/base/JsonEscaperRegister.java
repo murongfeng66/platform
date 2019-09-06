@@ -19,7 +19,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.core.type.StandardAnnotationMetadata;
-import org.springframework.util.StringUtils;
+
+import com.jwzhu.platform.common.util.StringUtil;
 
 /**
  * JSON转义序列化器注册
@@ -37,7 +38,7 @@ public class JsonEscaperRegister implements ImportBeanDefinitionRegistrar, Resou
         List<String> basePackages = new ArrayList<>();
         if(annotationAttributes != null){
             for (String basePackage : annotationAttributes.getStringArray("basePackages")) {
-                if (StringUtils.hasText(basePackage)) {
+                if (StringUtil.isEmpty(basePackage)) {
                     basePackages.add(basePackage);
                 }
             }
@@ -49,7 +50,7 @@ public class JsonEscaperRegister implements ImportBeanDefinitionRegistrar, Resou
 
 
         JsonEscaperScanner scanner = new JsonEscaperScanner(beanDefinitionRegistry, true, environment, resourceLoader);
-        Set<BeanDefinitionHolder> beanDefinitionHolders = scanner.doScan(StringUtils.toStringArray(basePackages));
+        Set<BeanDefinitionHolder> beanDefinitionHolders = scanner.doScan(basePackages.toArray(new String[]{}));
         for (BeanDefinitionHolder beanDefinitionHolder : beanDefinitionHolders) {
             logger.info("JSON转义序列化器：{}",beanDefinitionHolder.getBeanDefinition().getBeanClassName());
             beanDefinitionRegistry.registerBeanDefinition(beanDefinitionHolder.getBeanName(), beanDefinitionHolder.getBeanDefinition());

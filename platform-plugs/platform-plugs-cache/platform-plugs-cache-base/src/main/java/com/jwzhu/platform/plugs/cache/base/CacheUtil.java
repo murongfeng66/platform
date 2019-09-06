@@ -44,4 +44,12 @@ public interface CacheUtil {
     default boolean returnBoolean(Boolean result){
         return result == null ? false : result;
     }
+
+    long increase(String key, long delta);
+
+    long increase(String key);
+
+    long decrease(String key, long delta);
+
+    long decrease(String key);
 }

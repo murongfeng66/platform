@@ -1,10 +1,6 @@
 package com.jwzhu.platform.plugs.web.response;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.jwzhu.platform.common.exception.BusinessException;
 import com.jwzhu.platform.common.exception.ParamException;

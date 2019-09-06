@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import com.jwzhu.platform.common.bean.LongBean;
 import com.jwzhu.platform.common.bean.UpdateStatusBean;
@@ -34,7 +33,7 @@ public class ResourceService {
         if (resourceDao.getByCode(bean.getCode()) != null) {
             throw new BusinessException("存在相同的资源编号");
         }
-        if (!StringUtils.isEmpty(bean.getUrl()) && resourceDao.getByUrl(bean.getUrl()) != null) {
+        if (!StringUtil.isEmpty(bean.getUrl()) && resourceDao.getByUrl(bean.getUrl()) != null) {
             throw new BusinessException("存在相同的资源URL");
         }
         bean.setCreateTime(bean.getCreateTime() == null ? RequestInfo.getRequestTime() : bean.getCreateTime());
@@ -64,7 +63,7 @@ public class ResourceService {
 
         List<Menu> menus = new LinkedList<>();
         for (Menu item : resourceMap.values()) {
-            if (StringUtils.isEmpty(item.getParentCode())) {
+            if (StringUtil.isEmpty(item.getParentCode())) {
                 menus.add(item);
             } else {
                 Menu parent = resourceMap.get(item.getParentCode());
@@ -106,7 +105,7 @@ public class ResourceService {
         for (ResourcePermission permission : list) {
             permission.setHave(roleResource.contains(permission.getCode()));
 
-            if (StringUtils.isEmpty(permission.getParentCode())) {
+            if (StringUtil.isEmpty(permission.getParentCode())) {
                 result.add(permission);
             } else if (map.containsKey(permission.getParentCode())) {
                 ResourcePermission parent = map.get(permission.getParentCode());

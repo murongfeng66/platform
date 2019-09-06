@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.jwzhu.platform.common.bean.LongBean;
@@ -69,7 +68,7 @@ public class FileService {
     @Transactional
     public String upload(Folder folder, MultipartFile file) {
         logger.debug("上传文件：名称={}类型={}大小={}", file.getOriginalFilename(), file.getContentType(), file.getSize());
-        if (StringUtils.isEmpty(file.getOriginalFilename())) {
+        if (StringUtil.isEmpty(file.getOriginalFilename())) {
             throw new BusinessException("文件名为空");
         }
         String[] originNames = file.getOriginalFilename().split("\\.");

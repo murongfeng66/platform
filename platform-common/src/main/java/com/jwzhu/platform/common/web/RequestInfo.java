@@ -4,8 +4,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import org.springframework.util.StringUtils;
-
 import com.jwzhu.platform.common.exception.SystemException;
 
 public class RequestInfo {
@@ -101,7 +99,7 @@ public class RequestInfo {
      */
     public static String getRequestId() {
         String requestId = REQUEST_ID.get();
-        if (StringUtils.isEmpty(requestId)) {
+        if (StringUtil.isEmpty(requestId)) {
             throw new SystemException("请求ID为空");
         }
         return requestId;

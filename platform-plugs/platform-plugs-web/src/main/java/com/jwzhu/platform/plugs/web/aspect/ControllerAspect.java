@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -58,7 +57,7 @@ public class ControllerAspect {
             clearToken();
         }
 
-        if (StringUtils.isEmpty(token)) {
+        if (StringUtil.isEmpty(token)) {
             if (PermissionType.No != controllerHandler.permissionType()) {
                 throw new TokenEmptyException();
             }
@@ -103,7 +102,7 @@ public class ControllerAspect {
 
     private void initRequestType(HttpServletRequest request) {
         String requestTypeString = request.getParameter("requestType");
-        if (StringUtils.isEmpty(requestTypeString)) {
+        if (StringUtil.isEmpty(requestTypeString)) {
             RequestInfo.initRequestType(RequestUtil.isAjax() ? RequestType.Ajax.getCode() : RequestType.Page.getCode());
         } else {
             RequestInfo.initRequestType(Short.valueOf(requestTypeString));
@@ -114,38 +113,38 @@ public class ControllerAspect {
         HttpServletRequest request = RequestUtil.getRequest();
 
         String token = request.getParameter(tokenService.getTokenConfig().getParamName());
-        if (StringUtils.isEmpty(token)) {
+        if (StringUtil.isEmpty(token)) {
             token = request.getHeader(tokenService.getTokenConfig().getParamName());
 
-            if (!StringUtils.isEmpty(token)) {
+            if (!StringUtil.isEmpty(token)) {
                 logger.info("Token来源：请求头");
             }
         } else {
             logger.info("Token来源：请求参数");
         }
 
-        if (StringUtils.isEmpty(token)) {
+        if (StringUtil.isEmpty(token)) {
             Object temp = request.getSession().getAttribute(tokenService.getTokenConfig().getParamName());
-            if (!StringUtils.isEmpty(temp)) {
+            if (!StringUtil.isEmpty(temp)) {
                 token = temp.toString();
             }
 
-            if (!StringUtils.isEmpty(token)) {
+            if (!StringUtil.isEmpty(token)) {
                 logger.info("Token来源：session");
             }
         }
 
-        if (StringUtils.isEmpty(token)) {
+        if (StringUtil.isEmpty(token)) {
             Cookie[] cookies = request.getCookies();
             if (cookies != null) {
                 for (Cookie cookie : request.getCookies()) {
-                    if (cookie.getName().equals(tokenService.getTokenConfig().getParamName()) && !StringUtils.isEmpty(cookie.getValue())) {
+                    if (cookie.getName().equals(tokenService.getTokenConfig().getParamName()) && !StringUtil.isEmpty(cookie.getValue())) {
                         token = cookie.getValue();
                     }
                 }
             }
 
-            if (!StringUtils.isEmpty(token)) {
+            if (!StringUtil.isEmpty(token)) {
                 logger.info("Token来源：cookie");
             }
         }

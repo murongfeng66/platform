@@ -53,7 +53,7 @@ public class SpringTest {
         bean.addParam("actionType","1");
         bean.addParam("authkey","BAA53B00F7B3A4324BA830833E923AC7");
         bean.addParam("merchantId","31");
-//        bean.addParam("content","评论3");
+//        bean.addUrlParam("content","评论3");
         System.out.println(HttpUtil.doGet(bean));
     }
 

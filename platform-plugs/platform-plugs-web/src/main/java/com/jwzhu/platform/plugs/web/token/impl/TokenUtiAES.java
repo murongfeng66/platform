@@ -1,20 +1,19 @@
 package com.jwzhu.platform.plugs.web.token.impl;
 
-import java.util.Base64;
-
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.util.Base64;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSON;
 import com.jwzhu.platform.common.exception.SystemException;
+import com.jwzhu.platform.common.web.TokenSubject;
 import com.jwzhu.platform.plugs.web.exception.token.TokenErrorException;
 import com.jwzhu.platform.plugs.web.exception.token.TokenTimeOutException;
 import com.jwzhu.platform.plugs.web.token.TokenConfig;
-import com.jwzhu.platform.common.web.TokenSubject;
 import com.jwzhu.platform.plugs.web.token.TokenUtil;
 
 public class TokenUtiAES implements TokenUtil {

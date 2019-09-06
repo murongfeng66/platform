@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 
 import org.springframework.context.ApplicationContext;
-import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -24,7 +23,7 @@ public class IntegerSerializer extends JacksonSerializer<Integer> {
         gen.writeNumber(value);
         try {
             String fieldName = gen.getOutputContext().getCurrentName();
-            if (StringUtils.isEmpty(fieldName)) {
+            if (StringUtil.isEmpty(fieldName)) {
                 return;
             }
 

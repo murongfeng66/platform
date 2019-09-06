@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -55,7 +54,7 @@ public class CommonController {
     public ModelAndView checkLogin(ModelAndView view, HttpServletRequest request) {
         if (RequestInfo.getRequestUser() != null) {
             String subHost = request.getParameter("subHost");
-            if (StringUtils.isEmpty(subHost)) {
+            if (StringUtil.isEmpty(subHost)) {
                 view.setViewName("redirect:/");
             } else {
                 logger.info("{}初始化子系统登录信息", subHost);

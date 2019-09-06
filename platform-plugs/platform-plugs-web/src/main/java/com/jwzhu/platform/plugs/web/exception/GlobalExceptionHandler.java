@@ -5,7 +5,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -54,7 +53,7 @@ public class GlobalExceptionHandler {
         logger.error(throwable.getMessage(), throwable);
         if (throwable instanceof TokenEmptyException || throwable instanceof TokenTimeOutException) {
             String redirect = "/";
-            if(systemConfig.getSub() != null && !StringUtils.isEmpty(systemConfig.getSub().getHost())){
+            if(systemConfig.getSub() != null && !StringUtil.isEmpty(systemConfig.getSub().getHost())){
                 UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(systemConfig.getMain().getCheckLogin());
                 uriComponentsBuilder.queryParam("originUrl", request.getRequestURL().toString());
                 uriComponentsBuilder.queryParam("subHost", systemConfig.getSub().getHost());

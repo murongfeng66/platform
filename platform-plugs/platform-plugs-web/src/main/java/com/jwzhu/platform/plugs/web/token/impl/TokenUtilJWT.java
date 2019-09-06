@@ -8,8 +8,6 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
 
-import org.springframework.util.StringUtils;
-
 import com.alibaba.fastjson.JSON;
 import com.jwzhu.platform.common.web.TokenSubject;
 import com.jwzhu.platform.plugs.web.exception.token.TokenTimeOutException;
@@ -45,7 +43,7 @@ public class TokenUtilJWT implements TokenUtil {
     }
 
     private SecretKey generalKey() {
-        if(StringUtils.isEmpty(tokenConfig.getSecretKey())){
+        if(StringUtil.isEmpty(tokenConfig.getSecretKey())){
             throw new IllegalArgumentException("secretKey is null");
         }
         byte[] encodedKey = Base64.getDecoder().decode(tokenConfig.getSecretKey());

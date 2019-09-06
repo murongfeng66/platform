@@ -3,8 +3,6 @@ package com.jwzhu.platform.core.permission.param;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.util.StringUtils;
-
 import com.jwzhu.platform.common.exception.BusinessException;
 import com.jwzhu.platform.core.permission.bean.ResourceBean;
 import com.jwzhu.platform.core.permission.model.ResourceType;
@@ -95,8 +93,8 @@ public class ResourceAddParam extends BaseParam<ResourceBean> {
 
     @Override
     protected void exValid() {
-        this.code = StringUtils.isEmpty(this.parentCode) ? this.code : this.parentCode + "." + this.code;
-        if ((this.type == ResourceType.Page.getCode() || this.type == ResourceType.Function.getCode()) && StringUtils.isEmpty(this.url)) {
+        this.code = StringUtil.isEmpty(this.parentCode) ? this.code : this.parentCode + "." + this.code;
+        if ((this.type == ResourceType.Page.getCode() || this.type == ResourceType.Function.getCode()) && StringUtil.isEmpty(this.url)) {
             throw new BusinessException("页面和功能的URL不能为空");
         }
     }

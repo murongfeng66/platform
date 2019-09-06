@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
+import com.jwzhu.platform.common.exception.SystemException;
 import com.jwzhu.platform.plugs.cache.base.CacheUtil;
 
 @Component
@@ -88,5 +89,33 @@ public class RedisCacheImpl implements CacheUtil {
     @Override
     public Set<String> sMembers(String key) {
         return stringRedisTemplate.boundSetOps(key).members();
+    }
+
+    @Override
+    public long increase(String key, long delta) {
+        Long increment = stringRedisTemplate.boundValueOps(key).increment(delta);
+        if(increment == null){
+            throw new SystemException("自增失败");
+        }
+        return increment;
+    }
+
+    @Override
+    public long increase(String key) {
+        return increase(key, 1);
+    }
+
+    @Override
+    public long decrease(String key, long delta) {
+        Long decrease = stringRedisTemplate.boundValueOps(key).increment(delta);
+        if(decrease == null){
+            throw new SystemException("自减失败");
+        }
+        return decrease;
+    }
+
+    @Override
+    public long decrease(String key) {
+        return decrease(key, 1);
     }
 }

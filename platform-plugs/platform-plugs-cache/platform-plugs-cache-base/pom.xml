@@ -15,6 +15,10 @@
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.jwzhu</groupId>
+            <artifactId>platform-common</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

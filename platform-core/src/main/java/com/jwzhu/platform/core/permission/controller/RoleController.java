@@ -16,12 +16,7 @@ import com.jwzhu.platform.core.permission.manager.RoleManager;
 import com.jwzhu.platform.core.permission.model.AdminRole;
 import com.jwzhu.platform.core.permission.model.ResourcePermission;
 import com.jwzhu.platform.core.permission.model.Role;
-import com.jwzhu.platform.core.permission.param.GetRoleResourceParam;
-import com.jwzhu.platform.core.permission.param.GetMyRoleParam;
-import com.jwzhu.platform.core.permission.param.PermissionSaveParam;
-import com.jwzhu.platform.core.permission.param.RoleAddParam;
-import com.jwzhu.platform.core.permission.param.RoleListParam;
-import com.jwzhu.platform.core.permission.param.RoleUpdateParam;
+import com.jwzhu.platform.core.permission.param.*;
 import com.jwzhu.platform.plugs.web.annotations.ControllerHandler;
 import com.jwzhu.platform.plugs.web.param.LongParam;
 
