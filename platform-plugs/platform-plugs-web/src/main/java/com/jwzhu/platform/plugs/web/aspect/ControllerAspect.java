@@ -1,8 +1,6 @@
 package com.jwzhu.platform.plugs.web.aspect;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
@@ -62,17 +60,16 @@ public class ControllerAspect {
             if (PermissionType.No != controllerHandler.permissionType()) {
                 throw new TokenEmptyException();
             }
-            RequestInfo.setRequestToken(null);
-            RequestInfo.setRequestUser(null);
         } else {
             logger.debug("取出Token：{}", token);
+            RequestInfo.setRequestToken(token);
             try {
-                analyzeToken(token);
+                TokenSubject subject = tokenService.checkToken(token);
+                RequestInfo.setRequestUser(subject);
             } catch (Exception e) {
                 clearToken();
                 throw e;
             }
-            RequestInfo.setRequestToken(token);
         }
 
         controllerHandler.permissionType().check();
@@ -92,12 +89,6 @@ public class ControllerAspect {
     }
 
     private void clearToken() {
-        HttpServletResponse response = RequestUtil.getResponse();
-        if (response != null) {
-            Cookie cookie = new Cookie(tokenService.getTokenConfig().getParamName(), null);
-            cookie.setPath("/");
-            response.addCookie(cookie);
-        }
         RequestUtil.getRequest().getSession().removeAttribute(tokenService.getTokenConfig().getParamName());
     }
 
@@ -114,48 +105,23 @@ public class ControllerAspect {
         HttpServletRequest request = RequestUtil.getRequest();
 
         String token = request.getParameter(tokenService.getTokenConfig().getParamName());
-        if (StringUtil.isEmpty(token)) {
-            token = request.getHeader(tokenService.getTokenConfig().getParamName());
-
-            if (!StringUtil.isEmpty(token)) {
-                logger.info("Token来源：请求头");
-            }
-        } else {
+        if (!StringUtil.isEmpty(token)) {
             logger.info("Token来源：请求参数");
+            return token;
         }
 
-        if (StringUtil.isEmpty(token)) {
-            Object temp = request.getSession().getAttribute(tokenService.getTokenConfig().getParamName());
-            if (!StringUtil.isEmpty(temp)) {
-                token = temp.toString();
-            }
-
-            if (!StringUtil.isEmpty(token)) {
-                logger.info("Token来源：session");
-            }
+        token = request.getHeader(tokenService.getTokenConfig().getParamName());
+        if (!StringUtil.isEmpty(token)) {
+            logger.info("Token来源：请求头");
+            return token;
         }
 
-        if (StringUtil.isEmpty(token)) {
-            Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                for (Cookie cookie : request.getCookies()) {
-                    if (cookie.getName().equals(tokenService.getTokenConfig().getParamName()) && !StringUtil.isEmpty(cookie.getValue())) {
-                        token = cookie.getValue();
-                    }
-                }
-            }
-
-            if (!StringUtil.isEmpty(token)) {
-                logger.info("Token来源：cookie");
-            }
+        token = (String) request.getSession().getAttribute(tokenService.getTokenConfig().getParamName());
+        if (!StringUtil.isEmpty(token)) {
+            logger.info("Token来源：session");
         }
 
         return token;
-    }
-
-    private void analyzeToken(String token) {
-        TokenSubject subject = tokenService.checkToken(token);
-        RequestInfo.setRequestUser(subject);
     }
 
     @AfterThrowing(value = "pointCut(controllerHandler)", argNames = "e,controllerHandler", throwing = "e")

@@ -58,7 +58,6 @@ public class LoginManager {
         String token = tokenService.createToken(subject);
 
         RequestInfo.setRequestUser(subject);
-        RequestInfo.setRefreshToken(token);
 
         String cacheKey = permissionService.getCacheKey(admin.getId(), PermissionService.PermissionCacheType.Url);
         cacheUtil.delete(cacheKey);

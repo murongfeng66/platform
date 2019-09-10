@@ -33,10 +33,6 @@ public class RequestInfo {
      */
     private static ThreadLocal<TokenSubject> REQUEST_USER = new ThreadLocal<>();
     /**
-     * 刷新Token
-     */
-    private static ThreadLocal<String> REFRESH_TOKEN = new ThreadLocal<>();
-    /**
      * 请求Token
      */
     private static ThreadLocal<String> REQUEST_TOKEN = new ThreadLocal<>();
@@ -51,7 +47,6 @@ public class RequestInfo {
         COST_TIME.remove();
         REQUEST_TYPE.remove();
         REQUEST_USER.remove();
-        REFRESH_TOKEN.remove();
         REQUEST_TOKEN.remove();
     }
 
@@ -156,14 +151,6 @@ public class RequestInfo {
 
     public static void setRequestUser(TokenSubject subject) {
         REQUEST_USER.set(subject);
-    }
-
-    public static String getRefreshToken() {
-        return REFRESH_TOKEN.get();
-    }
-
-    public static void setRefreshToken(String token) {
-        REFRESH_TOKEN.set(token);
     }
 
     public static String getRequestToken() {
