@@ -47,9 +47,9 @@ public class CommonController {
     @ControllerHandler(permissionType = PermissionType.No)
     public ModelAndView login(ModelAndView view) {
         if (RequestInfo.getRequestUser() != null) {
-            view.setViewName("login/login");
-        } else {
             view.setViewName("redirect:/main");
+        } else {
+            view.setViewName("login/login");
         }
         return view;
     }

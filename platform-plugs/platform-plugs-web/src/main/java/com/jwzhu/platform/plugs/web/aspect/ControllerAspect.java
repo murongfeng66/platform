@@ -44,6 +44,8 @@ public class ControllerAspect {
     public void before(JoinPoint joinPoint, ControllerHandler controllerHandler) {
         controllerHandler = controllerHandler == null ? joinPoint.getTarget().getClass().getAnnotation(ControllerHandler.class) : controllerHandler;
 
+        RequestInfo.clear();
+
         HttpServletRequest request = RequestUtil.getRequest();
         logger.info("请求地址：{}", request.getRequestURI());
         logger.info("请求SessionId：{}", request.getSession().getId());
