@@ -15,7 +15,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jwzhu.platform.common.bean.PageBean;
 import com.jwzhu.platform.common.exception.SystemException;
+import com.jwzhu.platform.common.util.StringUtil;
 import com.jwzhu.platform.common.web.RequestInfo;
+import com.jwzhu.platform.common.web.RequestUtil;
 import com.jwzhu.platform.plugs.web.response.PageResult;
 import com.jwzhu.platform.plugs.web.response.ResponseCode;
 import com.jwzhu.platform.plugs.web.response.WebResult;
@@ -56,6 +58,11 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
         }
         if (webResult.getCostTime() == null) {
             webResult.setCostTime(RequestInfo.getCostTime());
+        }
+
+        if (!StringUtil.isEmpty(RequestInfo.getRefreshToken())) {
+            logger.debug("存入Token到Session：{}", RequestInfo.getRefreshToken());
+            RequestUtil.setSession(tokenService.getTokenConfig().getParamName(), RequestInfo.getRefreshToken());
         }
 
         if (body instanceof String) {
