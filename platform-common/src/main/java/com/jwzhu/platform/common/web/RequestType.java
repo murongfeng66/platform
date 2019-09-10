@@ -16,6 +16,26 @@ public enum RequestType {
     Ajax((short) 2, "Ajax");
 
     /**
+     * 枚举键值对列表
+     */
+    public static List<Map<Short, String>> list = new ArrayList<>();
+    private static Map<Short, String> map = new HashMap<>();
+
+    static {
+        for (RequestType enumItem : RequestType.values()) {
+            Map<Short, String> item = new HashMap<>();
+            item.put(enumItem.code, enumItem.message);
+            list.add(item);
+        }
+    }
+
+    static {
+        for (RequestType item : RequestType.values()) {
+            map.put(item.code, item.message);
+        }
+    }
+
+    /**
      * 编码
      */
     private short code;
@@ -29,35 +49,6 @@ public enum RequestType {
         this.message = message;
     }
 
-    public short getCode() {
-        return code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    /**
-     * 枚举键值对列表
-     */
-    public static List<Map<Short, String>> list = new ArrayList<>();
-
-    static {
-        for (RequestType enumItem : RequestType.values()) {
-            Map<Short, String> item = new HashMap<>();
-            item.put(enumItem.code, enumItem.message);
-            list.add(item);
-        }
-    }
-
-    private static Map<Short, String> map = new HashMap<>();
-
-    static {
-        for (RequestType item : RequestType.values()) {
-            map.put(item.code, item.message);
-        }
-    }
-
     public static String message(short code) {
         return map.get(code);
     }
@@ -69,6 +60,14 @@ public enum RequestType {
             }
         }
         throw new SystemException("无此[" + code + "]枚举");
+    }
+
+    public short getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
     }
 
 }

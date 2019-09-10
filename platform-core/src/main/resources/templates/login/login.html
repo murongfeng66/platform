@@ -2,13 +2,13 @@
 <html lang="zh_CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
     <title th:text="${systemName}">登录</title>
-    <link rel="icon" type="image/x-icon" href="https://static.platform.jwzhu.com/image/icon.ico">
+    <link href="https://static.platform.jwzhu.com/image/icon.ico" rel="icon" type="image/x-icon">
 
-    <link rel="stylesheet" href="https://static.platform.jwzhu.com/font-awesome-4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://static.platform.jwzhu.com/css/common.css">
-    <link rel="stylesheet" href="https://static.platform.jwzhu.com/css/form.css">
+    <link href="https://static.platform.jwzhu.com/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://static.platform.jwzhu.com/css/common.css" rel="stylesheet">
+    <link href="https://static.platform.jwzhu.com/css/form.css" rel="stylesheet">
     <style type="text/css">
         .login-content {
             position: fixed;
@@ -46,13 +46,13 @@
             padding: 0 2.5rem 0 2rem;
         }
 
-        .login-box-bottom button{
+        .login-box-bottom button {
             width: 100%;
             letter-spacing: 2rem;
             text-indent: 2rem;
         }
 
-        .footer{
+        .footer {
             bottom: 0;
             position: fixed;
             text-align: center;
@@ -61,34 +61,34 @@
         }
 
         .footer a {
-             text-decoration: unset;
-             color: #000000;
-         }
+            text-decoration: unset;
+            color: #000000;
+        }
     </style>
 </head>
 <body>
 <div class="login-content">
-    <img src="https://static.platform.jwzhu.com/image/login_window.png" class="login-window" alt="" />
+    <img alt="" class="login-window" src="https://static.platform.jwzhu.com/image/login_window.png"/>
     <div class="login-box">
         <div class="login-box-top">
             <h2 th:text="${systemName}">统一管理平台</h2>
         </div>
         <div class="login-box-body">
-            <form id="form_login" class="form">
+            <form class="form" id="form_login">
                 <div class="form-row">
                     <div class="form-input-group input-x">
-                        <input type="text" class="form-input" name="username" placeholder="用户名"/>
+                        <input class="form-input" name="username" placeholder="用户名" type="text"/>
                     </div>
                 </div>
                 <div class="form-row margin-top-1">
                     <div class="form-input-group input-x">
-                        <input id="form_login_password" type="password" class="form-input" name="password" placeholder="密码"/>
+                        <input class="form-input" id="form_login_password" name="password" placeholder="密码" type="password"/>
                     </div>
                 </div>
             </form>
         </div>
         <div class="login-box-bottom">
-            <button type="button" class="button-x" onclick="login()">登录</button>
+            <button class="button-x" onclick="login()" type="button">登录</button>
         </div>
     </div>
     <div class="footer">

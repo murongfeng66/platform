@@ -7,12 +7,17 @@
     </insert>
     <update id="updateById">
         update Folder
-        set regionId = #{regionId}, folderName = #{folderName}, permissionType = #{permissionType}, path = #{path}, updateTime = #{updateTime}
+        set regionId = #{regionId},
+            folderName = #{folderName},
+            permissionType = #{permissionType},
+            path = #{path},
+            updateTime = #{updateTime}
         where id = #{id}
     </update>
     <update id="updateStatus">
         update Folder
-        set folderStatus = #{newStatus}, updateTime = #{updateTime}
+        set folderStatus = #{newStatus},
+            updateTime = #{updateTime}
         where id = #{id} and folderStatus = #{oldStatus}
     </update>
     <select id="queryByParam" resultType="com.jwzhu.platform.file.model.Folder">
@@ -55,7 +60,8 @@
     <select id="getByPathWithLock" resultType="java.lang.String">
         select path
         from Folder
-        where regionId = #{regionId} and path = #{path} for update
+        where regionId = #{regionId} and path = #{path} for
+        update
     </select>
     <select id="getByCode" resultType="com.jwzhu.platform.file.model.Folder">
         select id, regionId, folderName, folderCode, folderStatus, permissionType, permissionData, path, createTime, updateTime

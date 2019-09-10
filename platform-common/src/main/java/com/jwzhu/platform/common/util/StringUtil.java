@@ -9,13 +9,21 @@ public class StringUtil {
     /**
      * 判断字符串是否为空，去除前后空白符
      */
-    public static boolean isEmpty(String text){
+    public static boolean isEmpty(String text) {
         return text == null || "".equals(text.trim());
+    }
+
+    /**
+     * 判断对象和对象toString()是否为空，去除前后空白符
+     */
+    public static boolean isEmpty(Object object) {
+        return object == null || "".equals(object.toString().trim());
     }
 
     /**
      * 生成编码
      * yyMMddHHmmss+5位随机数
+     *
      * @param prefix 前缀
      */
     public static String createCode(String prefix) {
@@ -39,6 +47,7 @@ public class StringUtil {
 
     /**
      * 文件路径拼接
+     *
      * @param path1 前路径
      * @param path2 后路径
      */
@@ -58,17 +67,18 @@ public class StringUtil {
 
     /**
      * 数组转字符串
-     * @param array 数组
+     *
+     * @param array     数组
      * @param separator 分隔符，默认为','
      */
-    public static String join(String[] array, Character separator){
-        if(array == null || array.length == 0){
+    public static String join(String[] array, Character separator) {
+        if (array == null || array.length == 0) {
             return null;
         }
         separator = separator == null ? ',' : separator;
         StringBuilder sb = new StringBuilder(array[0]);
         for (int i = 1; i < array.length; i++) {
-            if(isEmpty(array[i])){
+            if (isEmpty(array[i])) {
                 continue;
             }
             sb.append(separator);
@@ -80,46 +90,47 @@ public class StringUtil {
     /**
      * 数组转字符串，以','分割
      */
-    public static String join(String[] array){
+    public static String join(String[] array) {
         return join(array, ',');
     }
 
     /**
      * 添加参数到URL上<br/>
      * 如已存在，则覆盖
-     * @param url URL
-     * @param name 参数名
+     *
+     * @param url   URL
+     * @param name  参数名
      * @param value 参数值
      */
-    public static String addParamToUrl(String url, String name, String value){
-        if(isEmpty(name) || isEmpty(value)){
+    public static String addParamToUrl(String url, String name, String value) {
+        if (isEmpty(name) || isEmpty(value)) {
             return url;
         }
 
         String paramName = name + "=";
         String param = paramName + value;
-        if(isEmpty(url)){
+        if (isEmpty(url)) {
             return param;
         }
 
         String[] urls = url.split("\\?");
-        if(urls.length == 1){
+        if (urls.length == 1) {
             return urls[0] + "?" + param;
         }
 
         String[] params = urls[1].split("&");
-        if(params.length == 0){
+        if (params.length == 0) {
             return urls[0] + "?" + param;
-        }else{
+        } else {
             boolean add = true;
             for (int i = 0; i < params.length; i++) {
-                if(params[i].startsWith(paramName)){
+                if (params[i].startsWith(paramName)) {
                     params[i] = param;
                     add = false;
                 }
             }
             urls[1] = join(params, '&');
-            if(add){
+            if (add) {
                 urls[1] = urls[1] + "&" + param;
             }
         }

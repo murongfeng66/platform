@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.jwzhu.platform.common.exception.SystemException;
+import com.jwzhu.platform.common.util.StringUtil;
 
 public class RequestInfo {
     /**
@@ -43,7 +44,7 @@ public class RequestInfo {
     /**
      * 清理基础参数
      */
-    public static void clear(){
+    public static void clear() {
         REQUEST_ID.remove();
         REQUEST_TIME.remove();
         RESPONSE_TIME.remove();
@@ -76,7 +77,7 @@ public class RequestInfo {
             initRequestTime();
         }
         RESPONSE_TIME.set(LocalDateTime.now());
-        COST_TIME.set(Duration.between(REQUEST_TIME.get(),  RESPONSE_TIME.get()).toMillis());
+        COST_TIME.set(Duration.between(REQUEST_TIME.get(), RESPONSE_TIME.get()).toMillis());
     }
 
     /**
@@ -149,28 +150,28 @@ public class RequestInfo {
         return COST_TIME.get();
     }
 
-    public static void setRequestUser(TokenSubject subject){
-        REQUEST_USER.set(subject);
-    }
-
     public static TokenSubject getRequestUser() {
         return REQUEST_USER.get();
     }
 
-    public static void setRefreshToken(String token){
-        REFRESH_TOKEN.set(token);
+    public static void setRequestUser(TokenSubject subject) {
+        REQUEST_USER.set(subject);
     }
 
-    public static String getRefreshToken(){
+    public static String getRefreshToken() {
         return REFRESH_TOKEN.get();
     }
 
-    public static  void setRequestToken(String token){
-        REQUEST_TOKEN.set(token);
+    public static void setRefreshToken(String token) {
+        REFRESH_TOKEN.set(token);
     }
 
-    public static String getRequestToken(){
+    public static String getRequestToken() {
         return REQUEST_TOKEN.get();
+    }
+
+    public static void setRequestToken(String token) {
+        REQUEST_TOKEN.set(token);
     }
 
 }

@@ -23,7 +23,7 @@ public class RegionController {
 
     @GetMapping("page")
     @ControllerHandler
-    public ModelAndView page(ModelAndView view){
+    public ModelAndView page(ModelAndView view) {
         view.setViewName("region");
         return view;
     }

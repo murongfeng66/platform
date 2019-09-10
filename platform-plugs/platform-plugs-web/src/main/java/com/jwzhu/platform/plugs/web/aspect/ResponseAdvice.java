@@ -15,6 +15,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jwzhu.platform.common.bean.PageBean;
 import com.jwzhu.platform.common.exception.SystemException;
+import com.jwzhu.platform.common.util.StringUtil;
 import com.jwzhu.platform.common.web.RequestInfo;
 import com.jwzhu.platform.common.web.RequestUtil;
 import com.jwzhu.platform.plugs.web.response.PageResult;
@@ -37,7 +38,7 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
     }
 
     @SuppressWarnings("unchecked")
-	@Override
+    @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
         if ("/error".equals(request.getURI().getPath())) {
             return body;
@@ -71,7 +72,7 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
             } catch (JsonProcessingException e) {
                 throw new SystemException(e);
             }
-        }else if(body instanceof PageBean){
+        } else if (body instanceof PageBean) {
             PageBean<Object> pageBean = (PageBean<Object>) body;
             PageResult<Object> pageResult = new PageResult<>();
             pageResult.setTotalPage(pageBean.getTotalPage());

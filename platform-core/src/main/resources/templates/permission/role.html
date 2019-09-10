@@ -2,15 +2,15 @@
 <html lang="zh_CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
     <title>系统资源</title>
-    <link rel="icon" type="image/x-icon" href="https://static.platform.jwzhu.com/image/icon.ico">
+    <link href="https://static.platform.jwzhu.com/image/icon.ico" rel="icon" type="image/x-icon">
 
-    <link rel="stylesheet" href="https://static.platform.jwzhu.com/font-awesome-4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://static.platform.jwzhu.com/css/common.css">
-    <link rel="stylesheet" href="https://static.platform.jwzhu.com/css/form.css">
-    <link rel="stylesheet" href="https://static.platform.jwzhu.com/css/table.css">
-    <link rel="stylesheet" href="https://static.platform.jwzhu.com/css/dialog.css">
+    <link href="https://static.platform.jwzhu.com/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://static.platform.jwzhu.com/css/common.css" rel="stylesheet">
+    <link href="https://static.platform.jwzhu.com/css/form.css" rel="stylesheet">
+    <link href="https://static.platform.jwzhu.com/css/table.css" rel="stylesheet">
+    <link href="https://static.platform.jwzhu.com/css/dialog.css" rel="stylesheet">
     <style>
         .permission {
             padding: 0.5rem 2rem;
@@ -35,47 +35,47 @@
     </style>
 </head>
 <body>
-<form id="form_role_query" class="form margin-top-1 form-inline">
+<form class="form margin-top-1 form-inline" id="form_role_query">
     <div class="form-row">
         <div class="form-input-group">
             <label class="form-label">关键字：</label>
-            <input name="key" class="form-input">
+            <input class="form-input" name="key">
         </div>
         <div class="form-input-group">
             <label class="form-label">状态：</label>
-            <select id="form_role_query_roleStatus" name="roleStatus" class="form-input"></select>
+            <select class="form-input" id="form_role_query_roleStatus" name="roleStatus"></select>
         </div>
         <div class="form-input-group margin-left-1">
-            <button type="button" onclick="(()=>tableRole.reload())()">查询</button>
-            <button type="reset" class="margin-left-1">重置</button>
+            <button onclick="(()=>tableRole.reload())()" type="button">查询</button>
+            <button class="margin-left-1" type="reset">重置</button>
         </div>
     </div>
 </form>
 <div id="table_role">
 </div>
-<div id="dialog_role" class="dialog">
+<div class="dialog" id="dialog_role">
     <div class="dialog-body">
-        <form id="form_role" class="form dialog-content">
-            <input id="form_role_id" type="hidden" name="id">
+        <form class="form dialog-content" id="form_role">
+            <input id="form_role_id" name="id" type="hidden">
             <div class="form-row">
                 <div class="form-input-group flex-1">
                     <label class="form-label">编码：</label>
-                    <input type="text" name="code" class="form-input" data-readonly="|Edit|">
+                    <input class="form-input" data-readonly="|Edit|" name="code" type="text">
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-input-group flex-1">
                     <label class="form-label">名称：</label>
-                    <input type="text" name="name" class="form-input" data-readonly>
+                    <input class="form-input" data-readonly name="name" type="text">
                 </div>
             </div>
         </form>
     </div>
 </div>
-<div id="dialog_permission" class="dialog">
+<div class="dialog" id="dialog_permission">
     <input id="dialog_permission_roleCode" type="hidden">
     <div class="dialog-body">
-        <div id="permission" class="dialog-content">
+        <div class="dialog-content" id="permission">
 
         </div>
     </div>

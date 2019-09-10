@@ -18,9 +18,9 @@ import com.jwzhu.platform.plugs.web.token.TokenUtil;
 
 public class TokenUtiAES implements TokenUtil {
 
+    private static final String ALGORITHM = "AES/CBC/PKCS5Padding";
     private Logger logger = LoggerFactory.getLogger(TokenUtiAES.class);
     private TokenConfig tokenConfig;
-    private static final String ALGORITHM = "AES/CBC/PKCS5Padding";
 
     public TokenUtiAES(TokenConfig tokenConfig) {
         this.tokenConfig = tokenConfig;

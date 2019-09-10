@@ -63,14 +63,14 @@ public class AdminService {
         adminDao.deleteAdminRole(bean);
     }
 
-    private void updateStatus(UpdateStatusBean bean, String errorMessage){
+    private void updateStatus(UpdateStatusBean bean, String errorMessage) {
         bean.setUpdateTime(bean.getUpdateTime() == null ? RequestInfo.getRequestTime() : bean.getUpdateTime());
-        if(adminDao.updateStatus(bean) == 0){
+        if (adminDao.updateStatus(bean) == 0) {
             throw new BusinessException(errorMessage);
         }
     }
 
-    public void disable(LongBean bean){
+    public void disable(LongBean bean) {
         UpdateStatusBean statusBean = new UpdateStatusBean();
         statusBean.setId(bean.getId());
         statusBean.setOldStatus(AvailableStatus.Enable.getCode());
@@ -78,7 +78,7 @@ public class AdminService {
         updateStatus(statusBean, "禁用管理员失败");
     }
 
-    public void enable(LongBean bean){
+    public void enable(LongBean bean) {
         UpdateStatusBean statusBean = new UpdateStatusBean();
         statusBean.setId(bean.getId());
         statusBean.setOldStatus(AvailableStatus.Disable.getCode());
@@ -86,7 +86,7 @@ public class AdminService {
         updateStatus(statusBean, "启用管理员失败");
     }
 
-    public void delete(LongBean bean){
+    public void delete(LongBean bean) {
         UpdateStatusBean statusBean = new UpdateStatusBean();
         statusBean.setId(bean.getId());
         statusBean.setOldStatus(AvailableStatus.Disable.getCode());

@@ -25,8 +25,18 @@ public class SpringTest {
     @Autowired
     private TokenService tokenService;
 
+    public static void main(String[] args) {
+        HttpUtil.RequestBean bean = new HttpUtil.RequestBean();
+        bean.setUrl("http://192.168.2.166/shop/merchant/comment/queryByParam");
+        bean.addParam("actionType", "1");
+        bean.addParam("authkey", "BAA53B00F7B3A4324BA830833E923AC7");
+        bean.addParam("merchantId", "31");
+//        bean.addUrlParam("content","评论3");
+        System.out.println(HttpUtil.doGet(bean));
+    }
+
     @Test
-    public void testLoginInsert(){
+    public void testLoginInsert() {
         LoginBean bean = new LoginBean();
         bean.setUsername("admin");
         bean.setPassword("123456");
@@ -34,27 +44,17 @@ public class SpringTest {
     }
 
     @Test
-    public void testLoginGetByUsername(){
+    public void testLoginGetByUsername() {
         Login login = loginService.getByUsername("admin");
         System.out.println(JSON.toJSONString(login));
     }
 
     @Test
-    public void testRedis(){
+    public void testRedis() {
         redisTemplate.boundValueOps("test_1").set("PribiEDZZV-QvE-TH-YmqX7Z52_cA8e-WJ16-s29M4TQGm33JCcInw7LgxbUSgtzgA3q6fbTQewWPoQ8w__Q1Q");
         redisTemplate.boundValueOps("test_2").set("PribiEDZZV-QvE-TH-YmqX7Z52_cA8e-WJ16-s29M4TQGm33JCcInw7LgxbUSgtzgA3q6fbTQewWPoQ8w__Q1Q");
-        System.out.println("test_1 \t "+redisTemplate.boundValueOps("test_1").get());
-        System.out.println("test_2 \t "+redisTemplate.boundValueOps("test_2").get());
-    }
-
-    public static void main(String[] args){
-        HttpUtil.RequestBean bean = new HttpUtil.RequestBean();
-        bean.setUrl("http://192.168.2.166/shop/merchant/comment/queryByParam");
-        bean.addParam("actionType","1");
-        bean.addParam("authkey","BAA53B00F7B3A4324BA830833E923AC7");
-        bean.addParam("merchantId","31");
-//        bean.addUrlParam("content","评论3");
-        System.out.println(HttpUtil.doGet(bean));
+        System.out.println("test_1 \t " + redisTemplate.boundValueOps("test_1").get());
+        System.out.println("test_2 \t " + redisTemplate.boundValueOps("test_2").get());
     }
 
 }

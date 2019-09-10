@@ -11,7 +11,7 @@ public class PermissionServiceDefaultConfig {
 
     @Bean
     @ConditionalOnMissingBean(PermissionService.class)
-    public PermissionService permissionService(CacheUtil cacheUtil){
+    public PermissionService permissionService(CacheUtil cacheUtil) {
         return new PermissionCheckService(cacheUtil);
     }
 

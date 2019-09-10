@@ -20,9 +20,8 @@ import com.jwzhu.platform.common.util.DateUtil;
 public class JacksonSerializerRegister {
 
 
-
     @Bean
-    public ObjectMapper objectMapper(ApplicationContext applicationContext){
+    public ObjectMapper objectMapper(ApplicationContext applicationContext) {
         ObjectMapper objectMapper = new ObjectMapper();
 
         SimpleModule module = new SimpleModule();

@@ -6,7 +6,7 @@
     padding: 0.5rem 1rem 0.5rem 0.5rem;
 }
 
-.form-inline .form-row{
+.form-inline .form-row {
     display: inline-flex;
 }
 
@@ -15,15 +15,15 @@
     height: 2rem;
 }
 
-.form-inline .form-input-group{
+.form-inline .form-input-group {
     margin: 0 1rem 0 0;
 }
 
-.form-input-group.input-x{
+.form-input-group.input-x {
     height: 2.5rem;
 }
 
-.form-input-group .button{
+.form-input-group .button {
     margin: 0 1rem 0 auto;
     color: #2196F3;
 }
@@ -35,7 +35,7 @@
     flex: 1;
 }
 
-.form-inline .form-label{
+.form-inline .form-label {
     flex: none;
 }
 
@@ -46,6 +46,6 @@
     flex: 3;
 }
 
-.form-inline .form-input{
+.form-inline .form-input {
     flex: none;
 }

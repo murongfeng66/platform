@@ -38,7 +38,7 @@ public class ResourceController {
     @PostMapping("add")
     @ResponseBody
     @ControllerHandler
-    public String add(ResourceAddParam param){
+    public String add(ResourceAddParam param) {
         resourceManager.insert(param.initBean());
         return "资源添加成功";
     }
@@ -46,7 +46,7 @@ public class ResourceController {
     @GetMapping("queryByParam")
     @ResponseBody
     @ControllerHandler
-    public ResourceListBean queryByParam(ResourceListParam param){
+    public ResourceListBean queryByParam(ResourceListParam param) {
         ResourceListBean bean = param.initBean();
         resourceManager.queryByParam(bean);
         return bean;
@@ -55,14 +55,14 @@ public class ResourceController {
     @GetMapping("getById")
     @ResponseBody
     @ControllerHandler
-    public Resource getById(LongParam param){
+    public Resource getById(LongParam param) {
         return resourceManager.getById(param.initBean());
     }
 
     @PostMapping("updateById")
     @ResponseBody
     @ControllerHandler
-    public String updateById(ResourceUpdateParam param){
+    public String updateById(ResourceUpdateParam param) {
         resourceManager.updateById(param.initBean());
         return "资源修改成功";
     }
@@ -70,14 +70,14 @@ public class ResourceController {
     @GetMapping("resourceType")
     @ResponseBody
     @ControllerHandler(permissionType = PermissionType.Only_Login)
-    public Map<Short, String> resourceType(){
+    public Map<Short, String> resourceType() {
         return ResourceType.map;
     }
 
     @PostMapping("disable")
     @ResponseBody
     @ControllerHandler
-    public String disable(LongParam param){
+    public String disable(LongParam param) {
         resourceManager.disable(param.initBean());
         return "禁用资源成功";
     }
@@ -85,7 +85,7 @@ public class ResourceController {
     @PostMapping("enable")
     @ResponseBody
     @ControllerHandler
-    public String enable(LongParam param){
+    public String enable(LongParam param) {
         resourceManager.enable(param.initBean());
         return "启用资源成功";
     }
@@ -93,7 +93,7 @@ public class ResourceController {
     @PostMapping("delete")
     @ResponseBody
     @ControllerHandler
-    public String delete(LongParam param){
+    public String delete(LongParam param) {
         resourceManager.delete(param.initBean());
         return "删除资源成功";
     }

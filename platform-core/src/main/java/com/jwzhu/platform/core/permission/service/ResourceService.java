@@ -15,6 +15,7 @@ import com.jwzhu.platform.common.enums.AdminType;
 import com.jwzhu.platform.common.enums.AvailableStatus;
 import com.jwzhu.platform.common.enums.YesOrNo;
 import com.jwzhu.platform.common.exception.BusinessException;
+import com.jwzhu.platform.common.util.StringUtil;
 import com.jwzhu.platform.common.web.RequestInfo;
 import com.jwzhu.platform.core.permission.bean.GetRoleResourceBean;
 import com.jwzhu.platform.core.permission.bean.QueryMenuBean;
@@ -118,7 +119,7 @@ public class ResourceService {
         return result;
     }
 
-    public List<String> queryAdminResourceUrl(long adminId, short userType){
+    public List<String> queryAdminResourceUrl(long adminId, short userType) {
         GetRoleResourceBean bean = new GetRoleResourceBean();
         if (userType != AdminType.Super.getCode()) {
             bean.setSelfId(adminId);
@@ -127,7 +128,7 @@ public class ResourceService {
         return resourceDao.queryMyResourceUrl(bean);
     }
 
-    public List<String> queryAdminResourceCode(long adminId, short userType){
+    public List<String> queryAdminResourceCode(long adminId, short userType) {
         GetRoleResourceBean bean = new GetRoleResourceBean();
         if (userType != AdminType.Super.getCode()) {
             bean.setSelfId(adminId);
@@ -136,14 +137,14 @@ public class ResourceService {
         return resourceDao.queryRoleResource(bean).stream().map(ResourcePermission::getCode).collect(Collectors.toList());
     }
 
-    private void updateStatus(UpdateStatusBean bean, String errorMessage){
+    private void updateStatus(UpdateStatusBean bean, String errorMessage) {
         bean.setUpdateTime(bean.getUpdateTime() == null ? RequestInfo.getRequestTime() : bean.getUpdateTime());
-        if(resourceDao.updateStatus(bean) == 0){
+        if (resourceDao.updateStatus(bean) == 0) {
             throw new BusinessException(errorMessage);
         }
     }
 
-    public void disable(LongBean bean){
+    public void disable(LongBean bean) {
         UpdateStatusBean statusBean = new UpdateStatusBean();
         statusBean.setId(bean.getId());
         statusBean.setOldStatus(AvailableStatus.Enable.getCode());
@@ -151,7 +152,7 @@ public class ResourceService {
         updateStatus(statusBean, "禁用资源失败");
     }
 
-    public void enable(LongBean bean){
+    public void enable(LongBean bean) {
         UpdateStatusBean statusBean = new UpdateStatusBean();
         statusBean.setId(bean.getId());
         statusBean.setOldStatus(AvailableStatus.Disable.getCode());
@@ -159,7 +160,7 @@ public class ResourceService {
         updateStatus(statusBean, "启用资源失败");
     }
 
-    public void delete(LongBean bean){
+    public void delete(LongBean bean) {
         UpdateStatusBean statusBean = new UpdateStatusBean();
         statusBean.setId(bean.getId());
         statusBean.setOldStatus(AvailableStatus.Disable.getCode());

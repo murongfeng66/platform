@@ -6,11 +6,28 @@ const common = {};
 common.config = {
     plugsConfig: {
         request: {js: 'https://static.platform.jwzhu.com/js/request.js'},
-        form: {js: 'https://static.platform.jwzhu.com/js/form.js', css: 'https://static.platform.jwzhu.com/css/form.css'},
-        dialog: {js: 'https://static.platform.jwzhu.com/js/dialog.js', css: 'https://static.platform.jwzhu.com/css/dialog.css'},
-        table: {js: 'https://static.platform.jwzhu.com/js/table.js', css: 'https://static.platform.jwzhu.com/css/table.css', loadCss: null},
-        datePicker: {js: 'https://static.platform.jwzhu.com/js/date-picker.js', css: 'https://static.platform.jwzhu.com/css/date-picker.css', loadJs: () => DatePicker.init},
-        permission: {js: 'https://static.platform.jwzhu.com/js/permission-filter.js', loadJs: () => PermissionFilter.filter},
+        form: {
+            js: 'https://static.platform.jwzhu.com/js/form.js',
+            css: 'https://static.platform.jwzhu.com/css/form.css'
+        },
+        dialog: {
+            js: 'https://static.platform.jwzhu.com/js/dialog.js',
+            css: 'https://static.platform.jwzhu.com/css/dialog.css'
+        },
+        table: {
+            js: 'https://static.platform.jwzhu.com/js/table.js',
+            css: 'https://static.platform.jwzhu.com/css/table.css',
+            loadCss: null
+        },
+        datePicker: {
+            js: 'https://static.platform.jwzhu.com/js/date-picker.js',
+            css: 'https://static.platform.jwzhu.com/css/date-picker.css',
+            loadJs: () => DatePicker.init
+        },
+        permission: {
+            js: 'https://static.platform.jwzhu.com/js/permission-filter.js',
+            loadJs: () => PermissionFilter.filter
+        },
         fontIcon: {css: 'https://static.platform.jwzhu.com/font-awesome-4.7.0/css/font-awesome.min.css'}
     }
 };

@@ -2,64 +2,64 @@
 <html lang="zh_CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
     <title>文件域</title>
-    <link rel="icon" type="image/x-icon" href="https://static.platform.jwzhu.com/image/icon.ico">
+    <link href="https://static.platform.jwzhu.com/image/icon.ico" rel="icon" type="image/x-icon">
 
-    <link rel="stylesheet" href="https://static.platform.jwzhu.com/font-awesome-4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://static.platform.jwzhu.com/css/common.css">
-    <link rel="stylesheet" href="https://static.platform.jwzhu.com/css/form.css">
-    <link rel="stylesheet" href="https://static.platform.jwzhu.com/css/table.css">
-    <link rel="stylesheet" href="https://static.platform.jwzhu.com/css/dialog.css">
+    <link href="https://static.platform.jwzhu.com/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://static.platform.jwzhu.com/css/common.css" rel="stylesheet">
+    <link href="https://static.platform.jwzhu.com/css/form.css" rel="stylesheet">
+    <link href="https://static.platform.jwzhu.com/css/table.css" rel="stylesheet">
+    <link href="https://static.platform.jwzhu.com/css/dialog.css" rel="stylesheet">
 </head>
 <body>
-<form id="form_region_query" class="form margin-top-1 form-inline">
+<form class="form margin-top-1 form-inline" id="form_region_query">
     <div class="form-row">
         <div class="form-input-group">
             <label class="form-label">关键字：</label>
-            <input name="key" class="form-input">
+            <input class="form-input" name="key">
         </div>
         <div class="form-input-group">
             <label class="form-label">状态：</label>
-            <select id="form_region_query_regionStatus" name="regionStatus" class="form-input"></select>
+            <select class="form-input" id="form_region_query_regionStatus" name="regionStatus"></select>
         </div>
         <div class="form-input-group margin-left-1">
-            <button type="button" onclick="(()=>tableRegion.reload())()">查询</button>
-            <button type="reset" class="margin-left-1">重置</button>
+            <button onclick="(()=>tableRegion.reload())()" type="button">查询</button>
+            <button class="margin-left-1" type="reset">重置</button>
         </div>
     </div>
 </form>
 <div id="table_region">
 </div>
-<div id="dialog_region" class="dialog">
+<div class="dialog" id="dialog_region">
     <div class="dialog-body">
-        <form id="form_region" class="form dialog-content">
-            <input type="hidden" name="id">
+        <form class="form dialog-content" id="form_region">
+            <input name="id" type="hidden">
             <div class="form-row">
                 <div class="form-input-group flex-1">
                     <label class="form-label">编码：</label>
-                    <input type="text" name="regionCode" class="form-input" data-readonly="|Edit|">
+                    <input class="form-input" data-readonly="|Edit|" name="regionCode" type="text">
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-input-group flex-1">
                     <label class="form-label">名称：</label>
-                    <input type="text" name="regionName" class="form-input">
+                    <input class="form-input" name="regionName" type="text">
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-input-group flex-1">
                     <label class="form-label">路径：</label>
-                    <input type="text" name="path" class="form-input">
+                    <input class="form-input" name="path" type="text">
                 </div>
             </div>
         </form>
     </div>
 </div>
-<div id="dialog_role" class="dialog">
+<div class="dialog" id="dialog_role">
     <input id="dialog_role_regionId" type="hidden">
     <div class="dialog-body">
-        <div id="role" class="dialog-content">
+        <div class="dialog-content" id="role">
 
         </div>
     </div>

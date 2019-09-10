@@ -27,7 +27,7 @@ public class FolderService {
         if (folderDao.getByPathWithLock(bean) != null) {
             throw new BusinessException("路径已存在");
         }
-        bean.setFolderCode(bean.getFolderCode() == null ? StringUtil.createCode("D" ): bean.getFolderCode());
+        bean.setFolderCode(bean.getFolderCode() == null ? StringUtil.createCode("D") : bean.getFolderCode());
         bean.setCreateTime(bean.getCreateTime() == null ? RequestInfo.getRequestTime() : bean.getCreateTime());
         bean.setFolderStatus(bean.getFolderStatus() == null ? AvailableStatus.Enable.getCode() : bean.getFolderStatus());
         folderDao.insert(bean);
@@ -67,7 +67,7 @@ public class FolderService {
         updateStatus(new UpdateStatusBean(bean.getId(), AvailableStatus.Disable.getCode(), AvailableStatus.Delete.getCode()), "删除失败");
     }
 
-    public Folder getByCode(String folderCode){
+    public Folder getByCode(String folderCode) {
         return folderDao.getByCode(folderCode);
     }
 

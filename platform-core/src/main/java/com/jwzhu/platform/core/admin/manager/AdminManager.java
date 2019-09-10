@@ -30,12 +30,12 @@ public class AdminManager {
     @Autowired
     private LoginService loginService;
 
-    public List<Admin> queryByParam(AdminListBean bean){
+    public List<Admin> queryByParam(AdminListBean bean) {
         return adminService.queryByParam(bean);
     }
 
     @Transactional
-    public void save(AdminSaveBean bean){
+    public void save(AdminSaveBean bean) {
         adminService.insert(bean);
         LoginBean loginBean = new LoginBean();
         loginBean.setUsername(bean.getUsername());
@@ -43,13 +43,13 @@ public class AdminManager {
         loginService.insert(loginBean);
     }
 
-    public void updateById(AdminBean bean){
+    public void updateById(AdminBean bean) {
         adminService.updateById(bean);
     }
 
-    public Admin getById(LongBean bean){
+    public Admin getById(LongBean bean) {
         Admin admin = adminService.getById(bean.getId());
-        if(admin == null){
+        if (admin == null) {
             throw new BusinessException("无此管理员");
         }
         return admin;
@@ -57,38 +57,38 @@ public class AdminManager {
 
     public Map<Short, String> getAddAdminType() {
         Map<Short, String> map = new HashMap<>();
-        if(RequestInfo.getRequestUser().getType() == AdminType.Super.getCode()){
+        if (RequestInfo.getRequestUser().getType() == AdminType.Super.getCode()) {
             map.put(AdminType.Admin.getCode(), AdminType.Admin.getMessage());
         }
         return map;
     }
 
     @Transactional
-    public void addAdminRole(AdminRoleBean bean){
+    public void addAdminRole(AdminRoleBean bean) {
         checkTarget(bean.getAdminId());
         adminService.addAdminRole(bean);
     }
 
-    public void removeAdminRole(AdminRoleBean bean){
+    public void removeAdminRole(AdminRoleBean bean) {
         checkTarget(bean.getAdminId());
         adminService.removeAdminRole(bean);
     }
 
-    private void checkTarget(long targetAdminId){
-        if(RequestInfo.getRequestUser().getType() != AdminType.Super.getCode() && RequestInfo.getRequestUser().getId() == targetAdminId){
+    private void checkTarget(long targetAdminId) {
+        if (RequestInfo.getRequestUser().getType() != AdminType.Super.getCode() && RequestInfo.getRequestUser().getId() == targetAdminId) {
             throw new NoPermissionException("不允许修改自己");
         }
     }
 
-    public void disable(LongBean bean){
+    public void disable(LongBean bean) {
         adminService.disable(bean);
     }
 
-    public void enable(LongBean bean){
+    public void enable(LongBean bean) {
         adminService.enable(bean);
     }
 
-    public void delete(LongBean bean){
+    public void delete(LongBean bean) {
         adminService.delete(bean);
     }
 }

@@ -32,6 +32,38 @@ public class SystemConfig {
     @DurationUnit(ChronoUnit.MILLIS)
     private Duration resourceTimeout = Duration.ofMinutes(30);
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Main getMain() {
+        return main;
+    }
+
+    public void setMain(Main main) {
+        this.main = main;
+    }
+
+    public Sub getSub() {
+        return sub;
+    }
+
+    public void setSub(Sub sub) {
+        this.sub = sub;
+    }
+
+    public Duration getResourceTimeout() {
+        return resourceTimeout;
+    }
+
+    public void setResourceTimeout(Duration resourceTimeout) {
+        this.resourceTimeout = resourceTimeout;
+    }
+
     public static class Main {
         /**
          * 系统Host
@@ -73,37 +105,5 @@ public class SystemConfig {
         public void setHost(String host) {
             this.host = host;
         }
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Main getMain() {
-        return main;
-    }
-
-    public void setMain(Main main) {
-        this.main = main;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Sub getSub() {
-        return sub;
-    }
-
-    public void setSub(Sub sub) {
-        this.sub = sub;
-    }
-
-    public Duration getResourceTimeout() {
-        return resourceTimeout;
-    }
-
-    public void setResourceTimeout(Duration resourceTimeout) {
-        this.resourceTimeout = resourceTimeout;
     }
 }

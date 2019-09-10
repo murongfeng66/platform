@@ -28,20 +28,20 @@ public class RoleService {
 
     public void insert(RoleBean bean) {
         Role role = roleDao.getByCode(bean.getCode());
-        if(role != null){
+        if (role != null) {
             throw new BusinessException("该角色已存在");
         }
 
         bean.setCreateTime(bean.getCreateTime() == null ? RequestInfo.getRequestTime() : bean.getCreateTime());
-        bean.setRoleStatus(bean.getRoleStatus() == null ? AvailableStatus.Enable.getCode(): bean.getRoleStatus());
+        bean.setRoleStatus(bean.getRoleStatus() == null ? AvailableStatus.Enable.getCode() : bean.getRoleStatus());
         roleDao.insert(bean);
     }
 
-    public List<Role> queryByParam(RoleListBean bean){
+    public List<Role> queryByParam(RoleListBean bean) {
         return roleDao.queryByParam(bean);
     }
 
-    public Role getById(long id){
+    public Role getById(long id) {
         return roleDao.getById(id);
     }
 
@@ -52,14 +52,14 @@ public class RoleService {
         }
     }
 
-    private void updateStatus(UpdateStatusBean bean, String errorMessage){
+    private void updateStatus(UpdateStatusBean bean, String errorMessage) {
         bean.setUpdateTime(bean.getUpdateTime() == null ? RequestInfo.getRequestTime() : bean.getUpdateTime());
-        if(roleDao.updateStatus(bean) == 0){
+        if (roleDao.updateStatus(bean) == 0) {
             throw new BusinessException(errorMessage);
         }
     }
 
-    public void disable(LongBean bean){
+    public void disable(LongBean bean) {
         UpdateStatusBean statusBean = new UpdateStatusBean();
         statusBean.setId(bean.getId());
         statusBean.setOldStatus(AvailableStatus.Enable.getCode());
@@ -67,7 +67,7 @@ public class RoleService {
         updateStatus(statusBean, "禁用角色失败");
     }
 
-    public void enable(LongBean bean){
+    public void enable(LongBean bean) {
         UpdateStatusBean statusBean = new UpdateStatusBean();
         statusBean.setId(bean.getId());
         statusBean.setOldStatus(AvailableStatus.Disable.getCode());
@@ -75,7 +75,7 @@ public class RoleService {
         updateStatus(statusBean, "启用角色失败");
     }
 
-    public void delete(LongBean bean){
+    public void delete(LongBean bean) {
         UpdateStatusBean statusBean = new UpdateStatusBean();
         statusBean.setId(bean.getId());
         statusBean.setOldStatus(AvailableStatus.Disable.getCode());
@@ -90,9 +90,9 @@ public class RoleService {
     }
 
     public void removePermission(PermissionSaveBean bean) {
-        if(RequestInfo.getRequestUser().getType() != AdminType.Super.getCode()){
+        if (RequestInfo.getRequestUser().getType() != AdminType.Super.getCode()) {
             List<String> adminRoleCode = roleDao.getAllRoleByAdminId(RequestInfo.getRequestUser().getId());
-            if(adminRoleCode.contains(bean.getRoleCode())){
+            if (adminRoleCode.contains(bean.getRoleCode())) {
                 throw new NoPermissionException("不允许修改自己角色的权限");
             }
         }
@@ -100,7 +100,7 @@ public class RoleService {
     }
 
     public List<AdminRole> getAdminRole(GetMyRoleBean bean) {
-        if(RequestInfo.getRequestUser().getType() != AdminType.Super.getCode()){
+        if (RequestInfo.getRequestUser().getType() != AdminType.Super.getCode()) {
             bean.setSelfId(RequestInfo.getRequestUser().getId());
         }
 

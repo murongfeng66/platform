@@ -14,7 +14,7 @@ public enum PermissionType {
     /**
      * 不验证权限
      */
-    No{
+    No {
         @Override
         public void check() {
         }
@@ -22,10 +22,10 @@ public enum PermissionType {
     /**
      * 仅登录即可
      */
-    Only_Login{
+    Only_Login {
         @Override
         public void check() {
-            if(RequestInfo.getRequestUser() == null){
+            if (RequestInfo.getRequestUser() == null) {
                 throw new NoPermissionException();
             }
         }
@@ -33,7 +33,7 @@ public enum PermissionType {
     /**
      * 验证权限
      */
-    HavePermission{
+    HavePermission {
         @Override
         public void check() {
             PermissionType.Only_Login.check();
@@ -41,8 +41,8 @@ public enum PermissionType {
             HttpServletRequest request = RequestUtil.getRequest();
 
             PermissionService permissionService = ApplicationContextUtil.getBean(PermissionService.class);
-            if(permissionService.checkNoPermission(request.getRequestURI())){
-                if(permissionService.checkNoPermission(request.getRequestURL().toString())){
+            if (permissionService.checkNoPermission(request.getRequestURI())) {
+                if (permissionService.checkNoPermission(request.getRequestURL().toString())) {
                     throw new NoPermissionException();
                 }
             }
@@ -51,10 +51,10 @@ public enum PermissionType {
     /**
      * 超级管理员
      */
-    SupperAdmin{
+    SupperAdmin {
         @Override
         public void check() {
-            if(RequestInfo.getRequestUser().getType() != AdminType.Super.getCode()){
+            if (RequestInfo.getRequestUser().getType() != AdminType.Super.getCode()) {
                 throw new NoPermissionException();
             }
         }

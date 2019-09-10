@@ -27,54 +27,8 @@ import com.jwzhu.platform.common.util.ReflectUtil;
 @Intercepts({@Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class})})
 public class MybatisCutPageInterceptor implements Interceptor {
 
-    private enum DataBaseType {
-        ORACLE {
-            @Override
-            public String getLimitSql(String sql, PageBean<?> pageBean) {
-                StringBuilder pageSql = new StringBuilder(100);
-                int beginIndex = (pageBean.getCurrentPage() - 1) * pageBean.getPageSize();
-                int endIndex = pageBean.getCurrentPage() * pageBean.getPageSize();
-                pageSql.append("select * from (select temp.*, rownum row_id from ( ");
-                pageSql.append(sql);
-                pageSql.append(" ) temp where rownum <= ").append(endIndex);
-                pageSql.append(") where row_id > ").append(beginIndex);
-                return pageSql.toString();
-            }
-        },
-        MYSQL {
-            @Override
-            public String getLimitSql(String sql, PageBean<?> pageBean) {
-                StringBuilder pageSql = new StringBuilder(100);
-                int beginIndex = (pageBean.getCurrentPage() - 1) * pageBean.getPageSize();
-                pageSql.append(sql);
-                pageSql.append(" limit ").append(beginIndex).append(",").append(pageBean.getPageSize());
-                return pageSql.toString();
-            }
-        };
-
-        /**
-         * 初始化数据库类型
-         */
-        public static DataBaseType initDataBaseType(String dataBaseType) {
-            if ("ORACLE".equalsIgnoreCase(dataBaseType)) {
-                return ORACLE;
-            } else if ("MYSQL".equalsIgnoreCase(dataBaseType)) {
-                return MYSQL;
-            } else {
-                throw new SystemException("不被支持的数据库类型");
-            }
-        }
-
-        /**
-         * 获取切分语句
-         */
-        public abstract String getLimitSql(String sql, PageBean<?> pageBean);
-    }
-
     private DataBaseType dataBaseType;
-
     private String countSQLSuffix;
-
     private HashSet<String> sqlNames = new HashSet<>();
 
     /**
@@ -82,7 +36,7 @@ public class MybatisCutPageInterceptor implements Interceptor {
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
     private Object doCutPage(Invocation invocation, PageBean pageBean) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, SQLException {
-        MappedStatement mappedStatement = (MappedStatement)invocation.getArgs()[0];
+        MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
         BoundSql boundSql = mappedStatement.getBoundSql(pageBean);
 
         Configuration configuration = mappedStatement.getConfiguration();
@@ -121,21 +75,8 @@ public class MybatisCutPageInterceptor implements Interceptor {
         return object;
     }
 
-    public static class PageSqlSource implements SqlSource{
-        private BoundSql boundSql;
-
-        PageSqlSource(BoundSql boundSql) {
-            this.boundSql = boundSql;
-        }
-
-        @Override
-        public BoundSql getBoundSql(Object parameterObject) {
-            return this.boundSql;
-        }
-    }
-
     private MappedStatement copyFromMappedStatement(MappedStatement ms, SqlSource newSqlSource) {
-        MappedStatement.Builder builder = new MappedStatement.Builder(ms.getConfiguration(),ms.getId(),newSqlSource,ms.getSqlCommandType());
+        MappedStatement.Builder builder = new MappedStatement.Builder(ms.getConfiguration(), ms.getId(), newSqlSource, ms.getSqlCommandType());
 
         builder.resource(ms.getResource());
         builder.fetchSize(ms.getFetchSize());
@@ -148,12 +89,12 @@ public class MybatisCutPageInterceptor implements Interceptor {
         builder.cache(ms.getCache());
         builder.flushCacheRequired(ms.isFlushCacheRequired());
         builder.useCache(ms.isUseCache());
-        if(ms.getKeyProperties() != null && ms.getKeyProperties().length !=0){
+        if (ms.getKeyProperties() != null && ms.getKeyProperties().length != 0) {
             StringBuilder keyProperties = new StringBuilder();
-            for(String keyProperty : ms.getKeyProperties()){
+            for (String keyProperty : ms.getKeyProperties()) {
                 keyProperties.append(keyProperty).append(",");
             }
-            keyProperties.delete(keyProperties.length()-1, keyProperties.length());
+            keyProperties.delete(keyProperties.length() - 1, keyProperties.length());
             builder.keyProperty(keyProperties.toString());
         }
 
@@ -278,5 +219,62 @@ public class MybatisCutPageInterceptor implements Interceptor {
         this.dataBaseType = DataBaseType.initDataBaseType(dataBaseType);
         this.countSQLSuffix = properties.getProperty("countSQLSuffix");
         this.countSQLSuffix = this.countSQLSuffix == null ? "Count" : this.countSQLSuffix;
+    }
+
+    private enum DataBaseType {
+        ORACLE {
+            @Override
+            public String getLimitSql(String sql, PageBean<?> pageBean) {
+                StringBuilder pageSql = new StringBuilder(100);
+                int beginIndex = (pageBean.getCurrentPage() - 1) * pageBean.getPageSize();
+                int endIndex = pageBean.getCurrentPage() * pageBean.getPageSize();
+                pageSql.append("select * from (select temp.*, rownum row_id from ( ");
+                pageSql.append(sql);
+                pageSql.append(" ) temp where rownum <= ").append(endIndex);
+                pageSql.append(") where row_id > ").append(beginIndex);
+                return pageSql.toString();
+            }
+        },
+        MYSQL {
+            @Override
+            public String getLimitSql(String sql, PageBean<?> pageBean) {
+                StringBuilder pageSql = new StringBuilder(100);
+                int beginIndex = (pageBean.getCurrentPage() - 1) * pageBean.getPageSize();
+                pageSql.append(sql);
+                pageSql.append(" limit ").append(beginIndex).append(",").append(pageBean.getPageSize());
+                return pageSql.toString();
+            }
+        };
+
+        /**
+         * 初始化数据库类型
+         */
+        public static DataBaseType initDataBaseType(String dataBaseType) {
+            if ("ORACLE".equalsIgnoreCase(dataBaseType)) {
+                return ORACLE;
+            } else if ("MYSQL".equalsIgnoreCase(dataBaseType)) {
+                return MYSQL;
+            } else {
+                throw new SystemException("不被支持的数据库类型");
+            }
+        }
+
+        /**
+         * 获取切分语句
+         */
+        public abstract String getLimitSql(String sql, PageBean<?> pageBean);
+    }
+
+    public static class PageSqlSource implements SqlSource {
+        private BoundSql boundSql;
+
+        PageSqlSource(BoundSql boundSql) {
+            this.boundSql = boundSql;
+        }
+
+        @Override
+        public BoundSql getBoundSql(Object parameterObject) {
+            return this.boundSql;
+        }
     }
 }

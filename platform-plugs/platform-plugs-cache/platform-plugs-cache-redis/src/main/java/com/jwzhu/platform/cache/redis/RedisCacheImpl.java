@@ -94,7 +94,7 @@ public class RedisCacheImpl implements CacheUtil {
     @Override
     public long increase(String key, long delta) {
         Long increment = stringRedisTemplate.boundValueOps(key).increment(delta);
-        if(increment == null){
+        if (increment == null) {
             throw new SystemException("自增失败");
         }
         return increment;
@@ -108,7 +108,7 @@ public class RedisCacheImpl implements CacheUtil {
     @Override
     public long decrease(String key, long delta) {
         Long decrease = stringRedisTemplate.boundValueOps(key).increment(delta);
-        if(decrease == null){
+        if (decrease == null) {
             throw new SystemException("自减失败");
         }
         return decrease;

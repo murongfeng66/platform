@@ -9,10 +9,18 @@ import com.jwzhu.platform.plugs.jsonescape.bind.JsonEscapeInterface;
 /**
  * 是否枚举
  **/
-public enum YesOrNo  implements JsonEscapeInterface<Short> {
+public enum YesOrNo implements JsonEscapeInterface<Short> {
 
     Yes((short) 1, "是"),
     No((short) 0, "否");
+
+    public static Map<Short, String> map = new HashMap<>();
+
+    static {
+        for (YesOrNo item : YesOrNo.values()) {
+            map.put(item.code, item.message);
+        }
+    }
 
     /**
      * 编码
@@ -28,22 +36,6 @@ public enum YesOrNo  implements JsonEscapeInterface<Short> {
         this.message = message;
     }
 
-    public short getCode() {
-        return code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public static Map<Short, String> map = new HashMap<>();
-
-    static {
-        for (YesOrNo item : YesOrNo.values()) {
-            map.put(item.code, item.message);
-        }
-    }
-
     public static String message(short code) {
         return map.get(code);
     }
@@ -55,6 +47,14 @@ public enum YesOrNo  implements JsonEscapeInterface<Short> {
             }
         }
         throw new SystemException("无此[" + code + "]枚举");
+    }
+
+    public short getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
     }
 
     @Override

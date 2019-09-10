@@ -30,7 +30,7 @@ public class AdminController {
 
     @GetMapping("page")
     @ControllerHandler
-    public ModelAndView page(ModelAndView view){
+    public ModelAndView page(ModelAndView view) {
         view.setViewName("admin/admin");
         return view;
     }
@@ -63,21 +63,21 @@ public class AdminController {
     @GetMapping("getById")
     @ResponseBody
     @ControllerHandler
-    public Admin getById(LongParam param){
+    public Admin getById(LongParam param) {
         return adminManager.getById(param.initBean());
     }
 
     @GetMapping("getAddAdminType")
     @ResponseBody
     @ControllerHandler(permissionType = PermissionType.Only_Login)
-    public Map<Short, String> getAddAdminType(){
+    public Map<Short, String> getAddAdminType() {
         return adminManager.getAddAdminType();
     }
 
     @PostMapping("addAdminRole")
     @ResponseBody
     @ControllerHandler
-    public String addAdminRole(AdminRoleSaveParam param){
+    public String addAdminRole(AdminRoleSaveParam param) {
         adminManager.addAdminRole(param.initBean());
         return "添加角色成功";
     }
@@ -85,7 +85,7 @@ public class AdminController {
     @PostMapping("removeAdminRole")
     @ResponseBody
     @ControllerHandler
-    public String removeAdminRole(AdminRoleSaveParam param){
+    public String removeAdminRole(AdminRoleSaveParam param) {
         adminManager.removeAdminRole(param.initBean());
         return "取消角色成功";
     }
@@ -93,7 +93,7 @@ public class AdminController {
     @PostMapping("disable")
     @ResponseBody
     @ControllerHandler
-    public String disable(LongParam param){
+    public String disable(LongParam param) {
         adminManager.disable(param.initBean());
         return "禁用管理员成功";
     }
@@ -101,7 +101,7 @@ public class AdminController {
     @PostMapping("enable")
     @ResponseBody
     @ControllerHandler
-    public String enable(LongParam param){
+    public String enable(LongParam param) {
         adminManager.enable(param.initBean());
         return "启用管理员成功";
     }
@@ -109,7 +109,7 @@ public class AdminController {
     @PostMapping("delete")
     @ResponseBody
     @ControllerHandler
-    public String delete(LongParam param){
+    public String delete(LongParam param) {
         adminManager.delete(param.initBean());
         return "删除管理员成功";
     }

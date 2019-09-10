@@ -14,6 +14,14 @@ public enum AdminType implements JsonEscapeInterface<Short> {
     Super((short) 1, "超级管理员"),
     Admin((short) 2, "管理员");
 
+    private static Map<Short, String> map = new HashMap<>();
+
+    static {
+        for (AdminType item : AdminType.values()) {
+            map.put(item.code, item.message);
+        }
+    }
+
     /**
      * 编码
      */
@@ -28,22 +36,6 @@ public enum AdminType implements JsonEscapeInterface<Short> {
         this.message = message;
     }
 
-    public short getCode() {
-        return code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    private static Map<Short, String> map = new HashMap<>();
-
-    static {
-        for (AdminType item : AdminType.values()) {
-            map.put(item.code, item.message);
-        }
-    }
-
     public static AdminType get(short code) {
         for (AdminType item : AdminType.values()) {
             if (item.code == code) {
@@ -51,6 +43,14 @@ public enum AdminType implements JsonEscapeInterface<Short> {
             }
         }
         throw new SystemException("无此[" + code + "]枚举");
+    }
+
+    public short getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
     }
 
     @Override

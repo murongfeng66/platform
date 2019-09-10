@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.jwzhu.platform.common.exception.BusinessException;
 import com.jwzhu.platform.common.exception.SystemException;
+import com.jwzhu.platform.common.util.StringUtil;
 import com.jwzhu.platform.plugs.jsonescape.bind.BooleanEscape;
 import com.jwzhu.platform.plugs.jsonescape.bind.JsonEscapeInterface;
 

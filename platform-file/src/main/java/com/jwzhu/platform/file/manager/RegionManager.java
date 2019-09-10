@@ -20,7 +20,7 @@ public class RegionManager {
         regionService.insert(bean);
     }
 
-    public List<Region> queryByParam(RegionListBean bean){
+    public List<Region> queryByParam(RegionListBean bean) {
         return regionService.queryByParam(bean);
     }
 

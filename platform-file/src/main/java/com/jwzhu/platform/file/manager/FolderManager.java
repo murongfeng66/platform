@@ -21,35 +21,35 @@ public class FolderManager {
     private FolderService folderService;
 
     @Transactional
-    public void insert(FolderBean bean){
+    public void insert(FolderBean bean) {
         folderService.insert(bean);
     }
 
-    public void updateById(FolderUpdateBean bean){
+    public void updateById(FolderUpdateBean bean) {
         folderService.updateById(bean);
     }
 
-    public List<Folder> queryByParam(FolderListBean bean){
+    public List<Folder> queryByParam(FolderListBean bean) {
         return folderService.queryByParam(bean);
     }
 
-    public Folder getById(LongBean bean){
+    public Folder getById(LongBean bean) {
         Folder folder = folderService.getById(bean.getId());
-        if(folder == null){
+        if (folder == null) {
             throw new BusinessException("无此文件夹");
         }
         return folder;
     }
 
-    public void enable(LongBean bean){
+    public void enable(LongBean bean) {
         folderService.enable(bean);
     }
 
-    public void disable(LongBean bean){
+    public void disable(LongBean bean) {
         folderService.disable(bean);
     }
 
-    public void delete(LongBean bean){
+    public void delete(LongBean bean) {
         folderService.delete(bean);
     }
 

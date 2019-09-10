@@ -1,12 +1,13 @@
-function DatePicker(){}
+function DatePicker() {
+}
 
 (() => {
-    DatePicker.init = function(){
+    DatePicker.init = function () {
         document.querySelectorAll('input.date-picker').forEach(function ($input) {
             let id = $input.getAttribute('id');
             id = id || $input.getAttribute('name');
             id += '_date_picker';
-            $input.setAttribute('autocomplete','off');
+            $input.setAttribute('autocomplete', 'off');
             $input.onfocus = () => {
 
                 let $datePicker = document.getElementById(id);
@@ -56,19 +57,19 @@ function DatePicker(){}
 
                         let year = document.getElementById(topYearId).innerText;
                         let month = document.getElementById(topMonthId).innerText;
-                        if(target.classList.contains('prefix')){
-                            month --;
+                        if (target.classList.contains('prefix')) {
+                            month--;
                         }
-                        if(target.classList.contains('next')){
-                            month ++;
+                        if (target.classList.contains('next')) {
+                            month++;
                         }
-                        if(month === 0){
+                        if (month === 0) {
                             month = 12;
-                            year --;
+                            year--;
                         }
-                        if(month === 13){
+                        if (month === 13) {
                             month = 1;
-                            year ++;
+                            year++;
                         }
                         month = month.fixLength(2, '0', 'prefix');
                         let day = target.innerText.fixLength(2, '0', 'prefix');
@@ -160,7 +161,7 @@ function DatePicker(){}
                 classNames = 'next';
             } else {
                 classNames = 'current';
-                if (isNow  && item === now.getDate()) {
+                if (isNow && item === now.getDate()) {
                     classNames += ' now';
                 }
 

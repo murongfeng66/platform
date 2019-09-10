@@ -16,7 +16,7 @@ public class AdminNameEscaper extends JsonEscapeCacheInterface<Long> {
     @Override
     public Object getFormDB(Long id) {
         Admin admin = adminService.getById(id);
-        if(admin == null){
+        if (admin == null) {
             throw new BusinessException("管理员不存在");
         }
         return admin.getNickname();

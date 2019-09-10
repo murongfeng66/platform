@@ -16,6 +16,7 @@ import com.jwzhu.platform.common.exception.BusinessException;
 import com.jwzhu.platform.common.exception.NoPermissionException;
 import com.jwzhu.platform.common.exception.ParamException;
 import com.jwzhu.platform.common.exception.SystemException;
+import com.jwzhu.platform.common.util.StringUtil;
 import com.jwzhu.platform.common.web.RequestInfo;
 import com.jwzhu.platform.plugs.web.exception.token.TokenEmptyException;
 import com.jwzhu.platform.plugs.web.exception.token.TokenErrorException;
@@ -53,7 +54,7 @@ public class GlobalExceptionHandler {
         logger.error(throwable.getMessage(), throwable);
         if (throwable instanceof TokenEmptyException || throwable instanceof TokenTimeOutException) {
             String redirect = "/";
-            if(systemConfig.getSub() != null && !StringUtil.isEmpty(systemConfig.getSub().getHost())){
+            if (systemConfig.getSub() != null && !StringUtil.isEmpty(systemConfig.getSub().getHost())) {
                 UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(systemConfig.getMain().getCheckLogin());
                 uriComponentsBuilder.queryParam("originUrl", request.getRequestURL().toString());
                 uriComponentsBuilder.queryParam("subHost", systemConfig.getSub().getHost());

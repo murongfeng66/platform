@@ -50,9 +50,9 @@ public class HttpUtil {
 
         try {
             AbstractHttpEntity entity = null;
-            if(!StringUtil.isEmpty(bean.getBody())){
+            if (!StringUtil.isEmpty(bean.getBody())) {
                 entity = new StringEntity(bean.getBody());
-            }else if(bean.getParams() != null){
+            } else if (bean.getParams() != null) {
                 List<NameValuePair> list = mapToPair(bean.getParams());
                 entity = new UrlEncodedFormEntity(list, "UTF-8");
             }
@@ -79,17 +79,17 @@ public class HttpUtil {
         List<NameValuePair> list = mapToPair(bean.getUrlParams());
 
         boolean paramsToUrl = false;
-        if(bean.getParams() != null){
-            if(isGet){
+        if (bean.getParams() != null) {
+            if (isGet) {
                 paramsToUrl = true;
-            }else if(StringUtil.isEmpty(bean.getBody())){
+            } else if (StringUtil.isEmpty(bean.getBody())) {
                 paramsToUrl = true;
             }
         }
 
-        if(paramsToUrl){
+        if (paramsToUrl) {
             for (Map.Entry<String, String> entry : bean.getParams().entrySet()) {
-                if(StringUtil.isEmpty(entry.getKey()) || StringUtil.isEmpty(entry.getValue())){
+                if (StringUtil.isEmpty(entry.getKey()) || StringUtil.isEmpty(entry.getValue())) {
                     continue;
                 }
                 BasicNameValuePair valuePair = new BasicNameValuePair(entry.getKey(), entry.getValue());
@@ -101,10 +101,10 @@ public class HttpUtil {
         return uriBuilder.toString();
     }
 
-    private static void setHeaders(HttpRequestBase requestBase, RequestBean bean){
+    private static void setHeaders(HttpRequestBase requestBase, RequestBean bean) {
         if (bean.getHeaders() != null) {
             for (Map.Entry<String, String> entry : bean.getHeaders().entrySet()) {
-                if(StringUtil.isEmpty(entry.getKey()) || StringUtil.isEmpty(entry.getValue())){
+                if (StringUtil.isEmpty(entry.getKey()) || StringUtil.isEmpty(entry.getValue())) {
                     continue;
                 }
                 requestBase.addHeader(entry.getKey(), entry.getValue());
@@ -114,11 +114,11 @@ public class HttpUtil {
         requestBase.addHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     }
 
-    private static List<NameValuePair> mapToPair(Map<String, String> map){
+    private static List<NameValuePair> mapToPair(Map<String, String> map) {
         List<NameValuePair> list = new ArrayList<>();
         if (map != null) {
             for (Map.Entry<String, String> entry : map.entrySet()) {
-                if(StringUtil.isEmpty(entry.getKey()) || StringUtil.isEmpty(entry.getValue())){
+                if (StringUtil.isEmpty(entry.getKey()) || StringUtil.isEmpty(entry.getValue())) {
                     continue;
                 }
                 BasicNameValuePair valuePair = new BasicNameValuePair(entry.getKey(), entry.getValue());

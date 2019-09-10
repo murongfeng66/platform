@@ -20,6 +20,7 @@ import com.jwzhu.platform.common.enums.AvailableStatus;
 import com.jwzhu.platform.common.enums.YesOrNo;
 import com.jwzhu.platform.common.exception.SystemException;
 import com.jwzhu.platform.common.util.HttpUtil;
+import com.jwzhu.platform.common.util.StringUtil;
 import com.jwzhu.platform.common.web.RequestInfo;
 import com.jwzhu.platform.core.admin.manager.LoginManager;
 import com.jwzhu.platform.core.permission.manager.ResourceManager;

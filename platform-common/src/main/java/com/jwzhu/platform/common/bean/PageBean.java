@@ -8,7 +8,7 @@ import com.jwzhu.platform.common.enums.YesOrNo;
 /**
  * 分页参数类
  */
-public class PageBean<T> extends BaseBean{
+public class PageBean<T> extends BaseBean {
 
     /**
      * 当前页
@@ -92,7 +92,7 @@ public class PageBean<T> extends BaseBean{
 
     public void setTotalCount(Integer totalCount) {
         this.totalCount = totalCount;
-        if(this.totalCount != null){
+        if (this.totalCount != null) {
             this.totalPage = this.totalCount % this.pageSize == 0 ? this.totalCount / this.pageSize : this.totalCount / this.pageSize + 1;
         }
     }
@@ -105,11 +105,11 @@ public class PageBean<T> extends BaseBean{
         this.sorts = sorts;
     }
 
-    public void addSort(String columnName, String sortType){
+    public void addSort(String columnName, String sortType) {
         this.sorts.add(new SortItem(columnName, sortType));
     }
 
-    public void addSort(String columnName){
+    public void addSort(String columnName) {
         this.sorts.add(new SortItem(columnName, "asc"));
     }
 

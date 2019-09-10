@@ -33,7 +33,7 @@ public abstract class BaseParam<T extends BaseBean> {
         Validator validator = factory.getValidator();
         Set<ConstraintViolation<BaseParam<T>>> constraintViolations = validator.validate(this, groups);
 
-        if(!constraintViolations.isEmpty()){
+        if (!constraintViolations.isEmpty()) {
             ConstraintViolation<BaseParam<T>> constraintViolation = constraintViolations.iterator().next();
             throw new ParamException(constraintViolation.getMessage());
         }
@@ -41,6 +41,7 @@ public abstract class BaseParam<T extends BaseBean> {
         exValid();
     }
 
-    protected void exValid(){}
+    protected void exValid() {
+    }
 
 }

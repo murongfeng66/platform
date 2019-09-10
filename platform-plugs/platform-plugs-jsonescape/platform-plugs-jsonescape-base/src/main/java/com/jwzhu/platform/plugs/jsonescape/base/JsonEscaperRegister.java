@@ -36,7 +36,7 @@ public class JsonEscaperRegister implements ImportBeanDefinitionRegistrar, Resou
         AnnotationAttributes annotationAttributes = AnnotationAttributes.fromMap(annotationMetadata.getAnnotationAttributes(JsonEscaperScan.class.getName()));
 
         List<String> basePackages = new ArrayList<>();
-        if(annotationAttributes != null){
+        if (annotationAttributes != null) {
             for (String basePackage : annotationAttributes.getStringArray("basePackages")) {
                 if (StringUtil.isEmpty(basePackage)) {
                     basePackages.add(basePackage);
@@ -44,7 +44,7 @@ public class JsonEscaperRegister implements ImportBeanDefinitionRegistrar, Resou
             }
         }
 
-        if(basePackages.isEmpty()){
+        if (basePackages.isEmpty()) {
             basePackages.add(((StandardAnnotationMetadata) annotationMetadata).getIntrospectedClass().getPackage().getName());
         }
 
@@ -52,7 +52,7 @@ public class JsonEscaperRegister implements ImportBeanDefinitionRegistrar, Resou
         JsonEscaperScanner scanner = new JsonEscaperScanner(beanDefinitionRegistry, true, environment, resourceLoader);
         Set<BeanDefinitionHolder> beanDefinitionHolders = scanner.doScan(basePackages.toArray(new String[]{}));
         for (BeanDefinitionHolder beanDefinitionHolder : beanDefinitionHolders) {
-            logger.info("JSON转义序列化器：{}",beanDefinitionHolder.getBeanDefinition().getBeanClassName());
+            logger.info("JSON转义序列化器：{}", beanDefinitionHolder.getBeanDefinition().getBeanClassName());
             beanDefinitionRegistry.registerBeanDefinition(beanDefinitionHolder.getBeanName(), beanDefinitionHolder.getBeanDefinition());
         }
     }

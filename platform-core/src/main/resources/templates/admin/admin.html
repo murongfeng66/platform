@@ -2,15 +2,15 @@
 <html lang="zh_CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
     <title>管理员</title>
-    <link rel="icon" type="image/x-icon" href="https://static.platform.jwzhu.com/image/icon.ico">
+    <link href="https://static.platform.jwzhu.com/image/icon.ico" rel="icon" type="image/x-icon">
 
-    <link rel="stylesheet" href="https://static.platform.jwzhu.com/font-awesome-4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://static.platform.jwzhu.com/css/common.css">
-    <link rel="stylesheet" href="https://static.platform.jwzhu.com/css/form.css">
-    <link rel="stylesheet" href="https://static.platform.jwzhu.com/css/table.css">
-    <link rel="stylesheet" href="https://static.platform.jwzhu.com/css/dialog.css">
+    <link href="https://static.platform.jwzhu.com/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://static.platform.jwzhu.com/css/common.css" rel="stylesheet">
+    <link href="https://static.platform.jwzhu.com/css/form.css" rel="stylesheet">
+    <link href="https://static.platform.jwzhu.com/css/table.css" rel="stylesheet">
+    <link href="https://static.platform.jwzhu.com/css/dialog.css" rel="stylesheet">
     <style>
         .role {
             padding: 0.5rem 2rem;
@@ -26,55 +26,55 @@
     </style>
 </head>
 <body>
-<form id="form_admin_query" class="form margin-top-1 form-inline">
+<form class="form margin-top-1 form-inline" id="form_admin_query">
     <div class="form-row">
         <div class="form-input-group">
             <label class="form-label">关键字：</label>
-            <input name="key" class="form-input">
+            <input class="form-input" name="key">
         </div>
         <div class="form-input-group margin-left-1">
-            <button type="button" onclick="(()=>tableAdmin.reload())()">查询</button>
-            <button type="reset" class="margin-left-1">重置</button>
+            <button onclick="(()=>tableAdmin.reload())()" type="button">查询</button>
+            <button class="margin-left-1" type="reset">重置</button>
         </div>
     </div>
 </form>
 <div id="table_admin">
 </div>
-<div id="dialog_admin" class="dialog">
+<div class="dialog" id="dialog_admin">
     <div class="dialog-body">
-        <form id="form_admin" class="form dialog-content">
-            <input type="hidden" name="id">
+        <form class="form dialog-content" id="form_admin">
+            <input name="id" type="hidden">
             <div class="form-row" data-show="|Add|">
                 <div class="form-input-group flex-1">
                     <label class="form-label">用户名：</label>
-                    <input type="text" name="username" class="form-input" data-readonly="|Edit|">
+                    <input class="form-input" data-readonly="|Edit|" name="username" type="text">
                 </div>
             </div>
             <div class="form-row" data-show="|Add|">
                 <div class="form-input-group flex-1">
                     <label class="form-label">类型：</label>
-                    <select id="form_admin_adminType" name="adminType" class="form-input" data-readonly></select>
+                    <select class="form-input" data-readonly id="form_admin_adminType" name="adminType"></select>
                 </div>
             </div>
             <div class="form-row" data-show="|Edit|">
                 <div class="form-input-group flex-1">
                     <label class="form-label">类型：</label>
-                    <input type="text" name="adminTypeText" class="form-input" data-readonly="|Add|Edit|">
+                    <input class="form-input" data-readonly="|Add|Edit|" name="adminTypeText" type="text">
                 </div>
             </div>
             <div class="form-row" data-show="|Add|Edit|">
                 <div class="form-input-group flex-1">
                     <label class="form-label">名称：</label>
-                    <input type="text" name="nickname" class="form-input" data-readonly>
+                    <input class="form-input" data-readonly name="nickname" type="text">
                 </div>
             </div>
         </form>
     </div>
 </div>
-<div id="dialog_role" class="dialog">
+<div class="dialog" id="dialog_role">
     <input id="dialog_role_adminId" type="hidden">
     <div class="dialog-body">
-        <div id="role" class="dialog-content">
+        <div class="dialog-content" id="role">
 
         </div>
     </div>

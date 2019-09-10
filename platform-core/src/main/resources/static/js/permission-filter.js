@@ -14,7 +14,7 @@ function PermissionFilter() {
         Request.get({
             url: '/getPermissionCodes',
             async: false,
-            success:function(data){
+            success: function (data) {
                 PermissionFilter.codes = data;
             }
         });

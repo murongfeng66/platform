@@ -39,7 +39,7 @@ public class RoleController {
     @GetMapping("queryByParam")
     @ResponseBody
     @ControllerHandler
-    public RoleListBean queryByParam(RoleListParam param){
+    public RoleListBean queryByParam(RoleListParam param) {
         RoleListBean bean = param.initBean();
         roleManager.queryByParam(bean);
         return bean;
@@ -48,7 +48,7 @@ public class RoleController {
     @PostMapping("add")
     @ResponseBody
     @ControllerHandler
-    public String add(RoleAddParam param){
+    public String add(RoleAddParam param) {
         roleManager.insert(param.initBean());
         return "角色添加成功";
     }
@@ -56,14 +56,14 @@ public class RoleController {
     @GetMapping("getById")
     @ResponseBody
     @ControllerHandler
-    public Role getById(LongParam param){
+    public Role getById(LongParam param) {
         return roleManager.getById(param.getId());
     }
 
     @PostMapping("updateById")
     @ResponseBody
     @ControllerHandler
-    public String updateById(RoleUpdateParam param){
+    public String updateById(RoleUpdateParam param) {
         roleManager.updateById(param.initBean());
         return "角色修改成功";
     }
@@ -71,7 +71,7 @@ public class RoleController {
     @PostMapping("disable")
     @ResponseBody
     @ControllerHandler
-    public String disable(LongParam param){
+    public String disable(LongParam param) {
         roleManager.disable(param.initBean());
         return "禁用角色成功";
     }
@@ -79,7 +79,7 @@ public class RoleController {
     @PostMapping("enable")
     @ResponseBody
     @ControllerHandler
-    public String enable(LongParam param){
+    public String enable(LongParam param) {
         roleManager.enable(param.initBean());
         return "启用角色成功";
     }
@@ -87,7 +87,7 @@ public class RoleController {
     @PostMapping("delete")
     @ResponseBody
     @ControllerHandler
-    public String delete(LongParam param){
+    public String delete(LongParam param) {
         roleManager.delete(param.initBean());
         return "删除角色成功";
     }
@@ -95,7 +95,7 @@ public class RoleController {
     @PostMapping("addPermission")
     @ResponseBody
     @ControllerHandler
-    public String addPermission(PermissionSaveParam param){
+    public String addPermission(PermissionSaveParam param) {
         roleManager.addPermission(param.initBean());
         return "授权成功";
     }
@@ -103,7 +103,7 @@ public class RoleController {
     @PostMapping("removePermission")
     @ResponseBody
     @ControllerHandler
-    public String removePermission(PermissionSaveParam param){
+    public String removePermission(PermissionSaveParam param) {
         roleManager.removePermission(param.initBean());
         return "取消授权成功";
     }
@@ -111,14 +111,14 @@ public class RoleController {
     @GetMapping("getAdminRole")
     @ResponseBody
     @ControllerHandler
-    public List<AdminRole> getAdminRole(GetMyRoleParam param){
+    public List<AdminRole> getAdminRole(GetMyRoleParam param) {
         return roleManager.getAdminRole(param.initBean());
     }
 
     @GetMapping("queryRoleResource")
     @ResponseBody
     @ControllerHandler
-    public List<ResourcePermission> queryRoleResource(GetRoleResourceParam param){
+    public List<ResourcePermission> queryRoleResource(GetRoleResourceParam param) {
         return resourceManager.queryRoleResource(param.initBean());
     }
 

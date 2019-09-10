@@ -9,11 +9,19 @@ import com.jwzhu.platform.plugs.jsonescape.bind.JsonEscapeInterface;
 /**
  * 资源类型
  **/
-public enum ResourceType  implements JsonEscapeInterface<Short> {
+public enum ResourceType implements JsonEscapeInterface<Short> {
 
     Menu((short) 1, "菜单"),
     Page((short) 2, "页面"),
     Function((short) 3, "功能");
+
+    public static Map<Short, String> map = new HashMap<>();
+
+    static {
+        for (ResourceType item : ResourceType.values()) {
+            map.put(item.code, item.message);
+        }
+    }
 
     /**
      * 编码
@@ -29,22 +37,6 @@ public enum ResourceType  implements JsonEscapeInterface<Short> {
         this.message = message;
     }
 
-    public short getCode() {
-        return code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public static Map<Short, String> map = new HashMap<>();
-
-    static {
-        for (ResourceType item : ResourceType.values()) {
-            map.put(item.code, item.message);
-        }
-    }
-
     public static String message(Short code) {
         return map.get(code);
     }
@@ -56,6 +48,14 @@ public enum ResourceType  implements JsonEscapeInterface<Short> {
             }
         }
         throw new SystemException("无此[" + code + "]枚举");
+    }
+
+    public short getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
     }
 
     @Override

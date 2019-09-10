@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.jwzhu.platform.common.exception.SystemException;
 import com.jwzhu.platform.common.util.ReflectUtil;
 
-public abstract class JacksonSerializer <T> extends JsonSerializer<T> {
+public abstract class JacksonSerializer<T> extends JsonSerializer<T> {
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -39,7 +39,7 @@ public abstract class JacksonSerializer <T> extends JsonSerializer<T> {
     }
 
     void writeEscape(JsonGenerator gen, String fieldName, String[] targetNames, Object messages) throws IOException {
-        if(messages == null){
+        if (messages == null) {
             return;
         }
 

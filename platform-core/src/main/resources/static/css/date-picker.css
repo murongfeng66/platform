@@ -1,11 +1,11 @@
-.date-picker-body{
+.date-picker-body {
     position: absolute;
     background-color: #ffffff;
     display: none;
     border: 1px solid #cccccc;
 }
 
-.date-picker-body:hover{
+.date-picker-body:hover {
     display: block;
 }
 
@@ -37,45 +37,45 @@
     margin-right: 0;
 }
 
-.date-picker-body-table{
+.date-picker-body-table {
     border-collapse: collapse;
 }
 
-.date-picker-body-table thead th{
+.date-picker-body-table thead th {
     text-align: center;
     padding: 0.5rem;
     font-weight: normal;
     background-color: #e8e8e8;
 }
 
-.date-picker-body-table tbody td{
+.date-picker-body-table tbody td {
     text-align: center;
     padding: 0.5rem;
     cursor: pointer;
 }
 
-.date-picker-body-table tbody td.prefix{
+.date-picker-body-table tbody td.prefix {
     background-color: #f3f3f3;
 }
 
-.date-picker-body-table tbody td.current{
+.date-picker-body-table tbody td.current {
 
 }
 
-.date-picker-body-table tbody td.next{
+.date-picker-body-table tbody td.next {
     background-color: #f3f3f3;
 }
 
-.date-picker-body-table tbody td.now{
+.date-picker-body-table tbody td.now {
     background-color: #2196F3;
 }
 
-.date-picker-body-table tbody td.active{
+.date-picker-body-table tbody td.active {
     background-color: #a9a9a9;
     color: #ffffff;
 }
 
-.date-picker-body-table tbody td:hover{
+.date-picker-body-table tbody td:hover {
     background-color: #a9a9a9;
     color: #ffffff;
 }

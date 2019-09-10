@@ -23,17 +23,17 @@ public class RoleManager {
     private RoleService roleService;
 
     @Transactional
-    public void insert(RoleBean bean){
+    public void insert(RoleBean bean) {
         roleService.insert(bean);
     }
 
-    public List<Role> queryByParam(RoleListBean bean){
+    public List<Role> queryByParam(RoleListBean bean) {
         return roleService.queryByParam(bean);
     }
 
-    public Role getById(long id){
+    public Role getById(long id) {
         Role role = roleService.getById(id);
-        if(role == null){
+        if (role == null) {
             throw new BusinessException("无此角色");
         }
         return role;
@@ -43,24 +43,24 @@ public class RoleManager {
         roleService.updateById(bean);
     }
 
-    public void disable(LongBean bean){
+    public void disable(LongBean bean) {
         roleService.disable(bean);
     }
 
-    public void enable(LongBean bean){
+    public void enable(LongBean bean) {
         roleService.enable(bean);
     }
 
-    public void delete(LongBean bean){
+    public void delete(LongBean bean) {
         roleService.delete(bean);
     }
 
     @Transactional
-    public void addPermission(PermissionSaveBean bean){
+    public void addPermission(PermissionSaveBean bean) {
         roleService.addPermission(bean);
     }
 
-    public void removePermission(PermissionSaveBean bean){
+    public void removePermission(PermissionSaveBean bean) {
         roleService.removePermission(bean);
     }
 

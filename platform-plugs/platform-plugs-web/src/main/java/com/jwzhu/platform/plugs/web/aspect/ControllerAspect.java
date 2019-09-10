@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jwzhu.platform.common.util.StringUtil;
 import com.jwzhu.platform.common.web.RequestInfo;
 import com.jwzhu.platform.common.web.RequestType;
 import com.jwzhu.platform.common.web.RequestUtil;

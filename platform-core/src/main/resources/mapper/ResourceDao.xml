@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jwzhu.platform.core.permission.db.ResourceDao">
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        insert into Resource (`code`, parentCode, `name`, url, sort, type, menuShow, resourceStatus, createTime) values (#{code}, #{parentCode}, #{name}, #{url}, #{sort}, #{type}, #{menuShow}, #{resourceStatus}, #{createTime})
+        insert into Resource (`code`, parentCode, `name`, url, sort, type, menuShow, resourceStatus, createTime)
+        values (#{code}, #{parentCode}, #{name}, #{url}, #{sort}, #{type}, #{menuShow}, #{resourceStatus}, #{createTime})
     </insert>
     <update id="updateById">
         update Resource
@@ -35,7 +36,8 @@
     </update>
     <update id="updateStatus">
         update Resource
-        set resourceStatus = #{newStatus}, updateTime = #{updateTime}
+        set resourceStatus = #{newStatus},
+            updateTime = #{updateTime}
         where id = #{id} and resourceStatus = #{oldStatus}
     </update>
     <select id="queryByParam" resultType="com.jwzhu.platform.core.permission.model.ResourceList">
@@ -103,12 +105,14 @@
     <select id="getByCode" resultType="com.jwzhu.platform.core.permission.model.Resource">
         select id, `code`, parentCode, `name`, url, sort, type, menuShow, createTime, updateTime, resourceStatus
         from Resource
-        where `code` = #{code} for update
+        where `code` = #{code} for
+        update
     </select>
     <select id="getByUrl" resultType="com.jwzhu.platform.core.permission.model.Resource">
         select id, `code`, parentCode, `name`, url, sort, type, menuShow, createTime, updateTime, resourceStatus
         from Resource
-        where `url` = #{url} for update
+        where `url` = #{url} for
+        update
     </select>
     <select id="queryRoleResource" resultType="com.jwzhu.platform.core.permission.model.ResourcePermission">
         select r.`code`, r.parentCode, r.`name`, r.type

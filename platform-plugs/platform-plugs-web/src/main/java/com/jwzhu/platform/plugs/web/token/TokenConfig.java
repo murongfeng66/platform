@@ -43,23 +43,6 @@ public class TokenConfig {
         this.expiredTime = expiredTime;
     }
 
-    public enum Type {
-        AES {
-            @Override
-            public TokenUtil getInstance(TokenConfig tokenConfig) {
-                return new TokenUtiAES(tokenConfig);
-            }
-        },
-        JWT {
-            @Override
-            public TokenUtil getInstance(TokenConfig tokenConfig) {
-                return new TokenUtilJWT(tokenConfig);
-            }
-        };
-
-        public abstract TokenUtil getInstance(TokenConfig tokenConfig);
-    }
-
     public String getSecretKey() {
         return secretKey;
     }
@@ -90,5 +73,22 @@ public class TokenConfig {
 
     public void setParamName(String paramName) {
         this.paramName = paramName;
+    }
+
+    public enum Type {
+        AES {
+            @Override
+            public TokenUtil getInstance(TokenConfig tokenConfig) {
+                return new TokenUtiAES(tokenConfig);
+            }
+        },
+        JWT {
+            @Override
+            public TokenUtil getInstance(TokenConfig tokenConfig) {
+                return new TokenUtilJWT(tokenConfig);
+            }
+        };
+
+        public abstract TokenUtil getInstance(TokenConfig tokenConfig);
     }
 }

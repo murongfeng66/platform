@@ -4,6 +4,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import com.jwzhu.platform.common.exception.BusinessException;
+import com.jwzhu.platform.common.util.StringUtil;
 import com.jwzhu.platform.core.permission.bean.ResourceBean;
 import com.jwzhu.platform.core.permission.model.ResourceType;
 import com.jwzhu.platform.plugs.web.param.BaseParam;

@@ -2,88 +2,88 @@
 <html lang="zh_CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
     <title>系统资源</title>
-    <link rel="icon" type="image/x-icon" href="https://static.platform.jwzhu.com/image/icon.ico">
+    <link href="https://static.platform.jwzhu.com/image/icon.ico" rel="icon" type="image/x-icon">
 
-    <link rel="stylesheet" href="https://static.platform.jwzhu.com/font-awesome-4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://static.platform.jwzhu.com/css/common.css">
-    <link rel="stylesheet" href="https://static.platform.jwzhu.com/css/form.css">
-    <link rel="stylesheet" href="https://static.platform.jwzhu.com/css/table.css">
-    <link rel="stylesheet" href="https://static.platform.jwzhu.com/css/dialog.css">
-    <link rel="stylesheet" href="https://static.platform.jwzhu.com/css/date-picker.css">
+    <link href="https://static.platform.jwzhu.com/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://static.platform.jwzhu.com/css/common.css" rel="stylesheet">
+    <link href="https://static.platform.jwzhu.com/css/form.css" rel="stylesheet">
+    <link href="https://static.platform.jwzhu.com/css/table.css" rel="stylesheet">
+    <link href="https://static.platform.jwzhu.com/css/dialog.css" rel="stylesheet">
+    <link href="https://static.platform.jwzhu.com/css/date-picker.css" rel="stylesheet">
 </head>
 <body>
-<form id="form_resource_query" class="form margin-top-1 form-inline">
+<form class="form margin-top-1 form-inline" id="form_resource_query">
     <div class="form-row">
         <div class="form-input-group">
             <label class="form-label">关键字：</label>
-            <input name="key" class="form-input">
+            <input class="form-input" name="key">
         </div>
-<!--        <div class="form-input-group">-->
-<!--            <label class="form-label">时间选择器：</label>-->
-<!--            <input name="key" class="form-input date-picker">-->
-<!--        </div>-->
+        <!--        <div class="form-input-group">-->
+        <!--            <label class="form-label">时间选择器：</label>-->
+        <!--            <input name="key" class="form-input date-picker">-->
+        <!--        </div>-->
         <div class="form-input-group">
             <label class="form-label">类型：</label>
-            <select id="form_resource_query_type" name="type" class="form-input"></select>
+            <select class="form-input" id="form_resource_query_type" name="type"></select>
         </div>
         <div class="form-input-group">
             <label class="form-label">状态：</label>
-            <select id="form_resource_query_availableStatus" name="resourceStatus" class="form-input"></select>
+            <select class="form-input" id="form_resource_query_availableStatus" name="resourceStatus"></select>
         </div>
         <div class="form-input-group margin-left-1">
-            <button type="button" onclick="(function(){tableResource.reload();})()" data-permission="permission.resource.queryByParam">查询</button>
-            <button type="reset" class="margin-left-1">重置</button>
+            <button data-permission="permission.resource.queryByParam" onclick="(function(){tableResource.reload();})()" type="button">查询</button>
+            <button class="margin-left-1" type="reset">重置</button>
         </div>
     </div>
 </form>
 <div id="table_resource">
 </div>
-<div id="dialog_resource" class="dialog">
+<div class="dialog" id="dialog_resource">
     <div class="dialog-body">
-        <form id="form_resource" class="form dialog-content">
-            <input type="hidden" name="id">
+        <form class="form dialog-content" id="form_resource">
+            <input name="id" type="hidden">
             <div class="form-row">
                 <div class="form-input-group flex-1">
                     <label class="form-label">父编码：</label>
-                    <input id="form_resource_parentCode" type="text" name="parentCode" class="form-input" data-readonly="|Edit|Add|">
+                    <input class="form-input" data-readonly="|Edit|Add|" id="form_resource_parentCode" name="parentCode" type="text">
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-input-group flex-1">
                     <label class="form-label">编码：</label>
-                    <input type="text" name="code" class="form-input" data-readonly="|Edit|">
+                    <input class="form-input" data-readonly="|Edit|" name="code" type="text">
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-input-group flex-1">
                     <label class="form-label">名称：</label>
-                    <input type="text" name="name" class="form-input" data-readonly>
+                    <input class="form-input" data-readonly name="name" type="text">
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-input-group flex-1">
                     <label class="form-label">地址：</label>
-                    <input type="text" name="url" class="form-input" data-readonly>
+                    <input class="form-input" data-readonly name="url" type="text">
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-input-group flex-1">
                     <label class="form-label">排序：</label>
-                    <input type="number" name="sort" class="form-input" data-readonly>
+                    <input class="form-input" data-readonly name="sort" type="number">
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-input-group flex-1">
                     <label class="form-label">类型：</label>
-                    <select id="form_resource_type" name="type" class="form-input" onchange="resourceTypeChange()" data-readonly></select>
+                    <select class="form-input" data-readonly id="form_resource_type" name="type" onchange="resourceTypeChange()"></select>
                 </div>
             </div>
-            <div id="form_resource_menuShow_div" class="form-row">
+            <div class="form-row" id="form_resource_menuShow_div">
                 <div class="form-input-group flex-1">
                     <label class="form-label">菜单显示：</label>
-                    <select id="form_resource_menuShow" name="menuShow" class="form-input" data-readonly></select>
+                    <select class="form-input" data-readonly id="form_resource_menuShow" name="menuShow"></select>
                 </div>
             </div>
         </form>

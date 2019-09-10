@@ -15,13 +15,13 @@ public class TokenService {
     @Autowired
     private CacheUtil cacheUtil;
 
-    public String getCacheKey(String token) {
-        return tokenConfig.getParamName() + ":" + token;
-    }
-
     public TokenService(TokenConfig tokenConfig) {
         this.tokenConfig = tokenConfig;
         tokenUtil = tokenConfig.getType().getInstance(tokenConfig);
+    }
+
+    public String getCacheKey(String token) {
+        return tokenConfig.getParamName() + ":" + token;
     }
 
     public String createToken(TokenSubject subject) {

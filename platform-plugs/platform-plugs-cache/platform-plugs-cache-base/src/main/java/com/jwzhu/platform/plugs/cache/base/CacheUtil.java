@@ -41,7 +41,7 @@ public interface CacheUtil {
 
     Set<String> sMembers(String key);
 
-    default boolean returnBoolean(Boolean result){
+    default boolean returnBoolean(Boolean result) {
         return result == null ? false : result;
     }
 

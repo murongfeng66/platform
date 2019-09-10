@@ -16,6 +16,14 @@ public enum PermissionType implements JsonEscapeInterface<Short> {
     User((short) 3, "用户"),
     Other((short) 4, "自定义");
 
+    public static Map<Short, String> map = new HashMap<>();
+
+    static {
+        for (PermissionType item : PermissionType.values()) {
+            map.put(item.code, item.message);
+        }
+    }
+
     /**
      * 编码
      */
@@ -30,22 +38,6 @@ public enum PermissionType implements JsonEscapeInterface<Short> {
         this.message = message;
     }
 
-    public short getCode() {
-        return code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public static Map<Short, String> map = new HashMap<>();
-
-    static {
-        for (PermissionType item : PermissionType.values()) {
-            map.put(item.code, item.message);
-        }
-    }
-
     public static String message(Short code) {
         return map.get(code);
     }
@@ -57,6 +49,14 @@ public enum PermissionType implements JsonEscapeInterface<Short> {
             }
         }
         throw new SystemException("无此[" + code + "]枚举");
+    }
+
+    public short getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
     }
 
     @Override

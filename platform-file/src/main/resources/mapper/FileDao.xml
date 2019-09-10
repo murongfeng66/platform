@@ -7,7 +7,8 @@
     </insert>
     <update id="updateStatus">
         update `File`
-        set fileStatus = #{newStatus}, updateTime = #{updateTime}
+        set fileStatus = #{newStatus},
+            updateTime = #{updateTime}
         where id = #{id} and fileStatus = #{oldStatus}
     </update>
     <select id="getWithLock" resultType="java.lang.String">

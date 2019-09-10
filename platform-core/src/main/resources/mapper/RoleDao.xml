@@ -2,10 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jwzhu.platform.core.permission.db.RoleDao">
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        insert into Role (`code`, `name`, createTime, roleStatus) values (#{code}, #{name}, #{createTime}, #{roleStatus})
+        insert into Role (`code`, `name`, createTime, roleStatus)
+        values (#{code}, #{name}, #{createTime}, #{roleStatus})
     </insert>
     <insert id="insertRoleResource">
-        insert into RoleResource (roleCode, resourceCode, createTime) values (#{roleCode}, #{resourceCode}, #{createTime})
+        insert into RoleResource (roleCode, resourceCode, createTime)
+        values (#{roleCode}, #{resourceCode}, #{createTime})
     </insert>
     <update id="updateById">
         update Role
@@ -25,10 +27,14 @@
         where id = #{id}
     </update>
     <update id="updateStatus">
-        update Role set roleStatus = #{newStatus}, updateTime = #{updateTime} where id = #{id} and roleStatus = #{oldStatus}
+        update Role
+        set roleStatus = #{newStatus},
+            updateTime = #{updateTime}
+        where id = #{id} and roleStatus = #{oldStatus}
     </update>
     <delete id="deleteRoleResource">
-        delete from RoleResource
+        delete
+        from RoleResource
         where roleCode = #{roleCode} and resourceCode = #{resourceCode}
     </delete>
     <select id="queryByParam" resultType="com.jwzhu.platform.core.permission.model.Role">
@@ -56,7 +62,8 @@
     <select id="getByCode" resultType="com.jwzhu.platform.core.permission.model.Role">
         select id, `code`, `name`, createTime, updateTime, roleStatus
         from Role
-        where `code` = #{roleCode} for update
+        where `code` = #{roleCode} for
+        update
     </select>
     <select id="getAdminRole" resultType="com.jwzhu.platform.core.permission.model.AdminRole">
         select r.id, r.`code`, r.`name`, r.createTime, r.updateTime, r.roleStatus
@@ -80,6 +87,8 @@
         </where>
     </select>
     <select id="getAllRoleByAdminId" resultType="java.lang.String">
-        select roleCode from AdminRole where adminId = #{adminId}
+        select roleCode
+        from AdminRole
+        where adminId = #{adminId}
     </select>
 </mapper>

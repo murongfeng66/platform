@@ -18,7 +18,7 @@ public class HandlerInterceptorAdapter extends org.springframework.web.servlet.h
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         super.postHandle(request, response, handler, modelAndView);
-        if(modelAndView != null){
+        if (modelAndView != null) {
             modelAndView.addObject("systemName", systemConfig.getName());
         }
     }
