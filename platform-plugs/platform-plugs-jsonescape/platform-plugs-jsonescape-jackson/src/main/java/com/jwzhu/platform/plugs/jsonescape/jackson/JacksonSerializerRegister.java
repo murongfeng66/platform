@@ -19,7 +19,6 @@ import com.jwzhu.platform.common.util.DateUtil;
 @Configuration
 public class JacksonSerializerRegister {
 
-
     @Bean
     public ObjectMapper objectMapper(ApplicationContext applicationContext) {
         ObjectMapper objectMapper = new ObjectMapper();
