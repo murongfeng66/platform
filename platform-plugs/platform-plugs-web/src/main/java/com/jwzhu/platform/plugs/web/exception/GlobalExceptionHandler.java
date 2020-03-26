@@ -68,7 +68,7 @@ public class GlobalExceptionHandler {
             view.addObject("responseCode", responseCode.getCode());
             view.addObject("message", getErrorMessage(throwable));
             view.addObject("costTime", RequestInfo.getCostTime());
-            view.setViewName("/error");
+            view.setViewName("error");
         }
         return view;
     }
