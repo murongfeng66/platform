@@ -56,6 +56,6 @@ public enum AvailableStatus implements JsonEscapeInterface<Short> {
 
     @Override
     public Object getMessage(Short id) {
-        return map.get(code);
+        return map.get(id);
     }
 }
